@@ -152,7 +152,7 @@ destDir="${reposDir}/${repoName}"
 
 if (( !justPrintDir )); then
     progress-msg "Pulling repo: ${repoName}"
-    actually-pull "${repoUrl}" "${repoName}" "${destDir}" \
+    actually-pull "${repoUrl}" "${destDir}" \
     || exit "$?"
     progress-msg '  Done!'
 fi
