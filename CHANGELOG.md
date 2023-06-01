@@ -1,20 +1,21 @@
 Changelog
 =========
 
-### v?
+### v2.2 -- 2023-06-01
 
 Notable changes:
 
 * `bashy-core`:
-  * New helper function: `set-array-from-lines` and `sort-array`.
+  * New helper functions: `set-array-from-lines` and `sort-array`.
   * `lib`: New option `--exec`. New feature `lib .`, `lib ..`, etc.
   * Expanded functionality of `helpy print-usage`.
   * `ubik`:
     * Finds functions from the library, not just commands (scripts).
     * Smarter error reporting.
-  * `stderr`
+  * `stderr`:
     * New helper functions for more consistency amongst commands.
     * `progress-msg` defaults to enabled.
+  * A decent handful of bugfixes.
 * `bashy-basics`:
   * New command hierarchy `buildy`, to do some common project-build type stuff.
   * New script `timey secs`. Subsumes and deprecates `timey now-secs`.
