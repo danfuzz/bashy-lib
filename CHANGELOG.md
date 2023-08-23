@@ -1,6 +1,14 @@
 Changelog
 =========
 
+### v2.3 -- 2023-08-23
+
+Notable changes:
+
+* `bashy-basics`: Fixed handling of nop JSON output filters, that is, `::
+  --output=none` without any JSON processing commands. Previously this could
+  _sometimes_ confusingly fail or at least produce a spurious error message.
+
 ### v2.2 -- 2023-06-01
 
 Notable changes:
