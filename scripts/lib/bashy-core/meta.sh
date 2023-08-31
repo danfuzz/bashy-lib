@@ -29,9 +29,9 @@ _bashy_cmdName=''
 # Library functions
 #
 
-# Gets the base directory of the project. With `--set=`, sets it to the given
-# directory, which can be specified relative to the calling script. It is an
-# error to try to get the directory before having set it.
+# Gets the absolute path to the base directory of the project. With `--set=`,
+# sets it to the given directory, which can be specified relative to the calling
+# script. It is an error to try to get the directory before having set it.
 function base-dir {
     if [[ $1 =~ --set=(.*)$ ]]; then
         local setDir="${BASH_REMATCH[1]}"
