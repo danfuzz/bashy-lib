@@ -78,6 +78,22 @@ function subproject-name {
     echo "${dir##*/}"
 }
 
+# Gets the subproject directory, relative to the base project directory (that
+# is, to `base-dir`).
+function subproject-subdir {
+    local baseDir && baseDir="$(base-dir)" || return "$?"
+    local subprojectDir && subprojectDir="$(subproject-dir)" || return "$?"
+
+    [[ ${subprojectDir} =~ ^"${baseDir}"/(.*)$ ]] || {
+        error-msg 'Subproject directory not actually under base directory?!'
+        error-msg "  base-dir:       ${baseDir}"
+        error-msg "  subproject-dir: ${subprojectDir}"
+        return 1
+    }
+
+    echo "${BASH_REMATCH[1]}"
+}
+
 # Gets the absolute path to the directory of this command, "this command" being
 # the (outer) script that is running.
 function this-cmd-dir {
