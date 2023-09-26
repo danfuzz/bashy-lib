@@ -5,7 +5,11 @@ Changelog
 
 Notable changes:
 
-* Support linking within script directories, to enable encapsulated subprojects.
+* `bashy-core`: Support linking within script directories, to enable
+  encapsulated subprojects.
+* `bashy-basics`: Make `jval` and `jget` option `--input=raw0[:slurp]` work as
+  expected with `jq-1.7`. (The new `jq` fixes a bug which we had implicitly
+  relied on.)
 
 ### v2.3 -- 2023-08-23
 
