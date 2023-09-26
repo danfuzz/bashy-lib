@@ -210,7 +210,7 @@ function _dispatch_find-in-dir {
             path="${nextPath}"
             foundAt="${at}"
             break
-        elif [[ -d "${nextPath}" ]]; then
+        elif [[ -d ${nextPath} ]]; then
             # We are looking at a subcommand directory. Include it in the
             # result, and iterate.
             path="${nextPath}"
