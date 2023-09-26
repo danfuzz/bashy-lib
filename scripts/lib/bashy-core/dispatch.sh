@@ -205,7 +205,7 @@ function _dispatch_find-in-dir {
             # End of search: The next word is not a valid command name.
             break
         elif [[ ! -x ${nextPath} ]]; then
-            # End of search: We landed at a non-exsitent path, unexecutable
+            # End of search: We landed at a non-existent path, unexecutable
             # file, or unsearchable directory.
             break
         elif [[ -f ${nextPath} ]]; then
