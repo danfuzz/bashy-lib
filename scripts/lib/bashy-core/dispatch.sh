@@ -220,6 +220,15 @@ function _dispatch_find-in-dir {
                 runCmdName="${runCmdName}"
                 runPath="${path}/_run"
             fi
+        elif [[ -f "${nextPath}.link" ]]; then
+            # We are looking at a "file-reified link." Follow it, and iterate.
+            nextWord="$(cat "${nextPath}.link")" || return 1
+            if [[ ${nextWord} =~ ^/ ]]; then
+                path="${nextWord}" # Absolute path.
+            else
+                path="$(base-dir)/${nextWord}" # Relative path w/r/t project base.
+            fi
+            foundAt="${at}"
         else
             # End of search: We landed at a non-existent path or special file
             # (device, etc.).

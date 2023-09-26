@@ -192,3 +192,31 @@ project-base-directory/
 
 **Note:** The files named with a `.sh` suffix are _not_ supposed to be marked
 executable (`chmod +x ...`). These are _include_ files.
+
+### To add per-subproject subcommand-script
+
+Sometimes it makes sense to define subprojects as separate directories within
+a project. In such cases, you may still want to have those subprojects' scripts
+be available in the top level project for interactive or script-available use
+(or both). Bashy-lib makes this arrangement possible via symlinking either per
+se or via "reified link" files (a text file containing the path, which may be
+preferable because of source control concerns). *Relative* reified links are
+taken to use the main project base directory as the base directory of the link.
+
+For example, let's say you have a directory `my-subproject` under your main
+project, which has its own `scripts` directory. Using symlinks per se:
+
+```bash
+$ cd my-project/scripts/lib/my-project # Your project's main scripts.
+$ ln -s ../../../my-subproject/scripts my-subproject
+```
+
+Or using a reified link file:
+
+```bash
+$ cd my-project
+$ echo 'my-subproject/scripts' > scripts/lib/my-subproject
+```
+
+With that, you can now say `ubik my-subproject ...` or (in scripts) `lib
+my-subproject ...`.

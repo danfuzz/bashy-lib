@@ -1,6 +1,12 @@
 Changelog
 =========
 
+### v??? -- ???
+
+Notable changes:
+
+* Support linking within script directories, to enable encapsulated subprojects.
+
 ### v2.3 -- 2023-08-23
 
 Notable changes:
