@@ -204,10 +204,6 @@ function _dispatch_find-in-dir {
         if ! _dispatch_is-valid-name "${nextWord}"; then
             # End of search: The next word is not a valid command name.
             break
-        elif [[ ! -x ${nextPath} ]]; then
-            # End of search: We landed at a non-existent path, unexecutable
-            # file, or unsearchable directory.
-            break
         elif [[ -f ${nextPath} ]]; then
             # We are looking at a regular executable script. Include it in the
             # result, and return it.
@@ -225,7 +221,8 @@ function _dispatch_find-in-dir {
                 runPath="${path}/_run"
             fi
         else
-            # End of search: We landed at a special file (device, etc.).
+            # End of search: We landed at a non-existent path or special file
+            # (device, etc.).
             break
         fi
     done
