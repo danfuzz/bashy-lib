@@ -1,6 +1,12 @@
 Changelog
 =========
 
+### ??? -- ???
+
+Notable changes:
+
+* New interactive `ubik`, which will use one found on `PATH` as a last resort.
+
 ### v2.4 -- 2023-09-26
 
 Notable changes:
