@@ -6,6 +6,8 @@ Changelog
 Notable changes:
 
 * New interactive `ubik`, which will use one found on `PATH` as a last resort.
+* Added `buildy make-distro`, cribbed from sibling project `lactoserv` and
+  adapted for more general use.
 
 ### v2.4 -- 2023-09-26
 
