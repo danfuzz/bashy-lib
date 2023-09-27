@@ -216,7 +216,7 @@ Or using a reified link file:
 
 ```bash
 $ cd my-project
-$ echo 'my-subproject/scripts' > scripts/lib/my-subproject
+$ echo 'my-subproject/scripts' > scripts/lib/my-subproject.link
 ```
 
 With that, you can now say `ubik my-subproject ...` or (in scripts) `lib
