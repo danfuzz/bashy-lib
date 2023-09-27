@@ -27,7 +27,8 @@ changes with each release. Expect a stable release sometime in 2024.
 ## To use included commands
 
 1. Copy the `scripts` directory from this project (or its contents) to a
-   directory that is part of your `$PATH`.
+   directory that is part of your `$PATH`. You need to include the directory
+   `lib/bashy-core`, but the other directories under `lib` are all optional.
 
 2. To use a Bashy-lib command from the command line, call `ubik` and pass it
    the (possibly-hierarchical) name of the command, e.g.:
