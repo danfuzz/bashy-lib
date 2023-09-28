@@ -64,7 +64,7 @@ process-args "$@" || usage --short
 #
 
 # The main actions of this script.
-function build-js-project {
+function build-project {
     local projectName="$1"
     local modulesDir="$2"
     local destDir="$3"
@@ -389,7 +389,7 @@ if [[ ! -d ${outProjectDir} ]]; then
     || exit "$?"
 fi
 
-build-js-project "${projectName}" "${modulesDir}" "${outProjectDir}" \
+build-project "${projectName}" "${modulesDir}" "${outProjectDir}" \
 || exit "$?"
 
 if (( !platformSpecific )); then
