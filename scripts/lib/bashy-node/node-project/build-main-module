@@ -44,7 +44,7 @@ opt-action --call='{ usage; exit }' help/h
 # Allow the build to be platform-specific?
 opt-toggle --var=platformSpecific allow-platform-specific-files
 
-# Directory containing all the modules
+# Directory containing all the modules.
 opt-value --required --var=modulesDir --filter='/./' modules-dir
 
 # Built output directory.
