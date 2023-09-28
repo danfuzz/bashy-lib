@@ -210,7 +210,6 @@ function do-sort {
 # Main script
 #
 
-
 srcDir="$(base-dir)/src"
 
 if (( ${#files[@]} == 0 )); then
