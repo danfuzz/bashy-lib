@@ -6,11 +6,13 @@ Changelog
 Notable changes:
 
 * New interactive `ubik`, which will use one found on `PATH` as a last resort.
-* `buildy`:
-  * New command `buildy make-distro`, cribbed from sibling project `lactoserv`
-    and adapted for more general use.
-  * New command `buildy ls-files`, inspired by (and based on) the `git` command
-    of the same name.
+* `bashy-basics`:
+  * `buildy`:
+    * New command `buildy make-distro`, cribbed from sibling project `lactoserv`
+      and adapted for more general use.
+    * New command `buildy ls-files`, inspired by (and based on) the `git`
+      command of the same name.
+* New sub-library `bashy-node`, for Node-specific stuff.
 
 ### v2.4 -- 2023-09-26
 
