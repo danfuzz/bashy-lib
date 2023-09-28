@@ -83,7 +83,10 @@ function get-deps {
             '(' -type d -name tests -prune ')' \
             -o -name '*.js' -print
     ))
-    awk "${WRANGLER_AWK}" "${files[@]}"
+
+    if (( ${#files[@]} != 0 )); then
+        awk "${WRANGLER_AWK}" "${files[@]}"
+    fi
 }
 
 # Runs the fixer on the given file.
@@ -118,7 +121,7 @@ function do-fix {
         version: .version,
         type: "module",
         private: true,
-        license: "Apache-2.0",
+        license: (.license // "UNLICENSED"),
         BLANK_LINE_1: "",
         exports: "./index.js",
         imports: {
