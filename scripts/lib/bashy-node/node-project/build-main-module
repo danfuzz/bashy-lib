@@ -13,11 +13,18 @@
 define-usage $'
     ${name} [<opt> ...] <project-name>
 
-    Builds a JavaScript (sub)project.
+    Builds a Node main module, pulling in all its local dependencies. The
+    result is deposited in a directory named <project-name> under the output
+    directory. The module used to build this is named `@this/main-<project-name>`
+    which is expected to be present in the modules directory.
 
     --allow-platform-specific-files
       If specified, the build does *not* check to see if any platform-specific
       files ended up in the built output.
+    --modules-dir=<dir>
+      Directory containing all source modules. Required. *Note:* Each of the
+      modules is expected to be defined to have the name `@this/<name>` where
+      <name> names the directory the module is in.
     --out=<dir>
       Directory where built output goes. Defaults to `out` directly under the
       main product directory.
@@ -36,6 +43,9 @@ opt-action --call='{ usage; exit }' help/h
 
 # Allow the build to be platform-specific?
 opt-toggle --var=platformSpecific allow-platform-specific-files
+
+# Directory containing all the modules
+opt-value --required --var=modulesDir --filter='/./' modules-dir
 
 # Built output directory.
 opt-value --var=outDir out
@@ -56,12 +66,12 @@ process-args "$@" || usage --short
 # The main actions of this script. The "main module" is taken to be `main-<name>`.
 function build-js-project {
     local projectName="$1"
-    local srcDir="$2"
+    local modulesDir="$2"
     local destDir="$3"
 
     local destLibDir="${destDir}/lib"
     local mainModule="main-${projectName}"
-    local srcMainModule="${srcDir}/${mainModule}"
+    local srcMainModule="${modulesDir}/${mainModule}"
     local srcPackageJson="${srcMainModule}/package.json"
     local srcPackageLockJson="${srcMainModule}/package-lock.json"
     local localCodeDirName='code'
@@ -79,7 +89,8 @@ function build-js-project {
 
     local deps
     deps="$(
-        lib . find-module-dependencies --modules-dir="${srcDir}" "${mainModule}"
+        lib . find-module-dependencies \
+            --modules-dir="${modulesDir}" "${mainModule}"
     )" \
     || return "$?"
 
@@ -119,7 +130,7 @@ function build-js-project {
     true \
     && make-index-js "${destLocalCode}" \
     && copy-scripts "${srcMainModule}" "${destDir}" \
-    && copy-local-modules "${srcDir}" "${destLocalModules}" "${deps}" \
+    && copy-local-modules "${modulesDir}" "${destLocalModules}" "${deps}" \
     && remove-dead-local-modules "${destLocalModules}" "${deps}" \
     && npm-install "${destLibDir}" \
     || return "$?"
@@ -368,7 +379,6 @@ function suspect-file-check {
 
 progress-msg "Building JS project ${projectName}..."
 
-srcDir="$(base-dir)/src"
 outDir="$(lib buildy out-dir --out="${outDir}" --create --print --quiet)"
 
 outProjectDir="${outDir}/${projectName}"
@@ -379,7 +389,7 @@ if [[ ! -d ${outProjectDir} ]]; then
     || exit "$?"
 fi
 
-build-js-project "${projectName}" "${srcDir}" "${outProjectDir}" \
+build-js-project "${projectName}" "${modulesDir}" "${outProjectDir}" \
 || exit "$?"
 
 if (( !platformSpecific )); then
