@@ -12,7 +12,10 @@ Notable changes:
       and adapted for more general use.
     * New command `buildy ls-files`, inspired by (and based on) the `git`
       command of the same name.
-* New sub-library `bashy-node`, for Node-specific stuff.
+* New sub-library `bashy-node`, for Node-specific stuff, particularly help
+  building and maintaining Node projects. As with `make-distro` (above), this
+  started out life in the sibling project `lactoserv`. **Nore:** This
+  sub-library is fairly opinionated.
 
 ### v2.4 -- 2023-09-26
 
