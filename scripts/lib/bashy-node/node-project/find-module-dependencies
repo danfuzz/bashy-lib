@@ -14,8 +14,8 @@ define-usage $'
     ${name} [<opt> ...] [--] <module-name>
 
     Transitively finds all module dependencies from the one given, which must
-    be the name of a module defined in this codebase. Prints out a JSON object
-    with bindings as follows:
+    be the name of a module defined under the indicated modules directory.
+    Prints out a JSON object with bindings as follows:
 
     * `main: string` -- The originally requested module.
     * `localDeps: [name, ...]` -- Local module dependencies.
