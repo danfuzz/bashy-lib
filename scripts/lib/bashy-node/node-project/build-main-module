@@ -63,7 +63,7 @@ process-args "$@" || usage --short
 # Helper functions
 #
 
-# The main actions of this script. The "main module" is taken to be `main-<name>`.
+# The main actions of this script.
 function build-js-project {
     local projectName="$1"
     local modulesDir="$2"
