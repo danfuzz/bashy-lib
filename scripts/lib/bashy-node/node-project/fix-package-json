@@ -41,7 +41,6 @@ WRANGLER_AWK=$'
     $0 = from;
     if (from ~ /^@this\//) {
         deps[from] = 1;
-        #print from;
     }
 }
 
@@ -79,13 +78,13 @@ function get-deps {
     local files
 
     files=($(
-        find "${srcDir}" \
-            '(' -type d -name tests -prune ')' \
-            -o -name '*.js' -print
-    ))
+        lib buildy ls-files --output=lines --include='\.js$' "${srcDir}"
+    )) \
+    || return "$?"
 
     if (( ${#files[@]} != 0 )); then
-        awk "${WRANGLER_AWK}" "${files[@]}"
+        awk "${WRANGLER_AWK}" "${files[@]}" \
+        || return "$?"
     fi
 }
 
