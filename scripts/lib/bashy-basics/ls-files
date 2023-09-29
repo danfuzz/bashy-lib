@@ -13,8 +13,8 @@
 define-usage $'
     ${name} [<path> ...]
 
-    List files at or under the given <path>s. With no <path>s, lists all files
-    in or under the current directory.
+    List files and/or directories at or under the given <path>s. With no <path>s,
+    lists all items in or under the current directory.
 
     This tool is inspired by `git ls-files`, and is similar to the git-specific
     `buildy ls-files` in this library.
@@ -25,6 +25,11 @@ define-usage $'
       at all.
     --depth=<n>
       Only include paths at the given depth below the starting <path>s.
+    --dirs
+      Include directories in the output.
+    --files
+      Include files in the output. This is the default if neither this option nor
+      `--dirs` is specified.
     --full-paths
       Output full canonicalized (absolute) paths. By default, outputs paths that
       are prefixed with one of the <path> arguments, or in the case of no <path>
@@ -49,6 +54,12 @@ opt-value --var=cdTo --filter='/./' cd
 # Depth for results.
 opt-value --var=depth --filter='/^[0-9]+$/' depth
 
+# Include directories in the output?
+opt-toggle --var=doDirs dirs
+
+# Include (regular) files in the output?
+opt-toggle --var=doFiles files
+
 # Full paths?
 opt-toggle --var=fullPaths full-paths
 
@@ -67,6 +78,10 @@ process-args "$@" || usage --short
 #
 # Main script
 #
+
+if (( !doDirectories )); then
+    doFiles=1
+fi
 
 if [[ ${cdTo} != '' ]]; then
     cd "${cdTo}" \
@@ -97,13 +112,24 @@ while IFS='' read -r -d $'\0' file; do
     fi
 done < <(
     findArgs=("${paths[@]}")
+
     if [[ ${depth} != '' ]]; then
         findArgs+=(-mindepth "${depth}" -maxdepth "${depth}")
     fi
 
+    if (( doFiles )); then
+        if (( doDirs )); then
+            findArgs+=('(' -type f -o -type d ')')
+        else
+            findArgs+=(-type f)
+        fi
+    elif (( doDirs )); then
+        findArgs+=(-type d)
+    fi
+
     # Note: The `printf` contents are designed to make it possible for the loop
     # above to (nearly) unambiguously notice errors.
-    find "${findArgs[@]}" -type f -print0 \
+    find "${findArgs[@]}" -print0 \
     || printf '\x01error\x00'
 )
 
