@@ -79,7 +79,7 @@ process-args "$@" || usage --short
 # Main script
 #
 
-if (( !doDirectories )); then
+if (( !doDirs )); then
     doFiles=1
 fi
 
