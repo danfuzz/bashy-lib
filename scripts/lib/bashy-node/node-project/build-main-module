@@ -306,28 +306,18 @@ function remove-dead-local-modules {
         | jval --input=read deps:json="${deps}" '. - $deps.localDeps'
     )"
 
-    if [[ ${deadModules} != '[]' ]]; then
-        # The following generates an `eval`able script to perform the removals.
-        local removalCmd
-        removalCmd="$(
-            jval \
-                --output=raw \
-                dir="${dir}" \
-                deadModules:json="${deadModules}" '
-            $deadModules
-            | map(
-                "progress-msg \("  \(.)" | @sh)",
-                "rm -rf \("\($dir)/\(.)" | @sh)"
-            )
-            | map("&& \(.) \\")
-            | ["true \\", .[], "&& true"]
-            | join("\n")
-        ')"
+    local mod first=1
+    while IFS='' read -r -d $'\0' mod; do
+        if (( first )); then
+            progress-msg 'Removing defunct local modules:'
+            first=0
+        fi
 
-        progress-msg 'Removing defunct local modules:'
+        progress-msg "  ${mod}"
+        rm -rf "${dir}/${mod}" || return "$?"
+    done < <(jget --output=raw0 "${deadModules}" '.[]')
 
-        eval "${removalCmd}"
-
+    if (( !first )); then
         progress-msg
     fi
 }
