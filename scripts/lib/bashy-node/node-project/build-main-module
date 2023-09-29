@@ -212,17 +212,11 @@ function copy-scripts {
 
     # Get a JSON array of all the files.
     local fileList
-    fileList="$(
-        cd "${srcDir}"
-        find . -mindepth 1 -maxdepth 1 -print0 \
-        | jval --input=raw0:slurp 'map(ltrimstr("./"))'
-    )" \
+    fileList="$(lib ls-files --cd="${srcDir}" --depth=1)" \
     || return "$?"
 
-    local flen="$(jget "${fileList}" 'length')"
-
-    if (( flen == 0 )); then
-        return;
+    if [[ ${fileList} == '[]' ]]; then
+        return
     fi
 
     progress-msg 'Copying scripts...'
@@ -230,11 +224,10 @@ function copy-scripts {
     mkdir -p "${destDir}" \
     || return "$?"
 
-    local i f srcScript destScript
-    for (( i = 0; i < flen; i++ )); do
-        f="$(jget --output=raw "${fileList}" i:json="${i}" '.[$i]')"
-        srcScript="${srcDir}/${f}"
-        destScript="${destDir}/${f}"
+    local file
+    while IFS='' read -r -d $'\0' file; do
+        local srcScript="${srcDir}/${file}"
+        local destScript="${destDir}/${file}"
         if [[ -x "${srcScript}" ]]; then
             error-msg 'Script is marked executable in the source directory:'
             error-msg "  ${srcScript}"
@@ -244,11 +237,11 @@ function copy-scripts {
             error-msg
             return 1
         fi
-        progress-msg "  ${f}"
+        progress-msg "  ${file}"
         rm -rf "${destScript}"            || return "$?"
         cp "${srcScript}" "${destScript}" || return "$?"
         chmod +x "${destScript}"          || return "$?"
-    done
+    done < <(jget --output=raw0 "${fileList}" '.[]')
 }
 
 # Writes a top-level `index.js` for a project.
