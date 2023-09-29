@@ -23,10 +23,10 @@ define-usage $'
 opt-action --call='{ usage; exit }' help/h
 
 # The command to print stuff about.
-positional-arg --required --var=cmdName --filter='/^[a-z]/' command
+positional-arg --required --var=cmdName --filter='/^[-a-z]/' command
 
 # Subcommands if any.
-rest-arg --var=subWords --filter='/^[a-z]/' subcommands
+rest-arg --var=subWords --filter='/^[-a-z]/' subcommands
 
 process-args "$@" || usage --short
 
