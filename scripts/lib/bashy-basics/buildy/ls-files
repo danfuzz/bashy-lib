@@ -41,11 +41,11 @@ opt-action --call='{ usage; exit }' help/h
 # Full paths?
 opt-toggle --var=fullPaths full-paths
 
-# Output style.
-opt-value --var=outputStyle --init=json --enum='json lines raw0' output
-
 # Include pattern.
 opt-value --var=includeRegex --init='.' --filter='/./' include
+
+# Output style.
+opt-value --var=outputStyle --init=json --enum='json lines raw0' output
 
 # The paths.
 rest-arg --var=paths --filter='/./' paths
