@@ -12,6 +12,7 @@ Notable changes:
       and adapted for more general use.
     * New command `buildy ls-files`, inspired by (and based on) the `git`
       command of the same name.
+  * Major improvements to `jbash-array`.
 * New sub-library `bashy-node`, for Node-specific stuff, particularly help
   building and maintaining Node projects. As with `make-distro` (above), this
   started out life in the sibling project `lactoserv`. **Nore:** This
