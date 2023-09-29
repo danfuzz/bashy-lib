@@ -34,13 +34,13 @@ define-usage $'
       Output full canonicalized (absolute) paths. By default, outputs paths that
       are prefixed with one of the <path> arguments, or in the case of no <path>
       arguments not prefixed at all (just a straight relative path from CWD).
+    --include=<regex>
+      Regular expression indicating which files to include. This is treated as
+      an "extended" regex.
     --output=<style> :: `json` `lines` `raw0`
       * `json` -- Output a JSON array of all file paths. This is the default.
       * `lines` -- Output newline-terminated file paths.
       * `raw0` -- Output NUL-terminated file paths.
-    --include=<regex>
-      Regular expression indicating which files to include. This is treated as
-      an "extended" regex.
 
     ${help}
 '

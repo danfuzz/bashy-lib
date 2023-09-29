@@ -22,15 +22,15 @@ define-usage $'
     --full-paths
       Output full canonicalized (absolute) paths. By default, outputs paths that
       are relative to the project\'s base directory.
-    --output=<style> :: `json` `lines` `raw0`
-      * `json` -- Output a JSON array of all file paths. This is the default.
-      * `lines` -- Output newline-terminated file paths.
-      * `raw0` -- Output NUL-terminated file paths.
     --include=<regex>
       Regular expression indicating which files to include. This is treated as
       an unanchored "extended" regex. Matching is performed on relative paths
       from the project\'s base directory; that is, the absolute path to the
       project is not part of the text being matched.
+    --output=<style> :: `json` `lines` `raw0`
+      * `json` -- Output a JSON array of all file paths. This is the default.
+      * `lines` -- Output newline-terminated file paths.
+      * `raw0` -- Output NUL-terminated file paths.
 
     ${help}
 '
