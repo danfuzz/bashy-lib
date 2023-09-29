@@ -19,6 +19,10 @@ define-usage $'
     This tool is inspired by `git ls-files`, and is similar to the git-specific
     `buildy ls-files` in this library.
 
+    --cd=<dir>
+      Change to the given directory before performing the search. This affects
+      how relative <path>s are treated as well as passing no <path> arguments
+      at all.
     --depth=<n>
       Only include paths at the given depth below the starting <path>s.
     --full-paths
@@ -38,6 +42,9 @@ define-usage $'
 
 # Want help?
 opt-action --call='{ usage; exit }' help/h
+
+# Directory to `cd` to before running.
+opt-value --var=cdTo --filter='/./' cd
 
 # Depth for results.
 opt-value --var=depth --filter='/^[0-9]+$/' depth
@@ -61,17 +68,16 @@ process-args "$@" || usage --short
 # Main script
 #
 
+if [[ ${cdTo} != '' ]]; then
+    cd "${cdTo}" \
+    || exit "$?"
+fi
+
 impliedCwd=0
 if [[ ${#paths[@]} == 0 ]]; then
     paths=('.')
     impliedCwd=1
 fi
-
-if (( error )); then
-    exit 1
-fi
-
-cd "${baseDir}"
 
 results=()
 
