@@ -55,7 +55,7 @@ function make-distro {
     fileList="$(
         cd "${dir}"
         find . -mindepth 1 -maxdepth 1 -print0 \
-        | jval --input=raw0 '.[2:]'
+        | jval --input=raw0 'ltrimstr("./")'
     )" \
     || return "$?"
 
