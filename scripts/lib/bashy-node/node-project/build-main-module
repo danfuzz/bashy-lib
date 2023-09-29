@@ -302,13 +302,9 @@ function remove-dead-local-modules {
 
     local deadModules
     deadModules="$(
-        cd "${dir}"
-        find . -mindepth 2 -maxdepth 2 -type d -print0 \
-        | jval --input=raw0:slurp \
-            deps:json="${deps}" \
-            'map(ltrimstr("./")) - $deps.localDeps'
-    )" \
-    || return "$?"
+        lib ls-files --cd="${dir}" --depth=2 --dirs \
+        | jval --input=read deps:json="${deps}" '. - $deps.localDeps'
+    )"
 
     if [[ ${deadModules} != '[]' ]]; then
         # The following generates an `eval`able script to perform the removals.
