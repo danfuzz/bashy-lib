@@ -85,9 +85,6 @@ function parse-rest {
 
 process-args "$@" || usage --short
 
-check-json-output-args \
-|| exit "$?"
-
 
 #
 # Main script

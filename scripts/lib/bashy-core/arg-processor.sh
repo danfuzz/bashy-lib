@@ -251,6 +251,18 @@ function positional-arg {
     _argproc_positionalFuncs+=("_argproc:positional-${specName}")
 }
 
+# Adds a call to perform post-processing -- usually checking -- after an
+# otherwise successful call to `process-args`. This accepts a function name and
+# zero or more arguments.
+function post-process-args-call {
+    local args=("$@")
+    _argproc_janky-args --multi-arg \
+    || return 1
+
+    printf '%q ' "${args[@]}"
+    _argproc_preReturnStatements+=("$(printf '%q ' "${args[@]}")")
+}
+
 # Processes all of the given arguments, according to the configured handlers.
 # Returns non-zero if there is trouble parsing options or if any handler returns
 # non-zero.
