@@ -259,7 +259,6 @@ function post-process-args-call {
     _argproc_janky-args --multi-arg \
     || return 1
 
-    printf '%q ' "${args[@]}"
     _argproc_preReturnStatements+=("$(printf '%q ' "${args[@]}")")
 }
 
