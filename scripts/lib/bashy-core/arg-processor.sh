@@ -31,7 +31,7 @@
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
 #   the regex doesn't match, the argument is rejected.
 # * `--var=<name>` -- Sets the named variable to the argument value(s). The
-#   variable is always initialized to _some_, which is itself optionally
+#   variable is always initialized to _something_, which is itself optionally
 #   specified via `--init=<value>`. If `--init` isn't used (or isn't available),
 #   then the default initialized value depends on the specific function.
 #
