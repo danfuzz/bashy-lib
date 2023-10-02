@@ -14,7 +14,7 @@ Notable changes:
       command of the same name.
   * New command `ls-files`, top-level and non-git-specific (as opposed to the
     one in `buildy`).
-  * Major improvements to `jbash-array`.
+  * Renamed `jbash-array` to `jset-array`, and made major improvements.
 * New sub-library `bashy-node`, for Node-specific stuff, particularly help
   building and maintaining Node projects. As with `make-distro` (above), this
   started out life in the sibling project `lactoserv`. **Nore:** This
