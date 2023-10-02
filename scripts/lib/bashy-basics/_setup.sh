@@ -196,9 +196,9 @@ function jset-array {
     )"
 }
 
-# Performs JSON output postprocessing as directed by arguments. Expects to be
-# given an _array_ of potential output (which it unwraps into a stream if so
-# directed).
+# Performs JSON output postprocessing as directed by originally-passed
+# options/arguments. Expects to be given a JSON _array_ of potential output
+# (which it unwraps into a stream if so directed).
 function json-postproc-output {
     local outputArray="$1"
 
@@ -220,6 +220,44 @@ function json-postproc-output {
             ;;
         raw|raw0|words)
             jget "${outputArray}" --output="${_bashy_jsonOutputStyle}" '.[]'
+            ;;
+        '')
+            error-msg 'No JSON --output option supplied (or implied).'
+            return 1
+            ;;
+        *)
+            error-msg "Unrecognized JSON --output option: ${_bashy_jsonOutputStyle}"
+            return 1
+            ;;
+    esac
+}
+
+# Performs JSON output processing as directed by originally-passed
+# options/arguments. Expects to be passed a series of individual strings of
+# potential output.
+function json-postproc-strings {
+    local output=("$@")
+
+    case "${_bashy_jsonOutputStyle}" in
+        array)
+            # Form a JSON array, and tell the postprocessor about it.
+            jarray --input=strings -- "${output[@]}" \
+            | jpostproc "${_bashy_jsonPostArgs[@]}"
+            ;;
+        json)
+            # Form a sequence of JSON strings, and tell the postprocessor about
+            # it.
+            jstring -- "${output[@]}" \
+            | jpostproc "${_bashy_jsonPostArgs[@]}"
+            ;;
+        none)
+            : # Nothing to do.
+            ;;
+        raw|raw0|words)
+            # Form a sequence of JSON strings, and then ask `jval` to use its
+            # output processing on it.
+            jstring -- "${output[@]}" \
+            | jval --input=read --output="${_bashy_jsonOutputStyle}"
             ;;
         '')
             error-msg 'No JSON --output option supplied (or implied).'
