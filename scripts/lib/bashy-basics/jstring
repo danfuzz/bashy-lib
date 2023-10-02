@@ -44,12 +44,6 @@ fi
 
 jqArgs=(--null-input)
 
-if [[ ${inputStyle} == 'strings' ]]; then
-    argOpt='--arg'
-else
-    argOpt='--argjson'
-fi
-
 expr=''
 for n in "${!values[@]}"; do
     jqArgs+=(--arg "a${n}" "${values[n]}")
