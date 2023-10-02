@@ -27,6 +27,11 @@ function jlength {
     lib jlength "$@"
 }
 
+# Calls `lib jstring`.
+function jstring {
+    lib jstring "$@"
+}
+
 # Calls `lib jval`.
 function jval {
     lib jval "$@"
