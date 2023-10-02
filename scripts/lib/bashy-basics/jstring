@@ -32,6 +32,10 @@ process-args "$@" || usage --short
 # Main script
 #
 
+if (( ${#values[@]} == 0 )); then
+    # No need to do anything.
+    exit
+fi
 
 # Note: Unfortunately, because `jq` doesn't actually do the usual shell command
 # behavior of not attempting to interpret things that look like options but are
