@@ -89,13 +89,28 @@ fi
 expectedOutput="$(cat "${expectMd}")" \
 || exit "$?"
 
-if cmp "${testOutput}" "${expectedOutput}"; then
+if cmp <(echo "${testOutput}") <(echo "${expectedOutput}"); then
     echo "## passed"
 else
     echo "## failed"
     echo ''
     diff -u \
-        <(echo 'Expected:'; echo "${expectedOutput}") \
-        <(echo 'Got:';      echo "${testOutput}")
+        <(echo "${expectedOutput}") \
+        <(echo "${testOutput}") \
+    | awk '
+        # Fix up the diff labels
+        !done && /^---/ {
+            print "--- expected";
+            print "+++ got";
+            next;
+        }
+        !done && /^+++/ {
+            done = 1;
+            next;
+        }
+        {
+            print;
+        }
+    '
     exit 1
 fi
