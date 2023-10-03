@@ -1,11 +1,3 @@
-## stdout
-```
-```
-(no newline at end)
+## 1
 
-## stderr
-```
-```
-(no newline at end)
-
-## exit: 0
+### exit: 0

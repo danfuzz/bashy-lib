@@ -4,4 +4,4 @@
 
 . "$(dirname "$(readlink -f "$0")")/../../_test-init.sh" || exit "$?"
 
-call-and-log-as-test '1' "$(this-cmd-dir)/the-cmd"
+call-and-log-as-test 'just load' "$(this-cmd-dir)/the-cmd"
