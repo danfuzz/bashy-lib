@@ -26,10 +26,12 @@ case "${what}" in
         echo '(no exit expected)'
         ;;
     short)
+        echo 1>&2 'This is an error!'
         usage --short
         echo '(no exit expected)'
         ;;
     *)
+        echo 1>&2 'This is an error!'
         (exit "${what}") || usage --short
         echo '(exit expected; should not see this)'
         ;;

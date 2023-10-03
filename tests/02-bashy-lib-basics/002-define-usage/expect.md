@@ -7,6 +7,7 @@
 
 ### stderr
 ```
+This is an error!
 
 the-cmd -- This is the short
 help for the command.
@@ -44,6 +45,7 @@ Displays this message.
 
 ### stderr
 ```
+This is an error!
 
 the-cmd -- This is the short
 help for the command.
@@ -58,6 +60,7 @@ the-cmd [--help | -h]
 
 ### stderr
 ```
+This is an error!
 
 the-cmd -- This is the short
 help for the command.
