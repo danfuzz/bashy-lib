@@ -900,13 +900,13 @@ function _argproc_statements-from-args {
         shift
     done
 
-    local statement
-    for statement in "${_argproc_positionalFuncs[@]}"; do
+    local func
+    for func in "${_argproc_positionalFuncs[@]}"; do
         if (( $# == 0 )); then
             break
         fi
 
-        _argproc_statements+=("${statement} $(_argproc_quote "$1")")
+        _argproc_statements+=("${func} $(_argproc_quote "$1")")
         shift
     done
 
