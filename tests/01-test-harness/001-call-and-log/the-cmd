@@ -11,7 +11,7 @@ if [[ ${toStdout} != '' ]]; then
 fi
 
 if [[ ${toStderr} != '' ]]; then
-    printf '%s' "${toStderr}"
+    printf 1>&2 '%s' "${toStderr}"
 fi
 
 exit "${exitCode}"

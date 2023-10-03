@@ -6,7 +6,35 @@
 
 cmd="$(this-cmd-dir)/the-cmd"
 
-call-and-log-as-test '1' "${cmd}" '' '' 0
-call-and-log-as-test '2' "${cmd}" '' '' 1
-call-and-log-as-test '3' "${cmd}" 'hello' '' 127
-call-and-log-as-test '4' "${cmd}" '' 'eek' 255
+call-and-log-as-test 'no output; success' \
+    "${cmd}" '' '' 0
+
+call-and-log-as-test 'no output; error' \
+    "${cmd}" '' '' 1
+
+call-and-log-as-test 'stdout without nl; success' \
+    "${cmd}" 'hello' '' 0
+
+call-and-log-as-test 'stdout; success' \
+    "${cmd}" $'hello\n' '' 0
+
+call-and-log-as-test 'stderr without nl; fail' \
+    "${cmd}" '' 'eek' 127
+
+call-and-log-as-test 'stderr; fail' \
+    "${cmd}" '' $'eek\n' 255
+
+call-and-log-as-test 'stdout and stderr' \
+    "${cmd}" $'hello\n' $'eek\n' 0
+
+call-and-log-as-test 'stdout and stderr, two lines without final nl' \
+    "${cmd}" $'hello\nhi' $'eek\noy' 0
+
+call-and-log-as-test 'stdout and stderr, two lines' \
+    "${cmd}" $'hello\nhi\n' $'eek\noy\n' 0
+
+call-and-log-as-test 'stdout and stderr, two lines and extra nl at end' \
+    "${cmd}" $'hello\nhi\n\n' $'eek\noy\n\n' 0
+
+call-and-log-as-test 'stdout and stderr, two lines and extra nl at start' \
+    "${cmd}" $'\nhello\nhi\n' $'\neek\noy\n' 0
