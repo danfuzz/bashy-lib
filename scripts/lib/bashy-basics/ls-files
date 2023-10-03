@@ -140,8 +140,8 @@ if [[ ${#paths[@]} == 0 ]]; then
     impliedCwd=1
 else
     # Check to see if any of the paths start with a dash. If so, prefix all
-    # non-relative paths with `./` so that `find` (which doesn't have any other
-    # standard way to differentiate such files from options).
+    # relative paths with `./` so that `find` (which doesn't have any other
+    # standard way to deal with this) won't confuse them with options.
     for path in "${paths[@]}"; do
         if [[ ${path} =~ ^- ]]; then
             impliedCwd=1
