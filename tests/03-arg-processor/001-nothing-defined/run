@@ -6,12 +6,38 @@
 
 cmd="$(this-cmd-dir)/the-cmd"
 
-call-and-log-as-test '1' "${cmd}"
-call-and-log-as-test '2' "${cmd}" --
-call-and-log-as-test '3' "${cmd}" x
-call-and-log-as-test '4' "${cmd}" -- x
-call-and-log-as-test '5' "${cmd}" -x
-call-and-log-as-test '6' "${cmd}" --x
-call-and-log-as-test '7' "${cmd}" --x=y
-call-and-log-as-test '8' "${cmd}" --no-x y
-call-and-log-as-test '9' "${cmd}" --blort --
+call-and-log-as-test 'no args or options passed' \
+    "${cmd}"
+
+call-and-log-as-test 'passed `--`' \
+    "${cmd}" --
+
+call-and-log-as-test 'passed non-option arg' \
+    "${cmd}" x
+
+call-and-log-as-test 'passed two non-option args' \
+    "${cmd}" florp fleep
+
+call-and-log-as-test 'passed `--` then non-option arg' \
+    "${cmd}" -- x
+
+call-and-log-as-test 'passed `--` then arg that looks like an option' \
+    "${cmd}" -- --not-actually-an-option
+
+call-and-log-as-test 'passed a single-dash option' \
+    "${cmd}" -x
+
+call-and-log-as-test 'passed a double-dash option' \
+    "${cmd}" --x
+
+call-and-log-as-test 'passed a double-dash option with a value' \
+    "${cmd}" --x=y
+
+call-and-log-as-test 'passed a `--no-` option' \
+    "${cmd}" --no-x
+
+call-and-log-as-test 'passed a `--no-` option and a non-option argument' \
+    "${cmd}" --no-x y
+
+call-and-log-as-test 'passed a double-dash option and then `--`' \
+    "${cmd}" --blort --
