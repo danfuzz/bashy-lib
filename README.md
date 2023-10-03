@@ -1,6 +1,8 @@
 Bashy-lib
 =========
 
+[![Test](https://github.com/danfuzz/bashy-lib/actions/workflows/main.yml/badge.svg)](https://github.com/danfuzz/bashy-lib/actions/workflows/main.yml)
+
 <blockquote><i>
 "Using Bash-3.2 plus the intersection of BSD and GNU tools is the worst form
 of commandline scripting, except for all those other forms that have been tried
