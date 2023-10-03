@@ -611,8 +611,8 @@ function _argproc_handler-body {
 # parsed option. Assumes the variable `args` (again presumed local to the
 # caller) contains all the arguments, which gets updates by this function.
 # After option parsing, this expects there to be one argument remaining, except
-# if `--multi-arg` is passed to this function, in which case there must be at
-# least one.
+# if `--multi-arg` is passed to this function, in which case there must be _at
+# least_ one.
 function _argproc_janky-args {
     local multiArg=0
     if [[ $1 == '--multi-arg' ]]; then
