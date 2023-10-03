@@ -1,0 +1,29 @@
+# Copyright 2022-2023 the Lactoserv Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+name: Test
+
+# Controls when the workflow will run.
+on:
+  # Triggers the workflow on push or PR events for the branch `main`.
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab.
+  workflow_dispatch:
+
+# Workflow. Jobs run in parallel by default, but that is moot here: there's only
+# one job.
+jobs:
+  # Test the project!
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Note: Checks out into `$GITHUB_WORKSPACE`, which is also the `$CWD`.
+      - name: Clone repo.
+        uses: actions/checkout@v4
+
+      - name: Run the tests.
+        run: ./tests/run-all
