@@ -24,6 +24,9 @@ define-usage $'
 # Want help?
 opt-action --call='{ usage; exit }' help/h
 
+# Update the expected output?
+opt-toggle --var=doUpdate update
+
 # The test to run.
 positional-arg --required --var=testName --filter='/^[^/]+/[^/]+$/' test-name
 
@@ -54,7 +57,7 @@ elif [[ ! -x "${runScript}" ]]; then
     error=1
 fi
 
-if [[ !(-f "${expectMd}" && -r "${expectMd}") ]]; then
+if [[ !(-f "${expectMd}" && -r "${expectMd}") ]] && (( !doUpdate )); then
     error-msg "Expected output not found for test: ${testName}"
     error=1
 fi
@@ -70,15 +73,21 @@ fi
 
 echo "# ${testName}"
 
-expectedOutput="$(cat "${expectMd}")" \
-|| exit "$?"
-
 testOutput="$("${runScript}")" \
 || {
     echo "${testOutput}"
     echo "Run script exited with code: $?"
     exit 1
 }
+
+if (( doUpdate )); then
+    echo >"${expectMd}" "${testOutput}" \
+    || exit "$?"
+    exit
+fi
+
+expectedOutput="$(cat "${expectMd}")" \
+|| exit "$?"
 
 if cmp "${testOutput}" "${expectedOutput}"; then
     echo "## passed"
