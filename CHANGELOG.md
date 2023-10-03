@@ -5,8 +5,9 @@ Changelog
 
 Notable changes:
 
-* New interactive `ubik`, which will use one found on `PATH` as a last resort.
+* Added a simple test harness, and made a handful of tests.
 * `bashy-core`:
+  * New interactive `ubik`, which will use one found on `PATH` as a last resort.
   * `arg-processor`: New post-process hook `post-process-args-call`.
 * `bashy-basics`:
   * `buildy`:
