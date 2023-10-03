@@ -12,6 +12,7 @@
 # (including stderr) to stdout.
 function call-and-log-as-test {
     local label="$1"
+    shift
     local cmd=("$@")
 
     echo ''
