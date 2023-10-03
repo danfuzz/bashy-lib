@@ -1,0 +1,36 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$(readlink -f "$0")")/../../_init.sh" || exit "$?"
+
+
+#
+# The test.
+#
+
+define-usage $'
+    ${name} -- This is the short
+    help for the command.
+
+    This is the longer help.
+
+    ${help}
+'
+
+what="$1"
+
+case "${what}" in
+    long)
+        usage
+        echo '(no exit expected)'
+        ;;
+    short)
+        usage --short
+        echo '(no exit expected)'
+        ;;
+    *)
+        (exit "${what}") || usage --short
+        echo '(exit expected; should not see this)'
+        ;;
+esac
