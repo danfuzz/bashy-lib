@@ -165,7 +165,7 @@ while IFS='' read -r -d $'\0' file; do
     fi
 
     if (( fullPaths )); then
-        file="$(readlink -f "${file}")" \
+        file="$(readlink -f -- "${file}")" \
         || exit 1
     fi
 
