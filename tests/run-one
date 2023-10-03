@@ -89,14 +89,12 @@ fi
 expectedOutput="$(cat "${expectMd}")" \
 || exit "$?"
 
-if cmp <(echo "${testOutput}") <(echo "${expectedOutput}"); then
+if cmp >/dev/null "${expectMd}" <(echo "${testOutput}"); then
     echo "## passed"
 else
     echo "## failed"
     echo ''
-    diff -u \
-        <(echo "${expectedOutput}") \
-        <(echo "${testOutput}") \
+    diff -u "${expectMd}" <(echo "${testOutput}") \
     | awk '
         # Fix up the diff labels
         !done && /^---/ {
