@@ -1,0 +1,53 @@
+#!/bin/bash
+#
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$(readlink -f "$0")")/_init.sh" || exit "$?"
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} [<opt> ...] [--]
+
+    Runs all the tests.
+
+    ${help}
+'
+
+# Want help?
+opt-action --call='{ usage; exit }' help/h
+
+process-args "$@" || usage --short
+
+
+#
+# Main script
+#
+
+jset-array --raw allTests "$(
+    lib ls-files --output=array --sort \
+        --cd="$(this-cmd-dir)" --dirs --include='^[0-9]+-[^/]+/[0-9]+-' \
+    || echo '["error"]'
+)" \
+|| exit "$?"
+
+if [[ ${allTests[0]} == 'error' ]]; then
+    exit 1
+fi
+
+errors=0
+for test in "${allTests[@]}"; do
+    "$(this-cmd-dir)/run-one" "${test}" \
+    || (( errors++ ))
+done
+
+if (( errors == 0 )); then
+    echo 'All passed. Yay!'
+else
+    echo "${errors} error(s). Alas."
+    exit 1
+fi

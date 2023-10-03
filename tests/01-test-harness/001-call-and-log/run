@@ -1,0 +1,12 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$(readlink -f "$0")")/../../_test-init.sh" || exit "$?"
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test '1' "${cmd}" '' '' 0
+call-and-log-as-test '2' "${cmd}" '' '' 1
+call-and-log-as-test '3' "${cmd}" 'hello' '' 127
+call-and-log-as-test '4' "${cmd}" '' 'eek' 255
