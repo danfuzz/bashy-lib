@@ -344,7 +344,7 @@ function rest-arg {
         _argproc_initStatements+=("${optVar}=()")
     fi
 
-    _argproc_set-arg-description "${specName}" argument || return 1
+    _argproc_set-arg-description "${specName}" rest-argument || return 1
 
     local desc="argument <${specName}>"
     local handlerBody="$(
@@ -823,6 +823,9 @@ function _argproc_set-arg-description {
             ;;
         option)
             desc="option --${longName}"
+            ;;
+        rest-argument)
+            desc="rest argument <${longName}...>"
             ;;
         *)
             error-msg "Unknown type: ${typeName}"
