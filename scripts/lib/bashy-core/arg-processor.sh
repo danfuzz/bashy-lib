@@ -344,7 +344,7 @@ function rest-arg {
         _argproc_initStatements+=("${optVar}=()")
     fi
 
-    _argproc_set-arg-description "${specName}" argument || return 1
+    _argproc_set-arg-description "${specName}" rest-argument || return 1
 
     local desc="argument <${specName}>"
     local handlerBody="$(
@@ -824,6 +824,9 @@ function _argproc_set-arg-description {
         option)
             desc="option --${longName}"
             ;;
+        rest-argument)
+            desc="rest argument <${longName}...>"
+            ;;
         *)
             error-msg "Unknown type: ${typeName}"
             return 1
@@ -900,13 +903,13 @@ function _argproc_statements-from-args {
         shift
     done
 
-    local statement
-    for statement in "${_argproc_positionalFuncs[@]}"; do
+    local func
+    for func in "${_argproc_positionalFuncs[@]}"; do
         if (( $# == 0 )); then
             break
         fi
 
-        _argproc_statements+=("${statement} $(_argproc_quote "$1")")
+        _argproc_statements+=("${func} $(_argproc_quote "$1")")
         shift
     done
 

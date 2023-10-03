@@ -1,0 +1,114 @@
+#!/bin/bash
+#
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$(readlink -f "$0")")/_init.sh" || exit "$?"
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} [<opt> ...] [--] <test-name>
+
+    Runs a single named test.
+
+    --update
+      Update the expected output to match the actual output.
+
+    ${help}
+'
+
+# Want help?
+opt-action --call='{ usage; exit }' help/h
+
+# Update the expected output?
+opt-toggle --var=doUpdate update
+
+# The test to run.
+positional-arg --required --var=testName --filter='/^[^/]+/[^/]+$/' test-name
+
+process-args "$@" || usage --short
+
+
+#
+# Main script
+#
+
+testDir="$(this-cmd-dir)/${testName}"
+runScript="${testDir}/run"
+infoTxt="${testDir}/info.txt"
+expectMd="${testDir}/expect.md"
+
+if [[ !(-d "${testDir}" && -r "${testDir}") ]]; then
+    error-msg "Test not found: ${testName}"
+    exit 1
+fi
+
+error=0
+
+if [[ !(-f "${runScript}" && -r "${runScript}") ]]; then
+    error-msg "Run script not found for test: ${testName}"
+    error=1
+elif [[ ! -x "${runScript}" ]]; then
+    error-msg "Run script not executable for test: ${testName}"
+    error=1
+fi
+
+if [[ !(-f "${expectMd}" && -r "${expectMd}") ]] && (( !doUpdate )); then
+    error-msg "Expected output not found for test: ${testName}"
+    error=1
+fi
+
+if [[ !(-f "${infoTxt}" && -r "${infoTxt}") ]]; then
+    error-msg "Info file not found for test: ${testName}"
+    error=1
+fi
+
+if (( error )); then
+    exit 1
+fi
+
+echo "# ${testName}"
+
+testOutput="$("${runScript}")" \
+|| {
+    echo "${testOutput}"
+    echo "Run script exited with code: $?"
+    exit 1
+}
+
+if (( doUpdate )); then
+    echo >"${expectMd}" "${testOutput}" \
+    || exit "$?"
+    exit
+fi
+
+expectedOutput="$(cat "${expectMd}")" \
+|| exit "$?"
+
+if cmp >/dev/null "${expectMd}" <(echo "${testOutput}"); then
+    echo "## passed"
+else
+    echo "## failed"
+    echo ''
+    diff -u "${expectMd}" <(echo "${testOutput}") \
+    | awk '
+        # Fix up the diff labels
+        !done && /^---/ {
+            print "--- expected";
+            print "+++ got";
+            next;
+        }
+        !done && /^+++/ {
+            done = 1;
+            next;
+        }
+        {
+            print;
+        }
+    '
+    exit 1
+fi
