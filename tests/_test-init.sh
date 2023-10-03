@@ -15,7 +15,6 @@ function call-and-log-as-test {
     shift
     local cmd=("$@")
 
-    echo ''
     echo "## ${label}"
     echo ''
 
@@ -29,4 +28,5 @@ function call-and-log-as-test {
     echo '```'
     echo ''
     echo "### exit: ${exitCode}"
+    echo ''
 }
