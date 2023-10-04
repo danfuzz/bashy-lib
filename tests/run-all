@@ -28,20 +28,26 @@ process-args "$@" || usage --short
 # Main script
 #
 
-jset-array --raw allTests "$(
+jset-array --raw allRunScripts "$(
     lib ls-files --output=array --sort \
-        --cd="$(this-cmd-dir)" --dirs --include='^[0-9]+-[^/]+/[0-9]+-' \
+        --cd="$(this-cmd-dir)" --include='^[0-9][-/a-z0-9]+/run' \
     || echo '["error"]'
 )" \
 || exit "$?"
 
-if [[ ${allTests[0]} == 'error' ]]; then
+if [[ ${allRunScripts[0]} == 'error' ]]; then
     exit 1
 fi
 
 errors=0
-for test in "${allTests[@]}"; do
-    "$(this-cmd-dir)/run-one" "${test}" \
+for run in "${allRunScripts[@]}"; do
+    if [[ ! -x "${run}" ]]; then
+        echo "Not runnable: ${run}"
+        (( errors++ ))
+        continue
+    fi
+
+    "$(this-cmd-dir)/run-one" "${run%/run}" \
     || (( errors++ ))
 done
 

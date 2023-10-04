@@ -28,7 +28,7 @@ opt-action --call='{ usage; exit }' help/h
 opt-toggle --var=doUpdate update
 
 # The test to run.
-positional-arg --required --var=testName --filter='/^[^/]+/[^/]+$/' test-name
+positional-arg --required --var=testName --filter='/^[0-9][-/a-z0-9]+$/' test-name
 
 process-args "$@" || usage --short
 
@@ -36,6 +36,9 @@ process-args "$@" || usage --short
 #
 # Main script
 #
+
+# Drop final `/` on name if present
+testName="${testName%/}"
 
 testDir="$(this-cmd-dir)/${testName}"
 runScript="${testDir}/run"
