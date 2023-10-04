@@ -714,21 +714,21 @@ function _argproc_janky-args {
             error-msg "Invalid option syntax: ${a}"
             return 1
         fi
-   done
+    done
 
-   if (( !optsDone || (${#args[@]} == 0) )); then
-       error-msg 'Missing argument specification.'
-       return 1
-   elif (( ${#args[@]} > 1 && !multiArg )); then
-       error-msg 'Too many arguments.'
-       return 1
-   elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then
-       # Special case for `--call` and `--var` (which always go together).
-       if [[ (${optCall} == '') && (${optVar} == '') ]]; then
-           error-msg 'Must use at least one of --call or --var.'
-           return 1
-       fi
-   fi
+    if (( !optsDone || (${#args[@]} == 0) )); then
+        error-msg 'Missing argument specification.'
+        return 1
+    elif (( ${#args[@]} > 1 && !multiArg )); then
+        error-msg 'Too many arguments.'
+        return 1
+    elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then
+        # Special case for `--call` and `--var` (which always go together).
+        if [[ (${optCall} == '') && (${optVar} == '') ]]; then
+            error-msg 'Must use at least one of --call or --var.'
+            return 1
+        fi
+    fi
 }
 
 # Parses a single argument / option spec. `--abbrev` to accept an abbreviation.
