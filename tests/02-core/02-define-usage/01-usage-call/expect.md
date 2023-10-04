@@ -1,17 +1,13 @@
 ## short
 
-### stdout
-```
-(no exit expected)
-```
-
 ### stderr
 ```
-This is an error!
+This is not actually an error! (But we can pretend.)
 
 the-cmd -- This is the short
 help for the command.
-the-cmd [--help | -h]
+the-cmd another-option-variant
+(no exit expected; should see this)
 ```
 
 ### exit: 0
@@ -20,11 +16,6 @@ the-cmd [--help | -h]
 
 ## long
 
-### stdout
-```
-(no exit expected)
-```
-
 ### stderr
 ```
 the-cmd -- This is the short
@@ -32,9 +23,10 @@ help for the command.
 
 This is the longer help.
 
-the-cmd [--help | -h]
+the-cmd another-option-variant
 
-Displays this message.
+And more help about that.
+(no exit expected; should see this)
 ```
 
 ### exit: 0
@@ -49,7 +41,7 @@ This is an error!
 
 the-cmd -- This is the short
 help for the command.
-the-cmd [--help | -h]
+the-cmd another-option-variant
 ```
 
 ### exit: 1
@@ -64,7 +56,7 @@ This is an error!
 
 the-cmd -- This is the short
 help for the command.
-the-cmd [--help | -h]
+the-cmd another-option-variant
 ```
 
 ### exit: 99

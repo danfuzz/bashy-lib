@@ -15,7 +15,9 @@ define-usage $'
 
     This is the longer help.
 
-    ${help}
+    ${name} another-option-variant
+
+    And more help about that.
 '
 
 what="$1"
@@ -23,16 +25,16 @@ what="$1"
 case "${what}" in
     long)
         usage
-        echo '(no exit expected)'
+        echo 1>&2 '(no exit expected; should see this)'
         ;;
     short)
-        echo 1>&2 'This is an error!'
+        echo 1>&2 'This is not actually an error! (But we can pretend.)'
         usage --short
-        echo '(no exit expected)'
+        echo 1>&2 '(no exit expected; should see this)'
         ;;
     *)
         echo 1>&2 'This is an error!'
         (exit "${what}") || usage --short
-        echo '(exit expected; should not see this)'
+        echo 1>&2 '(exit expected; should not see this)'
         ;;
 esac
