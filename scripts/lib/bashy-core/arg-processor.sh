@@ -352,16 +352,9 @@ function rest-arg {
         _argproc_initStatements+=("${optVar}=()")
     fi
 
-    _argproc_set-arg-description "${specName}" rest-argument || return 1
-
-    local desc="argument <${specName}>"
-    local handlerBody="$(
-        _argproc_handler-body "${specName}" "${desc}" "${optFilter}" "${optCall}" "${optVar}"
-    )"
-
-    eval 'function _argproc:rest {
-        '"${handlerBody}"'
-    }'
+    _argproc_define-multi-value-arg \
+        "${specName}" "${optFilter}" "${optCall}" "${optVar}" \
+    || return "$?"
 }
 
 
@@ -458,6 +451,25 @@ function _argproc_define-abbrev {
 
     eval 'function _argproc:abbrev-'"${abbrevChar}"' {
         _argproc:long-'"${longName}"' "$@"
+    }'
+}
+
+# Defines an activation function for a multi-value argument.
+function _argproc_define-multi-value-arg {
+    local longName="$1"
+    local filter="$2"
+    local callFunc="$3"
+    local varName="$4"
+
+    _argproc_set-arg-description "${specName}" rest-argument || return 1
+
+    local desc="argument <${longName}>"
+    local handlerBody="$(
+        _argproc_handler-body "${longName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+    )"
+
+    eval 'function _argproc:rest {
+        '"${handlerBody}"'
     }'
 }
 
@@ -844,7 +856,7 @@ function _argproc_set-arg-description {
     local funcName="_argproc:arg-description-${longName}"
 
     if declare -F "${funcName}" >/dev/null; then
-        error-msg --file-line=1 "Duplicate argument: ${longName}"
+        error-msg --file-line=3 "Duplicate argument: ${longName}"
         _argproc_declarationError=1
         return 1
     fi
