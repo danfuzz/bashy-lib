@@ -10,16 +10,11 @@
 # Argument parsing
 #
 
-define-usage $'
+define-usage --with-help $'
     ${name} [<opt> ...] [--]
 
     Runs all the tests.
-
-    ${help}
 '
-
-# Want help?
-opt-action --call='{ usage; exit }' help/h
 
 process-args "$@" || usage --short
 

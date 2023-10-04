@@ -10,7 +10,7 @@
 # Argument parsing
 #
 
-define-usage $'
+define-usagem --with-help $'
     ${name} [<opt> ...] [--] <test-name>
 
     Runs a single named test. The name of the test is fundamentally the partial
@@ -28,12 +28,7 @@ define-usage $'
 
     --update
       Update the expected output to match the actual output.
-
-    ${help}
 '
-
-# Want help?
-opt-action --call='{ usage; exit }' help/h
 
 # Update the expected output?
 opt-toggle --var=doUpdate update
