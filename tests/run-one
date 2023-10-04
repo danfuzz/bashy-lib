@@ -15,8 +15,13 @@ define-usage $'
 
     Runs a single named test. The name of the test is fundamentally the partial
     path from the `tests` directory to the directory of the test, but as a
-    commandline convenience, any prefix on the test which looks like a path to
-    the `tests` directory is ignored.
+    commandline convenience:
+
+    * Any prefix on the test which looks like a path to the `tests` directory is
+      ignored.
+    * If the name consists only of digits and slashes, then it is expanded to
+      include the names of the test directories in question, e.g. `01/005` might
+      expand into `01-smoke-tests/005-dry-ice`.
 
     Note that all test directories are expected to be named with a sequential
     numeric prefix followed by a dash.
@@ -34,7 +39,7 @@ opt-action --call='{ usage; exit }' help/h
 opt-toggle --var=doUpdate update
 
 # The test to run.
-positional-arg --required --var=testName --filter='/[0-9][-/a-z0-9]+$/' test-name
+positional-arg --required --var=testName --filter='/[0-9][-/a-z0-9]*$/' test-name
 
 process-args "$@" || usage --short
 
@@ -43,8 +48,45 @@ process-args "$@" || usage --short
 # Main script
 #
 
+testsDir="$(this-cmd-dir)"
+
+if [[ ${testName} =~ ^[/0-9]+$ ]]; then
+    # The name appears to be a shorthand that omits the non-numeric portion of
+    # the directories. Try to expand it.
+    newName='/'
+    while [[ ${testName} =~ ^/*([0-9]+)(.*)$ ]]; do
+        part="${BASH_REMATCH[1]}"
+        testName="${BASH_REMATCH[2]}"
+        partExpanded=($(
+            lib ls-files --output=lines --cd="${testsDir}${newName}" --dirs \
+                --depth=1 --include="^${part}-"
+        ))
+
+        case "${#partExpanded[@]}" in
+            0)
+                error-msg 'Test not found:'
+                error-msg "  ${newName#/}${part}"
+                exit 1
+                ;;
+            1)
+                : # It's good
+                ;;
+            *)
+                error-msg 'Ambiguous test name:'
+                error-msg "  ${newName#/}${part}"
+                error-msg --exec printf '    %s\n' "${partExpanded[@]}"
+                exit 1
+                ;;
+        esac
+
+        newName+="${partExpanded[0]}/"
+    done
+
+    testName="tests${newName}"
+fi
+
 # Drop initial `.../tests/` and/or final `/` on name, if present.
-[[ ${testName} =~ ^((.*/)?tests/)?([0-9][-/a-z0-9]+)/?$ ]] || {
+[[ ${testName} =~ ^((.*/)?tests/)?([0-9][-/a-z0-9]*[a-z0-9])/?$ ]] || {
     error-msg 'Cannot parse test name:'
     error-msg "  ${testName}"
     usage --short
@@ -52,7 +94,7 @@ process-args "$@" || usage --short
 }
 testName="${BASH_REMATCH[3]}"
 
-testDir="$(this-cmd-dir)/${testName}"
+testDir="${testsDir}/${testName}"
 runScript="${testDir}/run"
 infoTxt="${testDir}/info.txt"
 expectMd="${testDir}/expect.md"
@@ -84,7 +126,8 @@ if [[ !(-f "${expectMd}" && -r "${expectMd}") ]] && (( !doUpdate )); then
 fi
 
 if [[ !(-f "${infoTxt}" && -r "${infoTxt}") ]]; then
-    error-msg "Info file not found for test: ${testName}"
+    error-msg 'Info file not found for test:'
+    error-msg "  ${testName}"
     error=1
 fi
 
