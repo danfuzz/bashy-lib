@@ -784,7 +784,7 @@ function _argproc_parse-spec {
     local spec="$1"
 
     if ! [[ ${spec} =~ ^([a-zA-Z0-9][-a-zA-Z0-9]*)(/[a-zA-Z])?(=.*)?$ ]]; then
-        error-msg --file-line=1 "Invalid spec: ${spec}"
+        error-msg --file-line=2 "Invalid spec: ${spec}"
         _argproc_declarationError=1
         return 1
     fi
@@ -796,7 +796,7 @@ function _argproc_parse-spec {
     if (( abbrevOk )); then
         specAbbrev="${abbrev:1}" # `:1` to drop the slash.
     elif [[ ${abbrev} != '' ]]; then
-        error-msg --file-line=1 "Abbrev not allowed in spec: ${spec}"
+        error-msg --file-line=2 "Abbrev not allowed in spec: ${spec}"
         _argproc_declarationError=1
         return 1
     fi
@@ -813,7 +813,7 @@ function _argproc_parse-spec {
             specValue="${value}"
         fi
     elif [[ ${value} != '' ]]; then
-        error-msg --file-line=1 "Value not allowed in spec: ${spec}"
+        error-msg --file-line=2 "Value not allowed in spec: ${spec}"
         _argproc_declarationError=1
         return 1
     fi

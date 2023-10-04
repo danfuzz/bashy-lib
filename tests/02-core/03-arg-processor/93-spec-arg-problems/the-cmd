@@ -1,0 +1,54 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+# Missing spec.
+opt-action --var=var1
+opt-value --var=var2
+opt-choice --var=var3
+opt-toggle --var=var4
+positional-arg --var=var5
+rest-arg --var=var6
+
+# Too many specs.
+opt-action --var=var1 x y
+opt-value --var=var2 x y
+opt-toggle --var=var3 x y
+positional-arg --var=var4 x y
+rest-arg --var=var5 x y
+
+# Invalid spec syntax.
+opt-action --var=var1 'foo%bar'
+opt-choice --var=var2 beep bloop@99
+opt-value --var=var3 -- -foo
+opt-toggle --var=var4 'beep boop'
+positional-arg --var=var5 '/x'
+rest-arg --var=var6 _why
+
+# Abbreviation (short option) not allowed.
+opt-value --var=var1 bloop/b
+opt-toggle --var=var2 zonk/z
+positional-arg --var=var3 crump/c
+rest-arg --var=var4 rhumba/r
+
+# Value not allowed.
+opt-choice --var=var1 florp foo=x bar
+positional-arg --var=var2 fleep=123
+rest-arg --var=var3 floop=xyz
+
+process-args "$@" || usage --short
+
+echo 'Nopers.'
