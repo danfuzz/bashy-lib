@@ -16,43 +16,6 @@ _test_anyLoggedResults=0
 # Library functions
 #
 
-function do-stream-marking {
-    local pid=''
-    if [[ $1 == '--wait' ]]; then
-        shift
-        IFS='' read -r pid
-    fi
-
-    local mark="$1"
-
-    if [[ ${pid} != '' ]]; then
-        while kill 2>/dev/null -0 "${pid}"; do
-            sleep 0.1
-        done
-    fi
-
-    local any=0
-
-    local str
-    while IFS='' read -r str; do
-        if (( !any )); then
-            any=1
-            printf '%s:\n' "${mark}"
-        fi
-        printf '%s %s\n' "${mark}" "${str}"
-    done
-
-    # If we hit EOF on the read, that is, if the final line of output read
-    # didn't end with a newline, then `str` will be non-empty.
-    if [[ ${str} != '' ]]; then
-        if (( !any )); then
-            any=1
-            printf '%s:\n' "${mark}"
-        fi
-        printf '%s- %s\n' "${mark}" "${str}"
-    fi
-}
-
 # Calls a function, wrapping its output in a standard form, writing it all
 # (including stderr) to stdout.
 function call-and-log-as-test {
@@ -71,8 +34,8 @@ function call-and-log-as-test {
     echo "## ${label}"
     echo ''
 
-    # What's going on here: We want to capture both stdout and stderr of the
-    # call to log, and then emit them to stdout in a specific order and with
+    # What's going on here: We capture both stdout and stderr of the call to
+    # log, and then emit them to stdout in a specific order and with
     # standardized markings.
 
     local output
@@ -81,8 +44,8 @@ function call-and-log-as-test {
             # Print the PID of the subshell we are currently in.
             sh 1>&2 -c 'echo "${PPID}"'
 
-            "${cmd[@]}" > >(do-stream-marking stdout)
-        ) 2> >(do-stream-marking --wait stderr)
+            "${cmd[@]}" > >(_test_do-stream-marking stdout)
+        ) 2> >(_test_do-stream-marking --wait stderr)
     )"
     local exitCode="$?"
 
@@ -130,4 +93,48 @@ function call-and-log-as-test {
     '
 
     echo "### exit: ${exitCode}"
+}
+
+
+#
+# Internal functions
+#
+
+# Helper for `call-and-log-as-test`, which re-emits its input with each line
+# prefixed, optionally waiting for a particular PID to exit first.
+function _test_do-stream-marking {
+    local pid=''
+    if [[ $1 == '--wait' ]]; then
+        shift
+        IFS='' read -r pid
+    fi
+
+    local mark="$1"
+
+    if [[ ${pid} != '' ]]; then
+        while kill 2>/dev/null -0 "${pid}"; do
+            sleep 0.1
+        done
+    fi
+
+    local any=0
+
+    local str
+    while IFS='' read -r str; do
+        if (( !any )); then
+            any=1
+            printf '%s:\n' "${mark}"
+        fi
+        printf '%s %s\n' "${mark}" "${str}"
+    done
+
+    # If we hit EOF on the read, that is, if the final line of output read
+    # didn't end with a newline, then `str` will be non-empty.
+    if [[ ${str} != '' ]]; then
+        if (( !any )); then
+            any=1
+            printf '%s:\n' "${mark}"
+        fi
+        printf '%s- %s\n' "${mark}" "${str}"
+    fi
 }
