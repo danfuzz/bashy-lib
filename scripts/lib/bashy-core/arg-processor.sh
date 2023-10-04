@@ -744,6 +744,11 @@ function _argproc_janky-args {
         error-msg --file-line=2 'Cannot use both --required and --init.'
         _argproc_declarationError=1
         return 1
+    elif (( gotInit )) && [[ ${optVar} == '' ]]; then
+        # Special case: `--init` is meaningless without `--var`.
+        error-msg --file-line=2 'Must use --var when --init is used.'
+        _argproc_declarationError=1
+        return 1
     elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then
         # Special case for `--call` and `--var` (which always go together).
         if [[ (${optCall} == '') && (${optVar} == '') ]]; then

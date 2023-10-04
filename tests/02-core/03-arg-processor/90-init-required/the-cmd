@@ -15,9 +15,15 @@ define-usage $'
     This is a test command.
 '
 
+# Can't use both `--init` and `--required`.
 opt-value --required --var=var1 --init=florp some-value
 opt-choice --init=maybe --required --var=var3 yes no
 positional-arg --init=x --var=var4 --required some-position
+
+# Can't use `--init` without `--var`.
+opt-value --init=x --call=func1 beep
+opt-choice --init=x --call=func2 bomp blump
+positional-arg --init=x --call=func3 plomp
 
 process-args "$@" || usage --short
 
