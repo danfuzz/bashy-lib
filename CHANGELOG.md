@@ -21,7 +21,7 @@ Notable changes:
   * New command `jstring`.
 * New sub-library `bashy-node`, for Node-specific stuff, particularly help
   building and maintaining Node projects. As with `make-distro` (above), this
-  started out life in the sibling project `lactoserv`. **Nore:** This
+  started out life in the sibling project `lactoserv`. **Note:** This
   sub-library is fairly opinionated.
 
 ### v2.4 -- 2023-09-26
