@@ -37,7 +37,7 @@ process-args "$@" || usage --short
 # Main script
 #
 
-# Drop final `/` on name if present
+# Drop final `/` on name if present.
 testName="${testName%/}"
 
 testDir="$(this-cmd-dir)/${testName}"
