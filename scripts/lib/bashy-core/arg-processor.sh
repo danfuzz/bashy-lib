@@ -641,7 +641,7 @@ function _argproc_janky-args {
         fi
 
         if [[ ${a} =~ ^--. ]]; then
-            if ! [[ ${a} =~ ^--([a-z]+)(=.*)?$ ]]; then
+            if ! [[ ${a} =~ ^--([a-z][-a-z]+)(=.*)?$ ]]; then
                 error-msg --file-line=2 "Invalid option syntax: ${a}"
                 _argproc_declarationError=1
                 return 1
