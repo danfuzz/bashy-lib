@@ -15,6 +15,7 @@ define-usage $'
     This is a test command.
 '
 
+opt-action act
 opt-value some-value
 opt-choice yes no
 opt-toggle boop

@@ -15,6 +15,7 @@ define-usage $'
     This is a test command.
 '
 
+opt-action --boop --call=func1 act
 opt-value --florp --var=var1 some-value
 opt-choice --fleep=zonk --call=func1 yes no
 opt-toggle --init=23 --flomp --var=var2 boop
