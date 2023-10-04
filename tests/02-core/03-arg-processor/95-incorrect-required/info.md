@@ -1,1 +1,1 @@
-Test for error detection of duplicate argument declaration.
+Test for error detection of cases where `--required` isn't allowed.
