@@ -3,10 +3,11 @@
 ### stderr
 ```
 the-cmd: 
-the-cmd:18: Unknown option: --florp
-the-cmd:19: Unknown option: --fleep
-the-cmd:20: Unknown option: --flomp
-the-cmd:21: Unknown option: --beep
+the-cmd:18: Must use at least one of --call or --var.
+the-cmd:19: Must use at least one of --call or --var.
+the-cmd:20: Must use at least one of --call or --var.
+the-cmd:21: Must use at least one of --call or --var.
+the-cmd:22: Must use at least one of --call or --var.
 Cannot process arguments, due to declaration errors.
 
 the-cmd -- test command

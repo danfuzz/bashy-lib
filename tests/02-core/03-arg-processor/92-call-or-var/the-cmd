@@ -19,7 +19,7 @@ opt-value some-value
 opt-choice yes no
 opt-toggle boop
 positional-arg --filter='/boop/' some-position
-rest-arg --required the-rest
+rest-arg --filter='/x/' the-rest
 
 process-args "$@" || usage --short
 
