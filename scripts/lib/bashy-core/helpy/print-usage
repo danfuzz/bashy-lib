@@ -38,9 +38,7 @@ define-usage $'
       prepends an extra newline at the start. Note: For this to work as intended,
       always put a double-newline after each command summary section.
 
-    ${name} [--help | -h]
-
-    Displays this message.
+    ${help}
 '
 
 # Want help?
