@@ -1,0 +1,16 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'with --help' \
+    "${cmd}" --help
+
+call-and-log-as-test 'with -h' \
+    "${cmd}" -h
+
+call-and-log-as-test 'short help from error' \
+    "${cmd}" --zoinks

@@ -1,0 +1,21 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# The test.
+#
+
+define-usage --with-help $'
+    ${name} -- This is the short
+    help for the command.
+
+    This is the longer help.
+'
+
+process-args "$@" || usage --short
+
+echo 'Finished.'
