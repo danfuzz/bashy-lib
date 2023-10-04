@@ -16,15 +16,14 @@ define-usage --with-help $'
 
     Prints a usage message. This does the following to the given <message>:
 
-    * Trim away empty lines at the start and end of the string.
-    * Trim away whitespace from the start of lines, based on the indentation of
+    * Trims away empty lines at the start and end of the string.
+    * Trims away whitespace from the start of lines, based on the indentation of
       the first not-just-whitespace line.
-    * Substitute variables (see below) in the form `$${name}`.
-    * Substitute `$$$$` with a literal `$$`.)
-    * Print everything to `stderr`.
+    * Substitutes variables (see below) in the form `$${name}`.
+    * Substitutes `$$$$` with a literal `$$`.)
+    * Prints everything to `stderr`.
 
     Available variables:
-    `$${help}` -- The standard blurb about the usual help option `--help` / `-h`
     `$${name}` -- The name of the command, as passed via `--name`.
     `$${stderr}` -- The standard blurb about the usual stderr control options
       `--verbose` and `--quiet` / `-q`.
@@ -63,12 +62,6 @@ fi
 vars="
 name
 ${cmdName}
-;
-
-help
-    \${name} [--help | -h]
-
-    Displays this message.
 ;
 
 stderr
