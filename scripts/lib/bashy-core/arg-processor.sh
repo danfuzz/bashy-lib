@@ -51,6 +51,9 @@
 # name. Generated functions use the convention `_argproc:<name>`, to make the
 # origin clear and to avoid collisions.
 
+# Was there an error during argument and option declaration?
+_argproc_declarationError=0
+
 # List of statements to run just before parsing. This includes:
 #
 # * global variable assignment statements
@@ -268,6 +271,11 @@ function post-process-args-call {
 function process-args {
     local _argproc_error=0
     local _argproc_s
+
+    if (( _argproc_declarationError )); then
+        error-msg 'Cannot process arguments, due to declaration errors.'
+        return 1
+    fi
 
     # Run all the pre-parse statements.
     for _argproc_s in "${_argproc_initStatements[@]}"; do
@@ -635,6 +643,7 @@ function _argproc_janky-args {
         if [[ ${a} =~ ^--. ]]; then
             if ! [[ ${a} =~ ^--([a-z]+)(=.*)?$ ]]; then
                 error-msg --file-line=2 "Invalid option syntax: ${a}"
+                _argproc_declarationError=1
                 return 1
             fi
 
@@ -643,6 +652,7 @@ function _argproc_janky-args {
 
             if ! [[ ${argSpecs} =~ " ${name} " ]]; then
                 error-msg --file-line=2 "Unknown option: --${name}"
+                _argproc_declarationError=1
                 return 1
             fi
 
@@ -692,6 +702,7 @@ function _argproc_janky-args {
                     ;;
                 *)
                     error-msg --file-line=2 "Unknown arg-processing option: --${name}"
+                    _argproc_declarationError=1
                     return 1
                     ;;
             esac
@@ -702,6 +713,7 @@ function _argproc_janky-args {
                 else
                     error-msg --file-line=2 "Value required for option --${name}."
                 fi
+                _argproc_declarationError=1
                 return 1
             fi
         elif [[ ${a} == '--' ]]; then
@@ -714,24 +726,29 @@ function _argproc_janky-args {
             optsDone=1
         else
             error-msg --file-line=2 "Invalid option syntax: ${a}"
+            _argproc_declarationError=1
             return 1
         fi
     done
 
     if (( !optsDone || (${#args[@]} == 0) )); then
         error-msg --file-line=2 'Missing argument specification.'
+        _argproc_declarationError=1
         return 1
     elif (( ${#args[@]} > 1 && !multiArg )); then
         error-msg --file-line=2 'Too many arguments.'
+        _argproc_declarationError=1
         return 1
     elif (( gotInit && optRequired )); then
         # Special case: `--init` is meaningless if `--required` was passed.
         error-msg --file-line=2 'Cannot use both --required and --init.'
+        _argproc_declarationError=1
         return 1
     elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then
         # Special case for `--call` and `--var` (which always go together).
         if [[ (${optCall} == '') && (${optVar} == '') ]]; then
             error-msg --file-line=2 'Must use at least one of --call or --var.'
+            _argproc_declarationError=1
             return 1
         fi
     fi
@@ -752,6 +769,7 @@ function _argproc_parse-spec {
             --value-eq) valueOk=1; valueWithEq=1 ;;
             *)
                 error-msg --file-line=1 "Unrecognized option: $1"
+                _argproc_declarationError=1
                 return 1
                 ;;
         esac
@@ -762,6 +780,7 @@ function _argproc_parse-spec {
 
     if ! [[ ${spec} =~ ^([a-zA-Z0-9][-a-zA-Z0-9]*)(/[a-zA-Z])?(=.*)?$ ]]; then
         error-msg --file-line=1 "Invalid spec: ${spec}"
+        _argproc_declarationError=1
         return 1
     fi
 
@@ -773,6 +792,7 @@ function _argproc_parse-spec {
         specAbbrev="${abbrev:1}" # `:1` to drop the slash.
     elif [[ ${abbrev} != '' ]]; then
         error-msg --file-line=1 "Abbrev not allowed in spec: ${spec}"
+        _argproc_declarationError=1
         return 1
     fi
 
@@ -789,6 +809,7 @@ function _argproc_parse-spec {
         fi
     elif [[ ${value} != '' ]]; then
         error-msg --file-line=1 "Value not allowed in spec: ${spec}"
+        _argproc_declarationError=1
         return 1
     fi
 }
@@ -804,6 +825,7 @@ function _argproc_regex-filter-check {
     for arg in "$@"; do
         if [[ ! (${arg} =~ ${regex}) ]]; then
             error-msg --file-line=1 "Invalid value for ${desc}: ${arg}"
+            _argproc_declarationError=1
             return 1
         fi
     done
@@ -819,6 +841,7 @@ function _argproc_set-arg-description {
 
     if declare -F "${funcName}" >/dev/null; then
         error-msg --file-line=1 "Duplicate argument: ${longName}"
+        _argproc_declarationError=1
         return 1
     fi
 
@@ -835,6 +858,7 @@ function _argproc_set-arg-description {
             ;;
         *)
             error-msg --file-line=1 "Unknown type: ${typeName}"
+            _argproc_declarationError=1
             return 1
             ;;
     esac

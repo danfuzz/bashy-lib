@@ -7,6 +7,7 @@ Notable changes:
 
 * `bashy-core`:
   * `stderr-msg`: New option `--file-line`.
+  * `arg-processor`: Tightened up error checking.
 
 ### v2.5 -- 2023-10-04
 
