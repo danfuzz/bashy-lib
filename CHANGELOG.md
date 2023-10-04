@@ -1,7 +1,7 @@
 Changelog
 =========
 
-### ??? -- ???
+### v2.5 -- 2023-10-04
 
 Notable changes:
 
