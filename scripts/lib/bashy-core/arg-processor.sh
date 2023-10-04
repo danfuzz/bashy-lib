@@ -829,8 +829,7 @@ function _argproc_regex-filter-check {
     local arg
     for arg in "$@"; do
         if [[ ! (${arg} =~ ${regex}) ]]; then
-            error-msg --file-line=1 "Invalid value for ${desc}: ${arg}"
-            _argproc_declarationError=1
+            error-msg "Invalid value for ${desc}: ${arg}"
             return 1
         fi
     done
