@@ -28,9 +28,13 @@ process-args "$@" || usage --short
 # Main script
 #
 
+testsDir="$(this-cmd-dir)"
+
+# Test directories are identified as directories that have a file called `run`
+# in them.
 jset-array --raw allRunScripts "$(
     lib ls-files --output=array --sort \
-        --cd="$(this-cmd-dir)" --include='^[0-9][-/a-z0-9]+/run' \
+        --cd="${testsDir}" --include='^[0-9][-/a-z0-9]+/run' \
     || echo '["error"]'
 )" \
 || exit "$?"
@@ -41,13 +45,7 @@ fi
 
 errors=0
 for run in "${allRunScripts[@]}"; do
-    if [[ ! -x "${run}" ]]; then
-        echo "Not runnable: ${run}"
-        (( errors++ ))
-        continue
-    fi
-
-    "$(this-cmd-dir)/run-one" "${run%/run}" \
+    "${testsDir}/run-one" "${run%/run}" \
     || (( errors++ ))
 done
 
