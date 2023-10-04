@@ -119,7 +119,7 @@ testName="${BASH_REMATCH[3]}"
 
 testDir="${testsDir}/${testName}"
 runScript="${testDir}/run"
-infoTxt="${testDir}/info.txt"
+infoFile="${testDir}/info.md"
 expectMd="${testDir}/expect.md"
 
 if [[ !(-d "${testDir}" && -r "${testDir}") ]]; then
@@ -141,7 +141,7 @@ if [[ !(-f "${expectMd}" && -r "${expectMd}") ]] && (( !doUpdate )); then
     emit-error 'Expected output not found.'
 fi
 
-if [[ !(-f "${infoTxt}" && -r "${infoTxt}") ]]; then
+if [[ !(-f "${infoFile}" && -r "${infoFile}") ]]; then
     emit-error 'Info file not found.'
 fi
 
