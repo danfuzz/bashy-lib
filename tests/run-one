@@ -45,10 +45,33 @@ process-args "$@" || usage --short
 
 
 #
+# Helper functions
+#
+
+# Any errors yet?
+anyErrors=0
+
+# Emits an error. This is only used once the test name has been successfully
+# found to be an existing test directory.
+function emit-error {
+    if (( !anyErrors )); then
+        error-msg 'Trouble running test:'
+        error-msg "  ${testName}"
+        error-msg ''
+        anyErrors=1
+    fi
+
+    error-msg "$@"
+}
+
+
+#
 # Main script
 #
 
 testsDir="$(this-cmd-dir)"
+
+# Expand (if necessary) and validate the given test name.
 
 if [[ ${testName} =~ ^[/0-9]+$ ]]; then
     # The name appears to be a shorthand that omits the non-numeric portion of
@@ -100,40 +123,33 @@ infoTxt="${testDir}/info.txt"
 expectMd="${testDir}/expect.md"
 
 if [[ !(-d "${testDir}" && -r "${testDir}") ]]; then
-    error-msg "Test not found: ${testName}"
+    emit-error "Test not found: ${testName}"
     exit 1
 fi
 
-error=0
+# Check the test directory for validity.
 
 if [[ !(-f "${runScript}" && -r "${runScript}") ]]; then
-    error-msg 'Run script not found for test:'
-    error-msg "  ${testName}"
-    error=1
+    emit-error 'Run script not found.'
 elif [[ ! -x "${runScript}" ]]; then
-    error-msg 'Run script not executable for test:'
-    error-msg "  ${testName}"
-    error-msg
-    error-msg 'Do this:'
-    error-msg "  chmod 755 ${runScript}"
-    error=1
+    emit-error 'Run script not executable. Do this:'
+    emit-error "  chmod 755 ${runScript}"
+    emit-error ''
 fi
 
 if [[ !(-f "${expectMd}" && -r "${expectMd}") ]] && (( !doUpdate )); then
-    error-msg 'Expected output not found for test:'
-    error-msg "  ${testName}"
-    error=1
+    emit-error 'Expected output not found.'
 fi
 
 if [[ !(-f "${infoTxt}" && -r "${infoTxt}") ]]; then
-    error-msg 'Info file not found for test:'
-    error-msg "  ${testName}"
-    error=1
+    emit-error 'Info file not found.'
 fi
 
-if (( error )); then
+if (( anyErrors )); then
     exit 1
 fi
+
+# Run the test!
 
 echo "# ${testName}"
 
