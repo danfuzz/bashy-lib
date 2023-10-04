@@ -53,15 +53,21 @@ fi
 error=0
 
 if [[ !(-f "${runScript}" && -r "${runScript}") ]]; then
-    error-msg "Run script not found for test: ${testName}"
+    error-msg 'Run script not found for test:'
+    error-msg "  ${testName}"
     error=1
 elif [[ ! -x "${runScript}" ]]; then
-    error-msg "Run script not executable for test: ${testName}"
+    error-msg 'Run script not executable for test:'
+    error-msg "  ${testName}"
+    error-msg
+    error-msg 'Do this:'
+    error-msg "  chmod 755 ${runScript}"
     error=1
 fi
 
 if [[ !(-f "${expectMd}" && -r "${expectMd}") ]] && (( !doUpdate )); then
-    error-msg "Expected output not found for test: ${testName}"
+    error-msg 'Expected output not found for test:'
+    error-msg "  ${testName}"
     error=1
 fi
 
