@@ -71,8 +71,6 @@ function call-and-log-as-test {
     echo "## ${label}"
     echo ''
 
-    # TODO!
-
     # What's going on here: We want to capture both stdout and stderr of the
     # call to log, and then emit them to stdout in a specific order and with
     # standardized markings.
