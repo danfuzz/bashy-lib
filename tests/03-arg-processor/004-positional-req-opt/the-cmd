@@ -1,0 +1,25 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$(readlink -f "$0")")/../../_init.sh" || exit "$?"
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+positional-arg --required --var=yesArg avec-yes
+
+positional-arg --var=someValue some-value
+
+process-args "$@" || usage --short
+
+printf 'avec-yes: %q\n' "${yesArg}"
+printf 'some-value: %q\n' "${someValue}"

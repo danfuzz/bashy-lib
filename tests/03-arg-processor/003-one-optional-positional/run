@@ -1,0 +1,31 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+. "$(dirname "$(readlink -f "$0")")/../../_test-init.sh" || exit "$?"
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'no args or options passed' \
+    "${cmd}"
+
+call-and-log-as-test 'passed `--`' \
+    "${cmd}" --
+
+call-and-log-as-test 'passed positional arg' \
+    "${cmd}" i-am-arguing
+
+call-and-log-as-test 'passed two positional args' \
+    "${cmd}" florp fleep
+
+call-and-log-as-test 'passed `--` then positional arg' \
+    "${cmd}" -- MORE_ARGUING
+
+call-and-log-as-test 'passed `--` then arg that looks like an option' \
+    "${cmd}" -- --non-option
+
+call-and-log-as-test 'passed a double-dash option' \
+    "${cmd}" --x
+
+call-and-log-as-test 'passed a double-dash option then a positional arg' \
+    "${cmd}" --x bloop
