@@ -1,6 +1,13 @@
 Changelog
 =========
 
+### ??? -- ???
+
+Notable changes:
+
+* `bashy-core`:
+  * `stderr-msg`: New option `--file-line`.
+
 ### v2.5 -- 2023-10-04
 
 Notable changes:

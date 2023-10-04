@@ -17,6 +17,8 @@
 #   when "manually" turning on or off messages.
 # --exec -- Execute the arguments as a command, instead of treating them as
 #   arguments to print. The command's output gets redirected to `stderr`.
+# --file-line -- Include the caller-of-the-caller's file and line number. That
+#   is, a user of the command can use this to talk about what called it.
 # --set=0|1 -- Enable or disable printing of this kind of message.
 # --status -- Prints `1` or `0` to stdout, to indicate enabled status. (This is
 #   to make it easy to propagate the enabled state down into another command.)
@@ -104,6 +106,7 @@ function _stderr_print-handler {
     shift 2
 
     local doExec=0
+    local doFileLine=0
     local printName=1
     local wasCmd=0
 
@@ -119,6 +122,9 @@ function _stderr_print-handler {
                 ;;
             --exec)
                 doExec=1
+                ;;
+            --file-line)
+                doFileLine=1
                 ;;
             --no-name)
                 if [[ ${anyMessagesVarName} == '' ]]; then
@@ -147,11 +153,22 @@ function _stderr_print-handler {
         return
     fi
 
+    local didPrintName=0
     if [[ ${anyMessagesVarName} != '' ]] && (( !${!anyMessagesVarName} )); then
         if (( printName )); then
+            didPrintName=1
             printf 1>&2 '%s: ' "$(this-cmd-name)"
         fi
         eval "${anyMessagesVarName}=1"
+    fi
+
+    if (( doFileLine )); then
+        if (( didPrintName )); then
+            printf 1>&2 '\n'
+        fi
+        # `3` (and not `2`) because there's an internal caller layer to elide.
+        [[ "$(caller 3)" =~ ^([0-9]+).*/(.*)$ ]]
+        printf 1>&2 '%s:%s: ' "${BASH_REMATCH[2]}" "${BASH_REMATCH[1]}"
     fi
 
     if (( doExec )); then
