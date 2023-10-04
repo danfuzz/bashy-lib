@@ -10,7 +10,7 @@
 # Argument parsing
 #
 
-define-usagem --with-help $'
+define-usage --with-help $'
     ${name} [<opt> ...] [--] <test-name>
 
     Runs a single named test. The name of the test is fundamentally the partial
