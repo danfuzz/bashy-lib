@@ -52,6 +52,7 @@ done
 if (( errors == 0 )); then
     echo 'All passed. Yay!'
 else
-    echo "${errors} error(s). Alas."
+    (( errors == 1 )) && noun=error || noun=errors
+    echo "${errors} ${noun}. Alas."
     exit 1
 fi
