@@ -13,7 +13,13 @@
 define-usage $'
     ${name} [<opt> ...] [--] <test-name>
 
-    Runs a single named test.
+    Runs a single named test. The name of the test is fundamentally the partial
+    path from the `tests` directory to the directory of the test, but as a
+    commandline convenience, any prefix on the test which looks like a path to
+    the `tests` directory is ignored.
+
+    Note that all test directories are expected to be named with a sequential
+    numeric prefix followed by a dash.
 
     --update
       Update the expected output to match the actual output.
@@ -28,7 +34,7 @@ opt-action --call='{ usage; exit }' help/h
 opt-toggle --var=doUpdate update
 
 # The test to run.
-positional-arg --required --var=testName --filter='/^[0-9][-/a-z0-9]+$/' test-name
+positional-arg --required --var=testName --filter='/[0-9][-/a-z0-9]+$/' test-name
 
 process-args "$@" || usage --short
 
@@ -37,8 +43,14 @@ process-args "$@" || usage --short
 # Main script
 #
 
-# Drop final `/` on name if present.
-testName="${testName%/}"
+# Drop initial `.../tests/` and/or final `/` on name, if present.
+[[ ${testName} =~ ^((.*/)?tests/)?([0-9][-/a-z0-9]+)/?$ ]] || {
+    error-msg 'Cannot parse test name:'
+    error-msg "  ${testName}"
+    usage --short
+    exit 1
+}
+testName="${BASH_REMATCH[3]}"
 
 testDir="$(this-cmd-dir)/${testName}"
 runScript="${testDir}/run"
