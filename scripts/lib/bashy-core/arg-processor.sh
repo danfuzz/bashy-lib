@@ -331,7 +331,7 @@ function rest-arg {
     || return 1
 
     if declare >/dev/null -F _argproc:rest; then
-        error-msg 'Duplicate definition of rest argument.'
+        error-msg --file-line=1 'Duplicate definition of rest argument.'
         return 1
     fi
 
@@ -428,7 +428,7 @@ function _argproc_arg-description {
     local desc
 
     if ! declare -F "${funcName}" >/dev/null; then
-        error-msg "No such argument: <${longName}>"
+        error-msg --file-line=1 "No such argument: <${longName}>"
         return 1
     fi
 
@@ -460,7 +460,7 @@ function _argproc_define-no-value-arg {
         shift
     else
         # `--option` is really defined here for parallel structure, not utility.
-        error-msg 'Not supported.'
+        error-msg --file-line=1 'Not supported.'
         return 1
     fi
 
@@ -623,6 +623,7 @@ function _argproc_janky-args {
     local argError=0
     local argSpecs=" $* " # Spaces on the ends to make the match code work.
     local optsDone=0
+    local gotInit=0
     local a
 
     for a in "${args[@]}"; do
@@ -633,7 +634,7 @@ function _argproc_janky-args {
 
         if [[ ${a} =~ ^--. ]]; then
             if ! [[ ${a} =~ ^--([a-z]+)(=.*)?$ ]]; then
-                error-msg "Invalid option syntax: ${a}"
+                error-msg --file-line=2 "Invalid option syntax: ${a}"
                 return 1
             fi
 
@@ -641,7 +642,7 @@ function _argproc_janky-args {
             local value="${BASH_REMATCH[2]}"
 
             if ! [[ ${argSpecs} =~ " ${name} " ]]; then
-                error-msg "Unknown option: --${name}"
+                error-msg --file-line=2 "Unknown option: --${name}"
                 return 1
             fi
 
@@ -652,6 +653,7 @@ function _argproc_janky-args {
                     || argError=1
                     ;;
                 init)
+                    gotInit=1
                     [[ ${value} =~ ^=(.*)$ ]] \
                     && optInit="${BASH_REMATCH[1]}" \
                     || argError=1
@@ -689,16 +691,16 @@ function _argproc_janky-args {
                     || argError=1
                     ;;
                 *)
-                    error-msg "Unknown arg-processing option: --${name}"
+                    error-msg --file-line=2 "Unknown arg-processing option: --${name}"
                     return 1
                     ;;
             esac
 
             if (( argError )); then
                 if [[ ${value} != '' ]]; then
-                    error-msg "Invalid value for option --${name}: ${value:1}"
+                    error-msg --file-line=2 "Invalid value for option --${name}: ${value:1}"
                 else
-                    error-msg "Value required for option --${name}."
+                    error-msg --file-line=2 "Value required for option --${name}."
                 fi
                 return 1
             fi
@@ -711,21 +713,25 @@ function _argproc_janky-args {
             args=("${a}")
             optsDone=1
         else
-            error-msg "Invalid option syntax: ${a}"
+            error-msg --file-line=2 "Invalid option syntax: ${a}"
             return 1
         fi
     done
 
     if (( !optsDone || (${#args[@]} == 0) )); then
-        error-msg 'Missing argument specification.'
+        error-msg --file-line=2 'Missing argument specification.'
         return 1
     elif (( ${#args[@]} > 1 && !multiArg )); then
-        error-msg 'Too many arguments.'
+        error-msg --file-line=2 'Too many arguments.'
+        return 1
+    elif (( gotInit && optRequired )); then
+        # Special case: `--init` is meaningless if `--required` was passed.
+        error-msg --file-line=2 'Cannot use both --required and --init.'
         return 1
     elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then
         # Special case for `--call` and `--var` (which always go together).
         if [[ (${optCall} == '') && (${optVar} == '') ]]; then
-            error-msg 'Must use at least one of --call or --var.'
+            error-msg --file-line=2 'Must use at least one of --call or --var.'
             return 1
         fi
     fi
@@ -745,7 +751,7 @@ function _argproc_parse-spec {
             --value)    valueOk=1                ;;
             --value-eq) valueOk=1; valueWithEq=1 ;;
             *)
-                error-msg "Unrecognized option: $1"
+                error-msg --file-line=1 "Unrecognized option: $1"
                 return 1
                 ;;
         esac
@@ -755,7 +761,7 @@ function _argproc_parse-spec {
     local spec="$1"
 
     if ! [[ ${spec} =~ ^([a-zA-Z0-9][-a-zA-Z0-9]*)(/[a-zA-Z])?(=.*)?$ ]]; then
-        error-msg "Invalid spec: ${spec}"
+        error-msg --file-line=1 "Invalid spec: ${spec}"
         return 1
     fi
 
@@ -766,7 +772,7 @@ function _argproc_parse-spec {
     if (( abbrevOk )); then
         specAbbrev="${abbrev:1}" # `:1` to drop the slash.
     elif [[ ${abbrev} != '' ]]; then
-        error-msg "Abbrev not allowed in spec: ${spec}"
+        error-msg --file-line=1 "Abbrev not allowed in spec: ${spec}"
         return 1
     fi
 
@@ -782,7 +788,7 @@ function _argproc_parse-spec {
             specValue="${value}"
         fi
     elif [[ ${value} != '' ]]; then
-        error-msg "Value not allowed in spec: ${spec}"
+        error-msg --file-line=1 "Value not allowed in spec: ${spec}"
         return 1
     fi
 }
@@ -797,7 +803,7 @@ function _argproc_regex-filter-check {
     local arg
     for arg in "$@"; do
         if [[ ! (${arg} =~ ${regex}) ]]; then
-            error-msg "Invalid value for ${desc}: ${arg}"
+            error-msg --file-line=1 "Invalid value for ${desc}: ${arg}"
             return 1
         fi
     done
@@ -812,7 +818,7 @@ function _argproc_set-arg-description {
     local funcName="_argproc:arg-description-${longName}"
 
     if declare -F "${funcName}" >/dev/null; then
-        error-msg "Duplicate argument: ${longName}"
+        error-msg --file-line=1 "Duplicate argument: ${longName}"
         return 1
     fi
 
@@ -828,7 +834,7 @@ function _argproc_set-arg-description {
             desc="rest argument <${longName}...>"
             ;;
         *)
-            error-msg "Unknown type: ${typeName}"
+            error-msg --file-line=1 "Unknown type: ${typeName}"
             return 1
             ;;
     esac
