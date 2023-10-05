@@ -38,16 +38,29 @@ if [[ ${allRunScripts[0]} == 'error' ]]; then
     exit 1
 fi
 
-errors=0
+errors=()
 for run in "${allRunScripts[@]}"; do
-    "${testsDir}/run-one" "${run%/run}" \
-    || (( errors++ ))
+    testName="${run%/run}"
+    "${testsDir}/run-one" "${testName}" \
+    || errors+=("${testName}")
 done
 
-if (( errors == 0 )); then
+errorCount="${#errors[@]}"
+
+echo ''
+
+if (( errorCount == 0 )); then
     echo 'All passed. Yay!'
 else
-    (( errors == 1 )) && noun=error || noun=errors
-    echo "${errors} ${noun}. Alas."
+    echo 'Problems with:'
+
+    for e in "${errors[@]}"; do
+        echo "  ${e}"
+    done
+
+    (( errorCount == 1 )) && noun=error || noun=errors
+    echo ''
+    echo "${errorCount} ${noun}. Alas."
+
     exit 1
 fi
