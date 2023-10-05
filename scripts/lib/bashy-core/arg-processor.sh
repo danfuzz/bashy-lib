@@ -266,8 +266,10 @@ function post-process-args-call {
 }
 
 # Processes all of the given arguments, according to the configured handlers.
-# Returns non-zero if there is trouble parsing options or if any handler returns
-# non-zero.
+# Returns normally upon successful processing. If there is any trouble parsing
+# (including if there were errors during argument/option declaration), this
+# prints the short form of the `usage` message (if `usage` is available) and
+# then exits the process entirely with a non-zero code.
 function process-args {
     local _argproc_error=0
     local _argproc_s
