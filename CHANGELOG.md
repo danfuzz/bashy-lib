@@ -6,8 +6,13 @@ Changelog
 Notable changes:
 
 * `bashy-core`:
-  * `arg-processor`: Tightened up error checking.
-  * `define-usage`: New option `--with-help` to help reduce boilerplate.
+  * `arg-processor`:
+    * Tightened up error checking and reporting.
+    * New recommended processing call `process-args "$@" || exit "$?"`, because
+      of "magic" reduction noted below.
+  * `define-usage`:
+    * New option `--with-help` to help reduce boilerplate.
+    * Dropped "magical" `exit` behavior.
   * `stderr-msg`: New option `--file-line`.
 
 ### v2.5 -- 2023-10-04
