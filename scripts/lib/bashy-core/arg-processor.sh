@@ -269,13 +269,14 @@ function post-process-args-call {
 # Returns normally upon successful processing. If there is any trouble parsing
 # (including if there were errors during argument/option declaration), this
 # prints the short form of the `usage` message (if `usage` is available) and
-# then exits the process entirely with a non-zero code.
+# then returns with a non-zero code.
 function process-args {
     local _argproc_error=0
     local _argproc_s
 
     if (( _argproc_declarationError )); then
-        _argproc_error-exit 'Cannot process arguments, due to declaration errors.'
+        _argproc_error-coda 'Cannot process arguments, due to declaration errors.'
+        return 1
     fi
 
     # Run all the pre-parse statements.
@@ -296,7 +297,8 @@ function process-args {
         # Don't continue if there were problems above, because that will lead to
         # spurious extra errors (e.g. "missing" a required option that was
         # present but didn't pass a validity check).
-        _argproc_error-exit --code="${_argproc_error}"
+        _argproc_error-coda
+        return "${_argproc_error}"
     fi
 
     # Do any post-parse checks.
@@ -305,7 +307,8 @@ function process-args {
     done
 
     if (( _argproc_error )); then
-        _argproc_error-exit --code="${_argproc_error}"
+        _argproc_error-coda
+        return "${_argproc_error}"
     fi
 }
 
@@ -570,15 +573,9 @@ function _argproc_define-value-taking-arg {
     fi
 }
 
-# Does an error-exit, printing `usage` if available.
-function _argproc_error-exit {
-    local exitCode=1
-
-    if [[ $1 =~ ^--code= ]]; then
-        exitCode="${1#*=}"
-        shift
-    fi
-
+# Helper for `process-args`, which prints an optional final error message and
+# then short `usage` if it is defined.
+function _argproc_error-coda {
     local msg=("$@")
 
     if (( ${#msg[@]} != 0 )); then
@@ -589,8 +586,6 @@ function _argproc_error-exit {
         error-msg ''
         usage --short
     fi
-
-    exit "${exitCode}"
 }
 
 # Produces an argument handler body, from the given components.
