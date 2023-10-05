@@ -49,6 +49,6 @@ opt-choice --var=var1 florp foo=x bar
 positional-arg --var=var2 fleep=123
 rest-arg --var=var3 floop=xyz
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Nopers.'

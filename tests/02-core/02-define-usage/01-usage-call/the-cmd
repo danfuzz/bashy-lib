@@ -25,16 +25,16 @@ what="$1"
 case "${what}" in
     long)
         usage
-        echo 1>&2 '(no exit expected; should see this)'
         ;;
     short)
-        echo 1>&2 'This is not actually an error! (But we can pretend.)'
         usage --short
-        echo 1>&2 '(no exit expected; should see this)'
         ;;
     *)
-        echo 1>&2 'This is an error!'
+        # Old behavior was that `usage` would magically `exit` if `$?` was
+        # non-zero upon entry. This test now verifies that it no longer does
+        # that.
         (exit "${what}") || usage --short
-        echo 1>&2 '(exit expected; should not see this)'
         ;;
 esac
+
+echo 'Done.'

@@ -1,13 +1,15 @@
 ## short
 
+### stdout
+```
+Done.
+```
+
 ### stderr
 ```
-This is not actually an error! (But we can pretend.)
-
 the-cmd -- This is the short
 help for the command.
 the-cmd another-option-variant
-(no exit expected; should see this)
 ```
 
 ### exit: 0
@@ -15,6 +17,11 @@ the-cmd another-option-variant
 - - - - - - - - - -
 
 ## long
+
+### stdout
+```
+Done.
+```
 
 ### stderr
 ```
@@ -26,7 +33,6 @@ This is the longer help.
 the-cmd another-option-variant
 
 And more help about that.
-(no exit expected; should see this)
 ```
 
 ### exit: 0
@@ -35,28 +41,34 @@ And more help about that.
 
 ## error 1
 
+### stdout
+```
+Done.
+```
+
 ### stderr
 ```
-This is an error!
-
 the-cmd -- This is the short
 help for the command.
 the-cmd another-option-variant
 ```
 
-### exit: 1
+### exit: 0
 
 - - - - - - - - - -
 
 ## error 99
 
+### stdout
+```
+Done.
+```
+
 ### stderr
 ```
-This is an error!
-
 the-cmd -- This is the short
 help for the command.
 the-cmd another-option-variant
 ```
 
-### exit: 99
+### exit: 0

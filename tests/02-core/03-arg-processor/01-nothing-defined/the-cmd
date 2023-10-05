@@ -15,6 +15,6 @@ define-usage $'
     This is a test command.
 '
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Success!'
