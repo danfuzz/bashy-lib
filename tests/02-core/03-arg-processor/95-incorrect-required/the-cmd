@@ -20,6 +20,6 @@ opt-toggle --required --var=var1 some-toggle
 rest-arg --required --var=var1 some-rest
 
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Nopers.'

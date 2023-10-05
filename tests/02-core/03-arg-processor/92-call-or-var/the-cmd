@@ -22,6 +22,6 @@ opt-toggle boop
 positional-arg --filter='/boop/' some-position
 rest-arg --filter='/x/' the-rest
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Nopers.'

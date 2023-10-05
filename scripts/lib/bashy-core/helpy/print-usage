@@ -47,7 +47,7 @@ opt-toggle --var=short short
 # Usage message to print.
 positional-arg --required --var=message message
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 
 #

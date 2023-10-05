@@ -27,6 +27,6 @@ opt-value -zonk --var=v x
 opt-value ---zonk --var=v x
 opt-value --Zomg --var=v x
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Nopers.'

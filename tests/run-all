@@ -16,7 +16,7 @@ define-usage --with-help $'
     Runs all the tests.
 '
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 
 #

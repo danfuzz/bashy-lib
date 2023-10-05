@@ -17,6 +17,6 @@ define-usage $'
 
 positional-arg --required --var=theName zongo
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 printf 'Value: %q\n' "${theName}"

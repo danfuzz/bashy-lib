@@ -31,6 +31,6 @@ rest-arg --var=var2 a-rest
 rest-arg --var=var3 different-name
 
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Nopers.'

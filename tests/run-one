@@ -36,7 +36,7 @@ opt-toggle --var=doUpdate update
 # The test to run.
 positional-arg --required --var=testName --filter='/[0-9][-/a-z0-9]*$/' test-name
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 
 #

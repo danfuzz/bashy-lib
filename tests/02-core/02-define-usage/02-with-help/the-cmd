@@ -16,6 +16,6 @@ define-usage --with-help $'
     This is the longer help.
 '
 
-process-args "$@" || usage --short
+process-args "$@" || exit "$?"
 
 echo 'Finished.'
