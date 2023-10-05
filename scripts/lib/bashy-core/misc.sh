@@ -21,7 +21,7 @@ _bashy_usageMessage=''
 # Defines a standard-form `usage` function, optionally adding standardized help
 # options. When `usage` is defined with this, any non-zero pending exit code
 # (`$?`) becomes a process exit, so, for example, it is possible to say
-# something like `process-args "$@" || usage --short`, and know that that exit
+# something like `do-something || usage --short`, and know that that will exit
 # the process on error. With option `--with-help`, this defines standard help
 # options `--help` and short form `-h`, and appends help-for-help to the
 # description.
