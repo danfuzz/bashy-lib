@@ -3,7 +3,6 @@
 ### stderr
 ```
 This is not actually an error! (But we can pretend.)
-
 the-cmd -- This is the short
 help for the command.
 the-cmd another-option-variant
@@ -38,7 +37,6 @@ And more help about that.
 ### stderr
 ```
 This is an error!
-
 the-cmd -- This is the short
 help for the command.
 the-cmd another-option-variant
@@ -53,7 +51,6 @@ the-cmd another-option-variant
 ### stderr
 ```
 This is an error!
-
 the-cmd -- This is the short
 help for the command.
 the-cmd another-option-variant
