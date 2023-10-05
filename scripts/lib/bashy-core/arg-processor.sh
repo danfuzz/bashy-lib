@@ -275,8 +275,7 @@ function process-args {
     local _argproc_s
 
     if (( _argproc_declarationError )); then
-        error-msg 'Cannot process arguments, due to declaration errors.'
-        return 1
+        _argproc_error-exit 'Cannot process arguments, due to declaration errors.'
     fi
 
     # Run all the pre-parse statements.
@@ -297,7 +296,7 @@ function process-args {
         # Don't continue if there were problems above, because that will lead to
         # spurious extra errors (e.g. "missing" a required option that was
         # present but didn't pass a validity check).
-        return "${_argproc_error}"
+        _argproc_error-exit --code="${_argproc_error}"
     fi
 
     # Do any post-parse checks.
@@ -305,7 +304,9 @@ function process-args {
         eval "${_argproc_s}" || _argproc_error="$?"
     done
 
-    return "${_argproc_error}"
+    if (( _argproc_error )); then
+        _argproc_error-exit --code="${_argproc_error}"
+    fi
 }
 
 # Requires that exactly one of the indicated arguments / options is present.
@@ -567,6 +568,29 @@ function _argproc_define-value-taking-arg {
     if [[ ${abbrevChar} != '' ]]; then
         _argproc_define-abbrev "${abbrevChar}" "${longName}"
     fi
+}
+
+# Does an error-exit, printing `usage` if available.
+function _argproc_error-exit {
+    local exitCode=1
+
+    if [[ $1 =~ ^--code= ]]; then
+        exitCode="${1#*=}"
+        shift
+    fi
+
+    local msg=("$@")
+
+    if (( ${#msg[@]} != 0 )); then
+        error-msg "${msg[@]}"
+    fi
+
+    if declare -F usage >/dev/null; then
+        error-msg ''
+        usage --short
+    fi
+
+    exit "${exitCode}"
 }
 
 # Produces an argument handler body, from the given components.
