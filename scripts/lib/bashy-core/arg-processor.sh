@@ -564,6 +564,9 @@ function _argproc_define-value-taking-arg {
     eval 'function '"${handlerName}"' {
         if (( $# < 1 )); then
             '"${ifNoValue}"'
+        elif (( $# > 1 )); then
+            error-msg "Too many values for '"${desc}"'."
+            return 1
         fi
         '"${handlerBody}"'
     }'
@@ -915,7 +918,7 @@ function _argproc_set-arg-description {
 # read.
 function _argproc_statements-from-args {
     local argError=0
-    local arg handler name value
+    local arg handler name value values
 
     # This is used for required-argument checking.
     _argproc_statements+=($'local _argproc_receivedArgNames=\'\'')
@@ -931,7 +934,7 @@ function _argproc_statements-from-args {
             # Non-option argument.
             break
         elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)(=.*)?$ ]]; then
-            # Long-form argument.
+            # Long-form no- or single-value option.
             name="${BASH_REMATCH[1]}"
             value="${BASH_REMATCH[2]}"
             handler="_argproc:long-${name}"
@@ -944,8 +947,24 @@ function _argproc_statements-from-args {
                 # `:1` to drop the `=` from the start of `value`.
                 _argproc_statements+=("${handler} $(_argproc_quote "${value:1}")")
             fi
+        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)\[(.*)\]$ ]]; then
+            # Long-form multi-value option.
+            name="${BASH_REMATCH[1]}"
+            value="${BASH_REMATCH[2]}"
+            handler="_argproc:long-${name}"
+            if ! declare -F "${handler}" >/dev/null; then
+                error-msg "Unknown option: --${name}"
+                argError=1
+            else
+                # Parse the value into elements.
+                eval 2>/dev/null "values=(${value})" || {
+                    error-msg "Invalid multi-value syntax for option --${name}:"
+                    error-msg "  ${value}"
+                }
+                _argproc_statements+=("${handler} $(_argproc_quote "${values[@]}")")
+            fi
         elif [[ $arg =~ ^-([a-zA-Z0-9]+)$ ]]; then
-            # Short-form argument.
+            # Short-form option.
             arg="${BASH_REMATCH[1]}"
             while [[ ${arg} =~ ^(.)(.*)$ ]]; do
                 name="${BASH_REMATCH[1]}"
