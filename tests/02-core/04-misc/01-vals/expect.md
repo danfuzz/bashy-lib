@@ -75,19 +75,19 @@ no
 
 - - - - - - - - - -
 
-## special characters in arguments
+## special characters as arguments
 
 ### stdout
 ```
-Result: \& \| \( \) \< \> \? \! \* \[ \] \{ \}
-Length: 13
+Result: \" \' \; \& \| \$ \? \! \* \[ \] \{ \} \( \) \< \>
+Length: 17
 
-0: &
-1: |
-2: (
-3: )
-4: <
-5: >
+0: "
+1: '
+2: ;
+3: &
+4: |
+5: $
 6: ?
 7: !
 8: *
@@ -95,6 +95,49 @@ Length: 13
 10: ]
 11: {
 12: }
+13: (
+14: )
+15: <
+16: >
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## special characters in the middle of arguments
+
+### stdout
+```
+Result: a\"b a\'b a\;b a\&b a\|b a\$b a\?b a\!b a\*b
+Length: 9
+
+0: a"b
+1: a'b
+2: a;b
+3: a&b
+4: a|b
+5: a$b
+6: a?b
+7: a!b
+8: a*b
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## special characters surrounding arguments
+
+### stdout
+```
+Result: \[ab\] \{ab\} \(ab\) \<ab\>
+Length: 4
+
+0: [ab]
+1: {ab}
+2: (ab)
+3: <ab>
 ```
 
 ### exit: 0

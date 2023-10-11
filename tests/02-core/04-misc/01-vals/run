@@ -44,5 +44,11 @@ call-and-log-as-test 'three args' \
 call-and-log-as-test 'space-type stuff in arguments' \
     call-vals 'space' ' more space ' $'yes\nno\n\n' $'\there\tthere'
 
-call-and-log-as-test 'special characters in arguments' \
-    call-vals '&' '|' '(' ')' '<' '>' '?' '!' '*' '[' ']' '{' '}' ';'
+call-and-log-as-test 'special characters as arguments' \
+    call-vals '"' "'" ';' '&' '|' '$' '?' '!' '*' '[' ']' '{' '}' '(' ')' '<' '>'
+
+call-and-log-as-test 'special characters in the middle of arguments' \
+    call-vals 'a"b' "a'b" 'a;b' 'a&b' 'a|b' 'a$b' 'a?b' 'a!b' 'a*b'
+
+call-and-log-as-test 'special characters surrounding arguments' \
+    call-vals '[ab]' '{ab}' '(ab)' '<ab>'
