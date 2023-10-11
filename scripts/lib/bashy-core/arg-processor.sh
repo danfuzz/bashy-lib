@@ -7,7 +7,7 @@
 # Option processing is done in the common style with double-dashes to pass long
 # options, which can optionally be passed values after an `=`, e.g. `--foo` for
 # a valueless option and `--bar=zorch` for one with a value. The argument `--`
-# indicates the explicit end of options, and single dash (`-`) and negative
+# indicates the explicit end of options, and both single dash (`-`) and negative
 # integers (e.g. `-123`) are interpreted as non-option arguments.
 #
 # The public argument-defining functions all take argument specifications of the
