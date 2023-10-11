@@ -24,7 +24,7 @@ words if there are no special characters) and then a final `]`. This multi-value
 form will also work for options that don't allow values or allow only one
 (though there are probably few reasons to favor the form in those cases).
 
-The helper function `values` is a convenient way to safely pass multiple values
+The helper function `vals` is a convenient way to safely pass multiple values
 without having to worry about quoting hygiene. (That is, the helper handles it
 for you.)
 
@@ -54,7 +54,7 @@ my-cmd -34                         # One positional argument.
 my-cmd -- --foo                    # One positional argument, literally `--foo`.
 
 # Passing arbitrary strings safely to a multi-value option.
-my-cmd --strings["$(values "${arrayOfStrings[@]}")"]
+my-cmd --strings["$(vals "${arrayOfStrings[@]}")"]
 ```
 
 ## Declaring options
