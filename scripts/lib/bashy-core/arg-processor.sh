@@ -38,11 +38,11 @@
 #   maybe'`.
 #
 # Some argument-definers also accept these options:
-# * `--init=<value>` -- Specifies a default value for an argument or option if
-#   it isn't explicitly passed. This is only valid to use if `--var` is also
-#   used.
+# * `--default=<value>` -- Specifies a default value for an argument or option
+#   if it isn't explicitly passed. This is only valid to use if `--var` is also
+#   used. TEMP DURING TRANSITION: `--init` is a synonym for this.
 # * `--required` -- Indicates that the argument or option is required
-#   (mandatory). **Note:** `--required` and `--init` are mutually exclusive.
+#   (mandatory). **Note:** `--required` and `--default` are mutually exclusive.
 #
 # Beyond the above, see the docs for the functions for restrictions and
 # additional options.
@@ -87,7 +87,7 @@ function opt-action {
     local optInit='0'
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call init var \
+    _argproc_janky-args call default var \
     || return 1
 
     local specName=''
@@ -117,7 +117,7 @@ function opt-choice {
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args --multi-arg call init required var \
+    _argproc_janky-args --multi-arg call default required var \
     || return 1
 
     if [[ ${optVar} != '' ]]; then
@@ -195,7 +195,7 @@ function opt-toggle {
     local optInit=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call init var \
+    _argproc_janky-args call default var \
     || return 1
 
     local specName=''
@@ -231,7 +231,7 @@ function opt-value {
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter init required var \
+    _argproc_janky-args call default enum filter required var \
     || return 1
 
     local specName=''
@@ -265,7 +265,7 @@ function positional-arg {
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter init required var \
+    _argproc_janky-args call default enum filter required var \
     || return 1
 
     local specName=''
@@ -714,6 +714,11 @@ function _argproc_janky-args {
     local gotInit=0
     local a
 
+    # TEMP DURING TRANSITION: If `default` is specified, add `init`.
+    if [[ ${argSpecs} =~ ' default ' ]]; then
+        argSpecs+='init '
+    fi
+
     for a in "${args[@]}"; do
         if (( optsDone )); then
             args+=("${a}")
@@ -742,7 +747,8 @@ function _argproc_janky-args {
                     && optCall="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
-                init)
+                # TEMP DURING TRANSITION: Synonym for `default`.
+                default|init)
                     gotInit=1
                     [[ ${value} =~ ^=(.*)$ ]] \
                     && optInit="${BASH_REMATCH[1]}" \
@@ -820,13 +826,13 @@ function _argproc_janky-args {
         _argproc_declarationError=1
         return 1
     elif (( gotInit && optRequired )); then
-        # Special case: `--init` is meaningless if `--required` was passed.
-        error-msg --file-line=2 'Cannot use both --required and --init.'
+        # Special case: `--default` is meaningless if `--required` was passed.
+        error-msg --file-line=2 'Cannot use both --required and --default.'
         _argproc_declarationError=1
         return 1
     elif (( gotInit )) && [[ ${optVar} == '' ]]; then
-        # Special case: `--init` is meaningless without `--var`.
-        error-msg --file-line=2 'Must use --var when --init is used.'
+        # Special case: `--default` is meaningless without `--var`.
+        error-msg --file-line=2 'Must use --var when --default is used.'
         _argproc_declarationError=1
         return 1
     elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then
