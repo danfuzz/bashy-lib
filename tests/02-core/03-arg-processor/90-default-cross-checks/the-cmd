@@ -15,12 +15,12 @@ define-usage $'
     This is a test command.
 '
 
-# Can't use both `--init` and `--required`.
+# Can't use both `--default` and `--required`.
 opt-value --required --var=var1 --default=florp some-value
 opt-choice --default=maybe --required --var=var3 yes no
 positional-arg --default=x --var=var4 --required some-position
 
-# Can't use `--init` without `--var`.
+# Can't use `--default` without `--var`.
 opt-value --default=x --call=func1 beep
 opt-choice --default=x --call=func2 bomp blump
 positional-arg --default=x --call=func3 plomp
