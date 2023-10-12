@@ -150,6 +150,17 @@ function opt-choice {
     fi
 }
 
+# Declares a "multi-value" option, which allows passing zero or more values. No
+# `<value>` is allowed in the argument spec. These options are accepted via the
+# syntax `--<name>[]=<values>` where <values> is a space-separated list of
+# literal values, with standard shell quoting and escaping allowed in order to
+# pass special characters.
+function opt-multi {
+    # TODO
+    error-msg 'TODO!'
+    return 1
+}
+
 # Declares a "toggle" option, which allows setting of a value to `0` or `1`. No
 # `<value>` is allowed in the argument spec. The main long form option name can
 # be used without a value to indicate "on" (`1`), or it can be used as
