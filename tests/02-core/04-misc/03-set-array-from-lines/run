@@ -1,0 +1,41 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+function call-safl {
+    local length="$1"
+
+    local theArray=()
+    local lines=''
+
+    local n
+    for (( n = 0; n < length; n++ )); do
+        lines+="$(printf 'Line #%s' "${n}")"$'\n'
+    done
+
+    set-array-from-lines theArray "${lines}" || return "$?"
+
+    printf 'Length: %s\n' "${#theArray[@]}"
+
+    if (( ${#theArray[@]} != 0 )); then
+        printf '\n'
+        local n
+        for n in "${!theArray[@]}"; do
+            printf '%s: %s\n' "${n}" "${theArray[n]}"
+        done
+    fi
+}
+
+call-and-log-as-test 'no elements' \
+    call-safl 0
+
+call-and-log-as-test 'one element' \
+    call-safl 1
+
+call-and-log-as-test 'two elements' \
+    call-safl 2
+
+call-and-log-as-test '25 elements' \
+    call-safl 25
