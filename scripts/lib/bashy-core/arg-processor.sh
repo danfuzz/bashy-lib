@@ -711,7 +711,7 @@ function _argproc_janky-args {
     local argError=0
     local argSpecs=" $* " # Spaces on the ends to make the match code work.
     local optsDone=0
-    local gotInit=0
+    local gotDefault=0
     local a
 
     # TEMP DURING TRANSITION: If `default` is specified, add `init`.
@@ -749,7 +749,7 @@ function _argproc_janky-args {
                     ;;
                 # TEMP DURING TRANSITION: Synonym for `default`.
                 default|init)
-                    gotInit=1
+                    gotDefault=1
                     [[ ${value} =~ ^=(.*)$ ]] \
                     && optInit="${BASH_REMATCH[1]}" \
                     || argError=1
@@ -825,12 +825,12 @@ function _argproc_janky-args {
         error-msg --file-line=2 'Too many arguments.'
         _argproc_declarationError=1
         return 1
-    elif (( gotInit && optRequired )); then
+    elif (( gotDefault && optRequired )); then
         # Special case: `--default` is meaningless if `--required` was passed.
         error-msg --file-line=2 'Cannot use both --required and --default.'
         _argproc_declarationError=1
         return 1
-    elif (( gotInit )) && [[ ${optVar} == '' ]]; then
+    elif (( gotDefault )) && [[ ${optVar} == '' ]]; then
         # Special case: `--default` is meaningless without `--var`.
         error-msg --file-line=2 'Must use --var when --default is used.'
         _argproc_declarationError=1
