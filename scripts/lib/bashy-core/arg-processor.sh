@@ -642,35 +642,31 @@ function _argproc_error-coda {
 # Produces an argument handler body, from the given components.
 function _argproc_handler-body {
     local specName="$1"
-    local filters="$2"
+    local filter="$2"
     local callFunc="$3"
     local varName="$4"
     local result=()
 
-    while [[ ${filters} =~ ^$'\n'*([^$'\n']+)(.*)$ ]]; do
-        local f="${BASH_REMATCH[1]}"
-        filters="${BASH_REMATCH[2]}"
-        if [[ ${f} =~ ^/(.*)/$ ]]; then
-            # Add a call to perform the regex check on each argument.
-            f="${BASH_REMATCH[1]}"
-            local desc="$(_argproc_arg-description "${specName}")"
-            result+=("$(printf \
-                '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
-                "${desc}" "${f}"
-            )")
-        else
-            # Add a loop to call the filter function on each argument.
-            result+=(
-                "$(printf '
-                    local _argproc_value _argproc_args=()
-                    for _argproc_value in "$@"; do
-                        _argproc_args+=("$(%s "${_argproc_value}")") || return 1
-                    done
-                    set -- "${_argproc_args[@]}"' \
-                    "${f}")"
-            )
-        fi
-    done
+    if [[ ${filter} =~ ^/(.*)/$ ]]; then
+        # Add a call to perform the regex check on each argument.
+        filter="${BASH_REMATCH[1]}"
+        local desc="$(_argproc_arg-description "${specName}")"
+        result+=("$(printf \
+            '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
+            "${desc}" "${filter}"
+        )")
+    elif [[ ${filter} != '' ]]; then
+        # Add a loop to call the filter function on each argument.
+        result+=(
+            "$(printf '
+                local _argproc_value _argproc_args=()
+                for _argproc_value in "$@"; do
+                    _argproc_args+=("$(%s "${_argproc_value}")") || return 1
+                done
+                set -- "${_argproc_args[@]}"' \
+                "${filter}")"
+        )
+    fi
 
     if [[ ${callFunc} =~ ^\{(.*)\}$ ]]; then
         # Add a compound statement for the code block.
