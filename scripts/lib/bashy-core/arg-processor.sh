@@ -151,11 +151,12 @@ function opt-choice {
 }
 
 # Declares a "multi-value" option, which allows passing zero or more values. No
-# `<value>` is allowed in the argument spec. These options are accepted via the
-# syntax `--<name>[]=<values>` where <values> is a space-separated list of
-# literal values, with standard shell quoting and escaping allowed in order to
-# pass special characters. This definer also accepts the `--required` option.
-# The initial variable value is `()` (the empty array).
+# `<abbrev>` or `<value>` is allowed in the argument spec. These options are
+# accepted via the syntax `--<name>[]=<values>` where <values> is a
+# space-separated list of literal values, with standard shell quoting and
+# escaping allowed in order to pass special characters. This definer also
+# accepts the `--required` option. The initial variable value is `()` (the empty
+# array).
 function opt-multi {
     local optCall=''
     local optFilter=''
