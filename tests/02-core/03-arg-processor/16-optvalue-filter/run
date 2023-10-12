@@ -1,0 +1,22 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'no args or options passed' \
+    "${cmd}"
+
+call-and-log-as-test 'passed value option with filter, matching value' \
+    "${cmd}" --item='good kitty'
+
+call-and-log-as-test 'passed value option with filter, non-matching value' \
+    "${cmd}" --item='bad kitty'
+
+call-and-log-as-test 'passed value option with enum, matching value' \
+    "${cmd}" --color='green'
+
+call-and-log-as-test 'passed value option with enum, non-matching value' \
+    "${cmd}" --color='crispy'
