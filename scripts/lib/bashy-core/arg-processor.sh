@@ -159,9 +159,10 @@ function opt-choice {
 function opt-multi {
     local optCall=''
     local optFilter=''
+    local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter var \
+    _argproc_janky-args call enum filter required var \
     || return 1
 
     local specName=''
