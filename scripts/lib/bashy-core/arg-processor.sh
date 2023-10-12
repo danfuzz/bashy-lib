@@ -84,7 +84,7 @@ _argproc_preReturnStatements=()
 # activation value is `1`.
 function opt-action {
     local optCall=''
-    local optInit='0'
+    local optDefault='0'
     local optVar=''
     local args=("$@")
     _argproc_janky-args call default var \
@@ -102,7 +102,7 @@ function opt-action {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 }
 
@@ -113,7 +113,7 @@ function opt-action {
 # `--required` option.
 function opt-choice {
     local optCall=''
-    local optInit=''
+    local optDefault=''
     local optRequired=0
     local optVar=''
     local args=("$@")
@@ -122,7 +122,7 @@ function opt-choice {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     local allNames=()
@@ -192,7 +192,7 @@ function opt-multi {
 # unspecified, the initial variable value for a toggle option is `0`.
 function opt-toggle {
     local optCall=''
-    local optInit=0
+    local optDefault=0
     local optVar=''
     local args=("$@")
     _argproc_janky-args call default var \
@@ -205,7 +205,7 @@ function opt-toggle {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg --option \
@@ -226,8 +226,8 @@ function opt-toggle {
 # option.
 function opt-value {
     local optCall=''
+    local optDefault=''
     local optFilter=''
-    local optInit=''
     local optRequired=0
     local optVar=''
     local args=("$@")
@@ -241,7 +241,7 @@ function opt-value {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg --option \
@@ -260,8 +260,8 @@ function opt-value {
 # `--required` option.
 function positional-arg {
     local optCall=''
+    local optDefault=''
     local optFilter=''
-    local optInit=''
     local optRequired=0
     local optVar=''
     local args=("$@")
@@ -274,7 +274,7 @@ function positional-arg {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg \
@@ -751,7 +751,7 @@ function _argproc_janky-args {
                 default|init)
                     gotDefault=1
                     [[ ${value} =~ ^=(.*)$ ]] \
-                    && optInit="${BASH_REMATCH[1]}" \
+                    && optDefault="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
                 enum)
