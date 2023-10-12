@@ -24,10 +24,7 @@
 #   the argument value(s), or runs the indicated code snippet. If the call
 #   fails, the argument is rejected. In the snippet form, normal positional
 #   parameter references (`$1` `$@` `set <value>` etc.) are available.
-# * `--var=<name>` -- Sets the named variable to the argument value(s). The
-#   variable is always initialized to _something_, which is itself optionally
-#   specified via `--init=<value>`. If `--init` isn't used (or isn't available),
-#   then the default initialized value depends on the specific function.
+# * `--var=<name>` -- Sets the named variable to the argument value(s).
 #
 # Value-accepting argument definers allow these additional options:
 # * `--filter=<name>` -- Calls the named function passing it a single argument
@@ -40,8 +37,12 @@
 #   `<spec>` must be a space-separated list of names, e.g. `--enum='yes no
 #   maybe'`.
 #
-# Some argument-definers also accept `--required`, to indicate that the argument
-# or option is required (mandatory).
+# Some argument-definers also accept these options:
+# * `--init=<value>` -- Specifies a default value for an argument or option if
+#   it isn't explicitly passed. This is only valid to use if `--var` is also
+#   used.
+# * `--required` -- Indicates that the argument or option is required
+#   (mandatory). **Note:** `--required` and `--init` are mutually exclusive.
 #
 # Beyond the above, see the docs for the functions for restrictions and
 # additional options.
