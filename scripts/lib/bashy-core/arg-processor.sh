@@ -154,11 +154,32 @@ function opt-choice {
 # `<value>` is allowed in the argument spec. These options are accepted via the
 # syntax `--<name>[]=<values>` where <values> is a space-separated list of
 # literal values, with standard shell quoting and escaping allowed in order to
-# pass special characters.
+# pass special characters. This definer also accepts the `--required` option.
+# The initial variable value is `()` (the empty array).
 function opt-multi {
-    # TODO
-    error-msg 'TODO!'
-    return 1
+    local optCall=''
+    local optFilter=''
+    local optVar=''
+    local args=("$@")
+    _argproc_janky-args call enum filter var \
+    || return 1
+
+    local specName=''
+    _argproc_parse-spec "${args[0]}" \
+    || return 1
+
+    if [[ ${optVar} != '' ]]; then
+        # Set up the variable initializer.
+        _argproc_initStatements+=("${optVar}=()")
+    fi
+
+    _argproc_define-multi-value-arg --option \
+        "${specName}" "${optFilter}" "${optCall}" "${optVar}" \
+    || return "$?"
+
+    if (( optRequired )); then
+        _argproc_add-required-arg-postcheck "${specName}"
+    fi
 }
 
 # Declares a "toggle" option, which allows setting of a value to `0` or `1`. No
@@ -224,7 +245,8 @@ function opt-value {
     fi
 
     _argproc_define-value-taking-arg --option \
-        "${specName}" "${specValue}" "${optFilter}" "${optCall}" "${optVar}"
+        "${specName}" "${specValue}" "${optFilter}" "${optCall}" "${optVar}" \
+    || return "$?"
 
     if (( optRequired )); then
         _argproc_add-required-arg-postcheck "${specName}"
@@ -355,11 +377,6 @@ function rest-arg {
     _argproc_janky-args call enum filter var \
     || return 1
 
-    if declare >/dev/null -F _argproc:rest; then
-        error-msg --file-line=1 'Duplicate definition of rest argument.'
-        return 1
-    fi
-
     local specName=''
     _argproc_parse-spec "${args[0]}" \
     || return 1
@@ -369,7 +386,7 @@ function rest-arg {
         _argproc_initStatements+=("${optVar}=()")
     fi
 
-    _argproc_define-multi-value-arg \
+    _argproc_define-multi-value-arg --rest \
         "${specName}" "${optFilter}" "${optCall}" "${optVar}" \
     || return "$?"
 }
@@ -473,19 +490,41 @@ function _argproc_define-abbrev {
 
 # Defines an activation function for a multi-value argument.
 function _argproc_define-multi-value-arg {
-    local longName="$1"
+    local isOption=0 isRest=0
+    if [[ $1 == '--option' ]]; then
+        isOption=1
+        shift
+    elif [[ $1 == '--rest' ]]; then
+        isRest=1
+        shift
+        if declare >/dev/null -F _argproc:rest; then
+            error-msg --file-line=2 'Duplicate definition of rest argument.'
+            return 1
+        fi
+    fi
+
+    local specName="$1"
     local filter="$2"
     local callFunc="$3"
     local varName="$4"
 
-    _argproc_set-arg-description "${specName}" rest-argument || return 1
+    if (( isOption )); then
+        _argproc_set-arg-description "${specName}" multi-option || return 1
+        handlerName="_argproc:long-${specName}"
+    elif (( isRest )); then
+        _argproc_set-arg-description "${specName}" rest-argument || return 1
+        handlerName='_argproc:rest'
+    else
+        _argproc_set-arg-description "${specName}" multi-argument || return 1
+        handlerName="_argproc:positional-${specName}"
+    fi
 
-    local desc="argument <${longName}>"
+    local desc="$(_argproc_arg-description "${specName}")"
     local handlerBody="$(
-        _argproc_handler-body "${longName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
     )"
 
-    eval 'function _argproc:rest {
+    eval 'function '"${handlerName}"' {
         '"${handlerBody}"'
     }'
 }
@@ -885,13 +924,13 @@ function _argproc_regex-filter-check {
 # Sets the description of the named argument based on its type. This function
 # will fail if an argument with the given name was already defined.
 function _argproc_set-arg-description {
-    local longName="$1"
+    local specName="$1"
     local typeName="$2"
 
-    local funcName="_argproc:arg-description-${longName}"
+    local funcName="_argproc:arg-description-${specName}"
 
     if declare -F "${funcName}" >/dev/null; then
-        error-msg --file-line=3 "Duplicate argument: ${longName}"
+        error-msg --file-line=3 "Duplicate argument declaration: ${specName}"
         _argproc_declarationError=1
         return 1
     fi
@@ -899,16 +938,22 @@ function _argproc_set-arg-description {
     local desc
     case "${typeName}" in
         argument)
-            desc="argument <${longName}>"
+            desc="argument <${specName}>"
+            ;;
+        multi-argument)
+            desc="argument <${specName}[]>"
+            ;;
+        multi-option)
+            desc="option --${specName}[]"
             ;;
         option)
-            desc="option --${longName}"
+            desc="option --${specName}"
             ;;
         rest-argument)
-            desc="rest argument <${longName}...>"
+            desc="rest argument <${specName}...>"
             ;;
         *)
-            error-msg --file-line=1 "Unknown type: ${typeName}"
+            error-msg --file-line=1 "Unknown argument type: ${typeName}"
             _argproc_declarationError=1
             return 1
             ;;
