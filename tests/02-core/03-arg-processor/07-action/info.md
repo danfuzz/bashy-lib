@@ -1,1 +1,1 @@
-Test of a action options.
+Test of action options.
