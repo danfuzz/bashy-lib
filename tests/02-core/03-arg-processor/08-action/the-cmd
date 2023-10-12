@@ -16,7 +16,7 @@ define-usage $'
 '
 
 opt-action --var=runVar run
-opt-action --var=perhapsVar --init=nopers perhaps=yeppers
+opt-action --var=perhapsVar --default=nopers perhaps=yeppers
 opt-action --var=flyVar fly/f=whee
 
 process-args "$@" || exit "$?"

@@ -15,7 +15,7 @@ define-usage $'
     This is a test command.
 '
 
-positional-arg --var=theName --init=zorch zongo
+positional-arg --var=theName --default=zorch zongo
 
 process-args "$@" || exit "$?"
 

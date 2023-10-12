@@ -1,1 +1,1 @@
-Test for error detection of interactions with `--init` in argument declarations.
+Test for error detection of interactions with `--default` in argument declarations.

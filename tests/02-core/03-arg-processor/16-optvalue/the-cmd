@@ -16,7 +16,7 @@ define-usage $'
 '
 
 opt-value --var=theItem item
-opt-value --var=theColor --init=red color
+opt-value --var=theColor --default=red color
 
 process-args "$@" || exit "$?"
 

@@ -15,8 +15,8 @@ define-usage $'
     This is a test command.
 '
 
-positional-arg --var=theColor --init=transparent --filter='/^[a-z]+$/' color
-positional-arg --var=theItem --init=nothing --enum='kitten puppy toaster' item
+positional-arg --var=theColor --default=transparent --filter='/^[a-z]+$/' color
+positional-arg --var=theItem --default=nothing --enum='kitten puppy toaster' item
 
 process-args "$@" || exit "$?"
 
