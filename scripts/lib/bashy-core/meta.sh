@@ -137,8 +137,9 @@ function this-cmd-path {
     echo "${_bashy_cmdPath}"
 }
 
-# Gets the full absolute path to this command's base library directory. This is the `lib`
-# directory containing the unit of this command.
+# Gets the full absolute path to this command's base library directory. This is
+# the `lib` directory containing the core `_init` which set the current shell
+# environment up.
 function this-base-library-dir {
     echo "${_bashy_libDir}"
 }
