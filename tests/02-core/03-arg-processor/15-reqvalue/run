@@ -1,0 +1,25 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'no args or options passed' \
+    "${cmd}"
+
+call-and-log-as-test 'passed `--`' \
+    "${cmd}" --
+
+call-and-log-as-test 'passed positional arg' \
+    "${cmd}" i-am-arguing
+
+call-and-log-as-test 'passed required value option, empty value' \
+    "${cmd}" --item=
+
+call-and-log-as-test 'passed required value option, non-empty value' \
+    "${cmd}" --item=kitten
+
+call-and-log-as-test 'passed two values to (single) value option' \
+    "${cmd}" --item[]='florp fleep'
