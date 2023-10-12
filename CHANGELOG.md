@@ -11,7 +11,7 @@ Notable changes:
     * Tightened up error checking and reporting.
     * New recommended processing call `process-args "$@" || exit "$?"`, because
       of "magic" reduction noted below.
-    * Added multi-value option syntax `--opt-name[...]`.
+    * Added multi-value option syntax `--opt-name[]=...`.
   * `define-usage`:
     * New option `--with-help` to help reduce boilerplate.
     * Dropped "magical" `exit` behavior.

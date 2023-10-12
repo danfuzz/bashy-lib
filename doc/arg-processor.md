@@ -15,18 +15,25 @@ arguments.
 Short options consist of a single dash (`-`) followed by a single letter, and in
 this system such options are not allowed to accept values.
 
-Long options consist of two dashes (`--`) followed by a series of alphanumerics
-and more dashes. For options that accept one value (or more), the option name
-can be followed by an equal sign (`=`) and the option value. For options that
-accept _more_ than one value, the option can be followed by an open square
-bracket (`[`) and then a series of strings in shell syntax (including unquoted
-words if there are no special characters) and then a final `]`. This multi-value
-form will also work for options that don't allow values or allow only one
-(though there are probably few reasons to favor the form in those cases).
+Long options all start with two dashes (`--`), followed by a series of
+alphanumerics and more dashes, e.g. `--some-option`. In addition:
 
-The helper function `vals` is a convenient way to safely pass multiple values
-without having to worry about quoting hygiene. (That is, the helper handles it
-for you.)
+* A single value can be passed to an option by following the option name
+  with an equal sign (`=`) and the arbitrary value, e.g. `--some-option='my
+  value'`.
+
+* Multiple values can be passed to an option by following the option name with
+  a pair of square brackets and an equal sign (`[]=`) and then a series of
+  space-separated words, with standard shell rules for quoting and escaping in
+  order to pass special characters, e.g. `--some-option[]='this "and that"'`.
+
+  This multi-value form will also work for options that don't allow values or
+  allow only one value (though there are probably few reasons to favor this form
+  in those cases).
+
+  The helper function `vals` is a convenient way to safely pass multiple values
+  without having to worry about quoting hygiene. (That is, the helper handles it
+  for you.) For example, `--some-option[]="$(vals "${myArray[@]}")"`.
 
 Special cases:
 * A single dash (`-`) is interpreted as a non-option argument.
@@ -45,7 +52,7 @@ Examples:
 my-cmd -h                          # Short option.
 my-cmd --help                      # Long option, no value.
 my-cmd --size=27                   # Long option, with value.
-my-cmd --colors['red green blue']  # Long option, multi-value.
+my-cmd --colors[]='red green blue' # Long option, multi-value.
 my-cmd --no-florp                  # Long option, turning off a toggle.
 my-cmd --florp=1                   # Long option, setting a toggle explicitly.
 my-cmd some-argument               # One positional argument.
@@ -54,7 +61,7 @@ my-cmd -34                         # One positional argument.
 my-cmd -- --foo                    # One positional argument, literally `--foo`.
 
 # Passing arbitrary strings safely to a multi-value option.
-my-cmd --strings["$(vals "${arrayOfStrings[@]}")"]
+my-cmd --strings[]="$(vals "${paths[@]}")"
 ```
 
 ## Declaring options

@@ -958,7 +958,7 @@ function _argproc_statements-from-args {
                 # `:1` to drop the `=` from the start of `value`.
                 _argproc_statements+=("${handler} $(_argproc_quote "${value:1}")")
             fi
-        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)\[(.*)\]$ ]]; then
+        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)'[]='(.*)$ ]]; then
             # Long-form multi-value option.
             name="${BASH_REMATCH[1]}"
             value="${BASH_REMATCH[2]}"
