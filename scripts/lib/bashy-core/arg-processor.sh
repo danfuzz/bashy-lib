@@ -412,14 +412,14 @@ function _argproc_add-required-arg-postcheck {
     local argNoun='option'
     local allNames=''
 
-    local longName desc
-    for longName in "$@"; do
+    local specName desc
+    for specName in "$@"; do
         _argproc_preReturnStatements+=("$(
             printf '[[ ${_argproc_receivedArgNames} =~ "<%s>" ]] && (( _argproc_count++ )) || true' \
-                "${longName}"
+                "${specName}"
         )")
 
-        desc="$(_argproc_arg-description --short "${longName}")" || return 1
+        desc="$(_argproc_arg-description --short "${specName}")" || return 1
         if ! [[ ${desc} =~ ^- ]]; then
             # The description doesn't start with a dash (`-`), so it's an
             # argument, not an option.
@@ -459,12 +459,12 @@ function _argproc_arg-description {
         shift
     fi
 
-    local longName="$1"
-    local funcName="_argproc:arg-description-${longName}"
+    local specName="$1"
+    local funcName="_argproc:arg-description-${specName}"
     local desc
 
     if ! declare -F "${funcName}" >/dev/null; then
-        error-msg --file-line=1 "No such argument: <${longName}>"
+        error-msg --file-line=1 "No such argument: <${specName}>"
         return 1
     fi
 
@@ -482,10 +482,10 @@ function _argproc_arg-description {
 # short-form option.
 function _argproc_define-abbrev {
     local abbrevChar="$1"
-    local longName="$2"
+    local specName="$2"
 
     eval 'function _argproc:abbrev-'"${abbrevChar}"' {
-        _argproc:long-'"${longName}"' "$@"
+        _argproc:long-'"${specName}"' "$@"
     }'
 }
 
@@ -541,19 +541,19 @@ function _argproc_define-no-value-arg {
         return 1
     fi
 
-    local longName="$1"
+    local specName="$1"
     local value="$2"
     local filter="$3"
     local callFunc="$4"
     local varName="$5"
     local abbrevChar="$6"
 
-    _argproc_set-arg-description "${longName}" option || return 1
+    _argproc_set-arg-description "${specName}" option || return 1
 
-    local desc="$(_argproc_arg-description "${longName}")"
-    local handlerName="_argproc:long-${longName}"
+    local desc="$(_argproc_arg-description "${specName}")"
+    local handlerName="_argproc:long-${specName}"
     local handlerBody="$(
-        _argproc_handler-body "${longName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
     )"
 
     value="$(_argproc_quote "${value}")"
@@ -568,7 +568,7 @@ function _argproc_define-no-value-arg {
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-abbrev "${abbrevChar}" "${longName}"
+        _argproc_define-abbrev "${abbrevChar}" "${specName}"
     fi
 }
 
@@ -581,7 +581,7 @@ function _argproc_define-value-taking-arg {
         shift
     fi
 
-    local longName="$1"
+    local specName="$1"
     local eqDefault="$2"
     local filter="$3"
     local callFunc="$4"
@@ -589,16 +589,16 @@ function _argproc_define-value-taking-arg {
 
     local handlerName
     if (( isOption )); then
-        _argproc_set-arg-description "${longName}" option || return 1
-        handlerName="_argproc:long-${longName}"
+        _argproc_set-arg-description "${specName}" option || return 1
+        handlerName="_argproc:long-${specName}"
     else
-        _argproc_set-arg-description "${longName}" argument || return 1
-        handlerName="_argproc:positional-${longName}"
+        _argproc_set-arg-description "${specName}" argument || return 1
+        handlerName="_argproc:positional-${specName}"
     fi
 
-    local desc="$(_argproc_arg-description "${longName}")"
+    local desc="$(_argproc_arg-description "${specName}")"
     local handlerBody="$(
-        _argproc_handler-body "${longName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
     )"
 
     local ifNoValue=''
@@ -623,7 +623,7 @@ function _argproc_define-value-taking-arg {
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-abbrev "${abbrevChar}" "${longName}"
+        _argproc_define-abbrev "${abbrevChar}" "${specName}"
     fi
 }
 
@@ -644,7 +644,7 @@ function _argproc_error-coda {
 
 # Produces an argument handler body, from the given components.
 function _argproc_handler-body {
-    local longName="$1"
+    local specName="$1"
     local desc="$2"
     local filters="$3"
     local callFunc="$4"
@@ -693,7 +693,7 @@ function _argproc_handler-body {
     fi
 
     result+=(
-        "$(printf '_argproc_receivedArgNames+="<%s>"' "${longName}")"
+        "$(printf '_argproc_receivedArgNames+="<%s>"' "${specName}")"
     )
 
     printf '%s\n' "${result[@]}"
