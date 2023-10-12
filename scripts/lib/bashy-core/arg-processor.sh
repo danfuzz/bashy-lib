@@ -24,24 +24,25 @@
 #   the argument value(s), or runs the indicated code snippet. If the call
 #   fails, the argument is rejected. In the snippet form, normal positional
 #   parameter references (`$1` `$@` `set <value>` etc.) are available.
+# * `--var=<name>` -- Sets the named variable to the argument value(s).
+#
+# Value-accepting argument definers allow these additional options:
 # * `--filter=<name>` -- Calls the named function passing it a single argument
 #   value; the function must output a replacement value. If the call fails, the
 #   argument is rejected. Note: The filter function runs in a subshell, and as
 #   such it cannot be used to affect the global environment of the main script.
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
 #   the regex doesn't match, the argument is rejected.
-# * `--var=<name>` -- Sets the named variable to the argument value(s). The
-#   variable is always initialized to _something_, which is itself optionally
-#   specified via `--init=<value>`. If `--init` isn't used (or isn't available),
-#   then the default initialized value depends on the specific function.
+# * `--enum=<spec>` -- Matches each argument value against a set of valid names.
+#   `<spec>` must be a space-separated list of names, e.g. `--enum='yes no
+#   maybe'`.
 #
-# Value-accepting argument definers allow `--enum=<spec>` as an alternate form
-# of filter. In this case `<spec>` must be a space-separated list of names --
-# e.g. `--enum='yes no maybe'` -- and the argument is restricted to only take on
-# those possible values.
-#
-# Some argument-definers also accept `--required`, to indicate that the argument
-# or option is required (mandatory).
+# Some argument-definers also accept these options:
+# * `--init=<value>` -- Specifies a default value for an argument or option if
+#   it isn't explicitly passed. This is only valid to use if `--var` is also
+#   used.
+# * `--required` -- Indicates that the argument or option is required
+#   (mandatory). **Note:** `--required` and `--init` are mutually exclusive.
 #
 # Beyond the above, see the docs for the functions for restrictions and
 # additional options.
@@ -65,7 +66,8 @@ _argproc_positionalFuncs=()
 # List of statements to run after parsing, to do pre-return validation. This
 # includes:
 #
-# * required argument checkers
+# * `--required` argument checkers
+# * client-added post-processing calls
 _argproc_preReturnStatements=()
 
 
@@ -83,10 +85,9 @@ _argproc_preReturnStatements=()
 function opt-action {
     local optCall=''
     local optInit='0'
-    local optFilter=''
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call filter init var \
+    _argproc_janky-args call init var \
     || return 1
 
     local specName=''
@@ -97,7 +98,7 @@ function opt-action {
     || return 1
 
     _argproc_define-no-value-arg --option \
-        "${specName}" "${specValue}" "${optFilter}" "${optCall}" "${optVar}" "${specAbbrev}"
+        "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specAbbrev}"
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
@@ -112,12 +113,11 @@ function opt-action {
 # `--required` option.
 function opt-choice {
     local optCall=''
-    local optFilter=''
     local optInit=''
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args --multi-arg call filter init required var \
+    _argproc_janky-args --multi-arg call init required var \
     || return 1
 
     if [[ ${optVar} != '' ]]; then
@@ -140,7 +140,7 @@ function opt-choice {
         fi
 
         _argproc_define-no-value-arg --option \
-            "${specName}" "${specValue}" "${optFilter}" "${optCall}" "${optVar}" "${specAbbrev}"
+            "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specAbbrev}"
 
         allNames+=("${specName}")
     done
@@ -192,11 +192,10 @@ function opt-multi {
 # unspecified, the initial variable value for a toggle option is `0`.
 function opt-toggle {
     local optCall=''
-    local optFilter=''
     local optInit=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call filter init var \
+    _argproc_janky-args call init var \
     || return 1
 
     local specName=''
@@ -209,11 +208,10 @@ function opt-toggle {
         _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
     fi
 
-    # Extra filter on the positive option, so it can take a value.
-    _argproc_define-value-taking-arg --option "${specName}" \
-        '=1' $'/^[01]$/\n'"${optFilter}" "${optCall}" "${optVar}"
-    _argproc_define-no-value-arg --option "no-${specName}" \
-        '0' "${optFilter}" "${optCall}" "${optVar}" ''
+    _argproc_define-value-taking-arg --option \
+        "${specName}" '=1' '/^[01]$/' "${optCall}" "${optVar}"
+    _argproc_define-no-value-arg --option \
+        "no-${specName}" '0' "${optCall}" "${optVar}" ''
 
     if [[ ${specAbbrev} != '' ]]; then
         _argproc_define-abbrev "${specAbbrev}" "${specName}"
@@ -543,17 +541,16 @@ function _argproc_define-no-value-arg {
 
     local specName="$1"
     local value="$2"
-    local filter="$3"
-    local callFunc="$4"
-    local varName="$5"
-    local abbrevChar="$6"
+    local callFunc="$3"
+    local varName="$4"
+    local abbrevChar="$5"
 
     _argproc_set-arg-description "${specName}" option || return 1
 
     local desc="$(_argproc_arg-description "${specName}")"
     local handlerName="_argproc:long-${specName}"
     local handlerBody="$(
-        _argproc_handler-body "${specName}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" '' "${callFunc}" "${varName}"
     )"
 
     value="$(_argproc_quote "${value}")"

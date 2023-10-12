@@ -1,0 +1,26 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+opt-toggle --var=hasFluff fluff
+opt-toggle --var=hasFeet --init=maybe feet
+opt-toggle --var=isRelaxed relaxed/r
+
+process-args "$@" || exit "$?"
+
+printf 'fluff: %q\n' "${hasFluff}"
+printf 'feet: %q\n' "${hasFeet}"
+printf 'relaxed: %q\n' "${isRelaxed}"

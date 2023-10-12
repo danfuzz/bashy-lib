@@ -1,0 +1,55 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'no args or options passed' \
+    "${cmd}"
+
+call-and-log-as-test 'passed `--`' \
+    "${cmd}" --
+
+call-and-log-as-test 'passed positional arg' \
+    "${cmd}" i-am-arguing
+
+call-and-log-as-test 'passed long toggle with no default' \
+    "${cmd}" --fluff
+
+call-and-log-as-test 'passed long no-toggle with no default' \
+    "${cmd}" --no-fluff
+
+call-and-log-as-test 'passed long toggle with default' \
+    "${cmd}" --feet
+
+call-and-log-as-test 'passed long no-toggle with default' \
+    "${cmd}" --no-feet
+
+call-and-log-as-test 'passed long toggle with no default but with short form' \
+    "${cmd}" --relaxed
+
+call-and-log-as-test 'passed long no-toggle with no default but with short form' \
+    "${cmd}" --no-relaxed
+
+call-and-log-as-test 'passed short toggle' \
+    "${cmd}" -r
+
+call-and-log-as-test 'passed long toggle then the no-toggle' \
+    "${cmd}" --feet --no-feet
+
+call-and-log-as-test 'passed long no-toggle then the toggle' \
+    "${cmd}" --no-relaxed --relaxed
+
+call-and-log-as-test 'passed value 0 to two toggles' \
+    "${cmd}" --feet=0 --fluff=0
+
+call-and-log-as-test 'passed value 1 to two toggles' \
+    "${cmd}" --feet=1 --fluff=1
+
+call-and-log-as-test 'passed invalid value toggle' \
+    "${cmd}" --relaxed='yes'
+
+call-and-log-as-test 'passed two valid values to toggle (which should fail)' \
+    "${cmd}" --relaxed[]='1 0'
