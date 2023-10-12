@@ -66,7 +66,7 @@ _argproc_positionalFuncs=()
 # List of statements to run after parsing, to do pre-return validation. This
 # includes:
 #
-# * required argument checkers
+# * `--required` argument checkers
 # * client-added post-processing calls
 _argproc_preReturnStatements=()
 
