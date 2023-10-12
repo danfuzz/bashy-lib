@@ -13,6 +13,7 @@ Notable changes:
       of "magic" reduction noted below.
     * Added multi-value option syntax `--opt-name[]=...`, along with helper
       function `values` for use sites.
+    * Renamed `--init` to `--default`, which is a better word for the meaning.
     * Added a lot of tests.
   * `define-usage`:
     * New option `--with-help` to help reduce boilerplate.

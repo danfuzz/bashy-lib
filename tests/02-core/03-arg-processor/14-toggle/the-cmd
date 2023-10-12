@@ -16,7 +16,7 @@ define-usage $'
 '
 
 opt-toggle --var=hasFluff fluff
-opt-toggle --var=hasFeet --init=maybe feet
+opt-toggle --var=hasFeet --default=maybe feet
 opt-toggle --var=isRelaxed relaxed/r
 
 process-args "$@" || exit "$?"

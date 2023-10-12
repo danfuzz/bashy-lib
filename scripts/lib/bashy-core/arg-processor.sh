@@ -38,11 +38,11 @@
 #   maybe'`.
 #
 # Some argument-definers also accept these options:
-# * `--init=<value>` -- Specifies a default value for an argument or option if
-#   it isn't explicitly passed. This is only valid to use if `--var` is also
-#   used.
+# * `--default=<value>` -- Specifies a default value for an argument or option
+#   if it isn't explicitly passed. This is only valid to use if `--var` is also
+#   used. TEMP DURING TRANSITION: `--init` is a synonym for this.
 # * `--required` -- Indicates that the argument or option is required
-#   (mandatory). **Note:** `--required` and `--init` are mutually exclusive.
+#   (mandatory). **Note:** `--required` and `--default` are mutually exclusive.
 #
 # Beyond the above, see the docs for the functions for restrictions and
 # additional options.
@@ -84,10 +84,10 @@ _argproc_preReturnStatements=()
 # activation value is `1`.
 function opt-action {
     local optCall=''
-    local optInit='0'
+    local optDefault='0'
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call init var \
+    _argproc_janky-args call default var \
     || return 1
 
     local specName=''
@@ -102,7 +102,7 @@ function opt-action {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 }
 
@@ -113,16 +113,16 @@ function opt-action {
 # `--required` option.
 function opt-choice {
     local optCall=''
-    local optInit=''
+    local optDefault=''
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args --multi-arg call init required var \
+    _argproc_janky-args --multi-arg call default required var \
     || return 1
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     local allNames=()
@@ -192,10 +192,10 @@ function opt-multi {
 # unspecified, the initial variable value for a toggle option is `0`.
 function opt-toggle {
     local optCall=''
-    local optInit=0
+    local optDefault=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call init var \
+    _argproc_janky-args call default var \
     || return 1
 
     local specName=''
@@ -205,7 +205,7 @@ function opt-toggle {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg --option \
@@ -226,12 +226,12 @@ function opt-toggle {
 # option.
 function opt-value {
     local optCall=''
+    local optDefault=''
     local optFilter=''
-    local optInit=''
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter init required var \
+    _argproc_janky-args call default enum filter required var \
     || return 1
 
     local specName=''
@@ -241,7 +241,7 @@ function opt-value {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg --option \
@@ -260,12 +260,12 @@ function opt-value {
 # `--required` option.
 function positional-arg {
     local optCall=''
+    local optDefault=''
     local optFilter=''
-    local optInit=''
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter init required var \
+    _argproc_janky-args call default enum filter required var \
     || return 1
 
     local specName=''
@@ -274,7 +274,7 @@ function positional-arg {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
+        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg \
@@ -711,8 +711,13 @@ function _argproc_janky-args {
     local argError=0
     local argSpecs=" $* " # Spaces on the ends to make the match code work.
     local optsDone=0
-    local gotInit=0
+    local gotDefault=0
     local a
+
+    # TEMP DURING TRANSITION: If `default` is specified, add `init`.
+    if [[ ${argSpecs} =~ ' default ' ]]; then
+        argSpecs+='init '
+    fi
 
     for a in "${args[@]}"; do
         if (( optsDone )); then
@@ -742,10 +747,11 @@ function _argproc_janky-args {
                     && optCall="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
-                init)
-                    gotInit=1
+                # TEMP DURING TRANSITION: Synonym for `default`.
+                default|init)
+                    gotDefault=1
                     [[ ${value} =~ ^=(.*)$ ]] \
-                    && optInit="${BASH_REMATCH[1]}" \
+                    && optDefault="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
                 enum)
@@ -819,14 +825,14 @@ function _argproc_janky-args {
         error-msg --file-line=2 'Too many arguments.'
         _argproc_declarationError=1
         return 1
-    elif (( gotInit && optRequired )); then
-        # Special case: `--init` is meaningless if `--required` was passed.
-        error-msg --file-line=2 'Cannot use both --required and --init.'
+    elif (( gotDefault && optRequired )); then
+        # Special case: `--default` is meaningless if `--required` was passed.
+        error-msg --file-line=2 'Cannot use both --required and --default.'
         _argproc_declarationError=1
         return 1
-    elif (( gotInit )) && [[ ${optVar} == '' ]]; then
-        # Special case: `--init` is meaningless without `--var`.
-        error-msg --file-line=2 'Must use --var when --init is used.'
+    elif (( gotDefault )) && [[ ${optVar} == '' ]]; then
+        # Special case: `--default` is meaningless without `--var`.
+        error-msg --file-line=2 'Must use --var when --default is used.'
         _argproc_declarationError=1
         return 1
     elif [[ ${argSpecs} =~ ' call '|' var ' ]]; then

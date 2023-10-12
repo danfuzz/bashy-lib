@@ -1,0 +1,30 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+# Can't use both `--default` and `--required`.
+opt-value --required --var=var1 --default=florp some-value
+opt-choice --default=maybe --required --var=var3 yes no
+positional-arg --default=x --var=var4 --required some-position
+
+# Can't use `--default` without `--var`.
+opt-value --default=x --call=func1 beep
+opt-choice --default=x --call=func2 bomp blump
+positional-arg --default=x --call=func3 plomp
+
+process-args "$@" || exit "$?"
+
+echo 'Nopers.'
