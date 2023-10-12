@@ -54,9 +54,9 @@ function base-dir {
 # calling script. It is an error to try to get the directory before having set
 # it.
 function subproject-dir {
-    if [[ $1 =~ --set=(.*)$ ]]; then
+    if [[ $1 =~ ^--set=(.*)$ ]]; then
         local setDir="${BASH_REMATCH[1]}"
-        if [[ ${setDir} =~ [^/] ]]; then
+        if [[ ${setDir} =~ ^[^/] ]]; then
             local callerDir="$(dirname "$(readlink -f -- "${BASH_SOURCE[1]}")")"
             setDir="${callerDir}/${setDir}"
         fi

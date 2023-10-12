@@ -1,0 +1,41 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# The test.
+#
+
+function report {
+    local cmd="$1"
+
+    local result
+    result="$("${cmd}")" || return "$?"
+
+    if [[ ${result} =~ ^(.*)"${prefix}"(.*)$ ]]; then
+        result="${BASH_REMATCH[1]}<base>${BASH_REMATCH[2]}"
+    fi
+
+    printf '%s: %s\n' "${cmd}" "${result}"
+}
+
+# Prefix to elide in results.
+prefix="${BASH_SOURCE[0]}"
+[[ ${prefix} =~ ^(.*/bashy-lib) ]] || {
+    error-msg 'Could not figure out prefix!'
+    exit 1
+}
+prefix="${BASH_REMATCH[1]}"
+
+true \
+&& report base-dir \
+&& report this-cmd-dir \
+&& report this-cmd-name \
+&& report this-cmd-path \
+&& report this-base-library-dir \
+|| exit "$?"
+
+printf '\nDone!\n'

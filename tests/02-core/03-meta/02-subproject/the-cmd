@@ -1,0 +1,63 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# The test.
+#
+
+function report {
+    local cmd="$1"
+
+    local result
+    result="$("${cmd}")" || return "$?"
+
+    if [[ ${result} =~ ^(.*)"${prefix}"(.*)$ ]]; then
+        result="${BASH_REMATCH[1]}<base>${BASH_REMATCH[2]}"
+    fi
+
+    printf '%s: %s\n' "${cmd}" "${result}"
+}
+
+# Prefix to elide in results.
+prefix="${BASH_SOURCE[0]}"
+[[ ${prefix} =~ ^(.*/bashy-lib) ]] || {
+    error-msg 'Could not figure out prefix!'
+    exit 1
+}
+prefix="${BASH_REMATCH[1]}"
+
+
+# These should fail before the subproject is set.
+
+echo 'Expecting failures:'
+
+if subproject-dir 2>&1; then
+    echo 'subproject-dir did not fail.'
+fi
+
+if subproject-subdir 2>&1; then
+    echo 'subproject-subdir did not fail.'
+fi
+
+if subproject-name 2>&1; then
+    echo 'subproject-name did not fail.'
+fi
+
+echo ''
+
+# Tests that should succeed after setting the subproject.
+
+subproject-dir --set="$(this-cmd-dir)" || exit "$?"
+echo 'Subproject has now been set.'
+
+true \
+&& report subproject-dir \
+&& report subproject-subdir \
+&& report subproject-name \
+|| exit "$?"
+
+printf '\nDone!\n'
