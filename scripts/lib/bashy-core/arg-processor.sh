@@ -96,7 +96,7 @@ function opt-action {
     || return 1
 
     _argproc_define-no-value-arg --option \
-        "${specName}" "${specValue}" '' "${optCall}" "${optVar}" "${specAbbrev}"
+        "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specAbbrev}"
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
@@ -138,7 +138,7 @@ function opt-choice {
         fi
 
         _argproc_define-no-value-arg --option \
-            "${specName}" "${specValue}" '' "${optCall}" "${optVar}" "${specAbbrev}"
+            "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specAbbrev}"
 
         allNames+=("${specName}")
     done
@@ -206,10 +206,10 @@ function opt-toggle {
         _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optInit}")")
     fi
 
-    _argproc_define-value-taking-arg --option "${specName}" \
-        '=1' '/^[01]$/' "${optCall}" "${optVar}"
-    _argproc_define-no-value-arg --option "no-${specName}" \
-        '0' '' "${optCall}" "${optVar}" ''
+    _argproc_define-value-taking-arg --option \
+        "${specName}" '=1' '/^[01]$/' "${optCall}" "${optVar}"
+    _argproc_define-no-value-arg --option \
+        "no-${specName}" '0' "${optCall}" "${optVar}" ''
 
     if [[ ${specAbbrev} != '' ]]; then
         _argproc_define-abbrev "${specAbbrev}" "${specName}"
@@ -539,17 +539,16 @@ function _argproc_define-no-value-arg {
 
     local specName="$1"
     local value="$2"
-    local filter="$3"
-    local callFunc="$4"
-    local varName="$5"
-    local abbrevChar="$6"
+    local callFunc="$3"
+    local varName="$4"
+    local abbrevChar="$5"
 
     _argproc_set-arg-description "${specName}" option || return 1
 
     local desc="$(_argproc_arg-description "${specName}")"
     local handlerName="_argproc:long-${specName}"
     local handlerBody="$(
-        _argproc_handler-body "${specName}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" '' "${callFunc}" "${varName}"
     )"
 
     value="$(_argproc_quote "${value}")"
