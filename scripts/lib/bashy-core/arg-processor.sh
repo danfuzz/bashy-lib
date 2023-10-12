@@ -186,12 +186,12 @@ function opt-toggle {
     fi
 }
 
-# Declares a "value" option, which requires a value when passed on a
-# commandline. If a <value> is passed in the spec, then the resulting option is
-# value-optional, with the no-value form using the given <value>. No <abbrev> is
-# allowed in the argument spec. If left unspecified, the initial variable value
-# for a value option is `''` (the empty string). This definer also accepts the
-# `--required` option.
+# Declares a "value" option, which allows passing an arbitrary value. If a
+# <value> is passed in the spec, then the resulting option is value-optional,
+# with the no-value form using the given <value>. No <abbrev> is allowed in the
+# argument spec. If left unspecified, the default variable value for a value
+# option is `''` (the empty string). This definer also accepts the `--required`
+# option.
 function opt-value {
     local optCall=''
     local optFilter=''
