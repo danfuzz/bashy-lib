@@ -520,9 +520,8 @@ function _argproc_define-multi-value-arg {
         handlerName="_argproc:positional-${specName}"
     fi
 
-    local desc="$(_argproc_arg-description "${specName}")"
     local handlerBody="$(
-        _argproc_handler-body "${specName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" "${filter}" "${callFunc}" "${varName}"
     )"
 
     eval 'function '"${handlerName}"' {
@@ -553,7 +552,7 @@ function _argproc_define-no-value-arg {
     local desc="$(_argproc_arg-description "${specName}")"
     local handlerName="_argproc:long-${specName}"
     local handlerBody="$(
-        _argproc_handler-body "${specName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" "${filter}" "${callFunc}" "${varName}"
     )"
 
     value="$(_argproc_quote "${value}")"
@@ -598,7 +597,7 @@ function _argproc_define-value-taking-arg {
 
     local desc="$(_argproc_arg-description "${specName}")"
     local handlerBody="$(
-        _argproc_handler-body "${specName}" "${desc}" "${filter}" "${callFunc}" "${varName}"
+        _argproc_handler-body "${specName}" "${filter}" "${callFunc}" "${varName}"
     )"
 
     local ifNoValue=''
@@ -645,10 +644,9 @@ function _argproc_error-coda {
 # Produces an argument handler body, from the given components.
 function _argproc_handler-body {
     local specName="$1"
-    local desc="$2"
-    local filters="$3"
-    local callFunc="$4"
-    local varName="$5"
+    local filters="$2"
+    local callFunc="$3"
+    local varName="$4"
     local result=()
 
     while [[ ${filters} =~ ^$'\n'*([^$'\n']+)(.*)$ ]]; do
@@ -657,6 +655,7 @@ function _argproc_handler-body {
         if [[ ${f} =~ ^/(.*)/$ ]]; then
             # Add a call to perform the regex check on each argument.
             f="${BASH_REMATCH[1]}"
+            local desc="$(_argproc_arg-description "${specName}")"
             result+=("$(printf \
                 '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
                 "${desc}" "${f}"
