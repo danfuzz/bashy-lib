@@ -67,6 +67,7 @@ _argproc_positionalFuncs=()
 # includes:
 #
 # * required argument checkers
+# * client-added post-processing calls
 _argproc_preReturnStatements=()
 
 
