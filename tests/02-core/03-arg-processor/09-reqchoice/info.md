@@ -1,1 +1,1 @@
-Test of an optional set of choice options.
+Test of a required set of choice options.
