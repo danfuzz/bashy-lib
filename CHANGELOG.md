@@ -5,11 +5,15 @@ Changelog
 
 Notable changes:
 
+* Cleaned up existing doc and added a handful more.
 * `bashy-core`:
   * `arg-processor`:
     * Tightened up error checking and reporting.
     * New recommended processing call `process-args "$@" || exit "$?"`, because
       of "magic" reduction noted below.
+    * Added multi-value option syntax `--opt-name[]=...`, along with helper
+      function `values` for use sites.
+    * Added a lot of tests.
   * `define-usage`:
     * New option `--with-help` to help reduce boilerplate.
     * Dropped "magical" `exit` behavior.

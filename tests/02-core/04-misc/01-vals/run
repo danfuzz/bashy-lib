@@ -1,0 +1,54 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+function call-vals {
+    local result
+
+    result="$(vals "$@")" || return "$?"
+
+    if [[ ${result} == '' ]]; then
+        printf 'Empty result.\n'
+    else
+        printf 'Result: %s\n' "${result}"
+    fi
+
+    local values
+    eval "values=(${result})" || return "$?"
+
+    printf 'Length: %s\n' "${#values[@]}"
+
+    if (( ${#values[@]} != 0 )); then
+        printf '\n'
+        local n
+        for n in "${!values[@]}"; do
+            printf '%s: %s\n' "${n}" "${values[n]}"
+        done
+    fi
+}
+
+call-and-log-as-test 'no args' \
+    call-vals
+
+call-and-log-as-test 'one arg' \
+    call-vals hello
+
+call-and-log-as-test 'two args' \
+    call-vals how goes
+
+call-and-log-as-test 'three args' \
+    call-vals Things are awesome.
+
+call-and-log-as-test 'space-type stuff in arguments' \
+    call-vals 'space' ' more space ' $'yes\nno\n\n' $'\there\tthere'
+
+call-and-log-as-test 'special characters as arguments' \
+    call-vals '"' "'" ';' '&' '|' '$' '?' '!' '*' '[' ']' '{' '}' '(' ')' '<' '>'
+
+call-and-log-as-test 'special characters in the middle of arguments' \
+    call-vals 'a"b' "a'b" 'a;b' 'a&b' 'a|b' 'a$b' 'a?b' 'a!b' 'a*b'
+
+call-and-log-as-test 'special characters surrounding arguments' \
+    call-vals '[ab]' '{ab}' '(ab)' '<ab>'

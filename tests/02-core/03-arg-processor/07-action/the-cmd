@@ -1,0 +1,26 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+opt-action --var=runVar run
+opt-action --var=perhapsVar --init=nopers perhaps=yeppers
+opt-action --var=flyVar fly/f=whee
+
+process-args "$@" || exit "$?"
+
+printf 'run: %q\n' "${runVar}"
+printf 'perhaps: %q\n' "${perhapsVar}"
+printf 'fly: %q\n' "${flyVar}"
