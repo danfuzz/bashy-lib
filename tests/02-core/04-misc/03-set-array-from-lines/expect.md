@@ -15,7 +15,7 @@ Length: 0
 ```
 Length: 1
 
-0: Line #0
+0: line-0
 ```
 
 ### exit: 0
@@ -28,8 +28,8 @@ Length: 1
 ```
 Length: 2
 
-0: Line #0
-1: Line #1
+0: line-0
+1: line-1
 ```
 
 ### exit: 0
@@ -42,31 +42,31 @@ Length: 2
 ```
 Length: 25
 
-0: Line #0
-1: Line #1
-2: Line #2
-3: Line #3
-4: Line #4
-5: Line #5
-6: Line #6
-7: Line #7
-8: Line #8
-9: Line #9
-10: Line #10
-11: Line #11
-12: Line #12
-13: Line #13
-14: Line #14
-15: Line #15
-16: Line #16
-17: Line #17
-18: Line #18
-19: Line #19
-20: Line #20
-21: Line #21
-22: Line #22
-23: Line #23
-24: Line #24
+0: line-0
+1: line-1
+2: line-2
+3: line-3
+4: line-4
+5: line-5
+6: line-6
+7: line-7
+8: line-8
+9: line-9
+10: line-10
+11: line-11
+12: line-12
+13: line-13
+14: line-14
+15: line-15
+16: line-16
+17: line-17
+18: line-18
+19: line-19
+20: line-20
+21: line-21
+22: line-22
+23: line-23
+24: line-24
 ```
 
 ### exit: 0
@@ -156,7 +156,7 @@ Length: 0
 ```
 Length: 1
 
-0: 
+0: ''
 ```
 
 ### exit: 0
@@ -169,8 +169,8 @@ Length: 1
 ```
 Length: 2
 
-0: 
-1: 
+0: ''
+1: ''
 ```
 
 ### exit: 0
@@ -183,7 +183,7 @@ Length: 2
 ```
 Length: 2
 
-0: 
+0: ''
 1: zorch
 ```
 
@@ -197,14 +197,14 @@ Length: 2
 ```
 Length: 8
 
-0: 
-1: 
+0: ''
+1: ''
 2: alpha
 3: beta
 4: gamma
 5: delta
 6: epsilon
-7: 
+7: ''
 ```
 
 ### exit: 0
@@ -218,9 +218,9 @@ Length: 8
 Length: 5
 
 0: start
-1: 
-2: 
-3: 
+1: ''
+2: ''
+3: ''
 4: end
 ```
 

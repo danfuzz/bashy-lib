@@ -21,7 +21,7 @@ function report {
         printf '\n'
         local n
         for n in "${!theArray[@]}"; do
-            printf '%s: %s\n' "${n}" "${theArray[n]}"
+            printf '%s: %q\n' "${n}" "${theArray[n]}"
         done
     fi
 }
@@ -34,7 +34,7 @@ function do-count {
 
     local n
     for (( n = 0; n < length; n++ )); do
-        lines+="$(printf 'Line #%s' "${n}")"$'\n'
+        lines+="$(printf 'line-%s' "${n}")"$'\n'
     done
 
     report "${lines}"
