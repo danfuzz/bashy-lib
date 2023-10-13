@@ -6,22 +6,26 @@ versioning principles. Unstable releases do not.
 
 ### [Unreleased]
 
-Notable changes:
+Breaking changes:
+
+* `bashy-core`:
+  * `arg-processor`:
+    * New recommended processing call `process-args "$@" || exit "$?"`, because
+      of "magic" reduction noted below.
+    * Renamed `--init` to `--default`, which is a better word for the meaning.
+  * `define-usage`: Dropped "magical" `exit` behavior.
+
+Other notable changes:
 
 * Cleaned up existing doc and added a handful more.
 * `bashy-core`:
   * `arg-processor`:
     * Tightened up error checking and reporting.
-    * New recommended processing call `process-args "$@" || exit "$?"`, because
-      of "magic" reduction noted below.
     * Added multi-value option syntax `--opt-name[]=...`, along with helper
       function `values` for use sites.
-    * Renamed `--init` to `--default`, which is a better word for the meaning.
-  * `define-usage`:
-    * New option `--with-help` to help reduce boilerplate.
-    * Dropped "magical" `exit` behavior.
+  * `define-usage`: New option `--with-help` to help reduce boilerplate.
   * `stderr-msg`: New option `--file-line`.
-  * Added a lot of tests.
+  * Added a lot of tests, covering almost all of the core library functionality.
 
 ### v2.5 -- 2023-10-04
 
