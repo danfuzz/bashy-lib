@@ -17,8 +17,9 @@
 # `<value>` are always optional and (independently) sometimes prohibited,
 # depending on the definition function.
 #
-# The public argument-defining functions also allow these options, of which
-# at least one of `--call` or `--var` must be used. When multiple of these are
+# The public argument-defining functions also all allow these options, of which
+# at least one must be used. When both are used, the `--call` is performed
+# first, and then the `--var` setting.
 # present, evaluation order is filter then call then variable setting.
 # * `--call=<name>` or `--call={<code>}` -- Calls the named function passing it
 #   the argument value(s), or runs the indicated code snippet. If the call
@@ -26,7 +27,8 @@
 #   parameter references (`$1` `$@` `set <value>` etc.) are available.
 # * `--var=<name>` -- Sets the named variable to the argument value(s).
 #
-# Value-accepting argument definers allow these additional options:
+# Value-accepting argument definers allow these additional options to pre-filter
+# a value, before it gets set or passed to a `--call`:
 # * `--filter=<name>` -- Calls the named function passing it a single argument
 #   value; the function must output a replacement value. If the call fails, the
 #   argument is rejected. Note: The filter function runs in a subshell, and as
