@@ -70,3 +70,69 @@ Length: 25
 ```
 
 ### exit: 0
+
+- - - - - - - - - -
+
+## just newline
+
+### stdout
+```
+Length: 0
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## just two newlines
+
+### stdout
+```
+Length: 0
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## one line with newline at start and end
+
+### stdout
+```
+Length: 1
+
+0: zorch
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## five lines with two newlines at start and end
+
+### stdout
+```
+Length: 5
+
+0: alpha
+1: beta
+2: gamma
+3: delta
+4: epsilon
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## two lines with four newlines in the middle
+
+### stdout
+```
+Length: 2
+
+0: start
+1: end
+```
+
+### exit: 0

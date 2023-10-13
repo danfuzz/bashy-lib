@@ -4,16 +4,8 @@
 
 [[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
 
-function call-safl {
-    local length="$1"
-
-    local theArray=()
-    local lines=''
-
-    local n
-    for (( n = 0; n < length; n++ )); do
-        lines+="$(printf 'Line #%s' "${n}")"$'\n'
-    done
+function report {
+    local lines="$1"
 
     set-array-from-lines theArray "${lines}" || return "$?"
 
@@ -28,14 +20,49 @@ function call-safl {
     fi
 }
 
+function do-count {
+    local length="$1"
+
+    local theArray=()
+    local lines=''
+
+    local n
+    for (( n = 0; n < length; n++ )); do
+        lines+="$(printf 'Line #%s' "${n}")"$'\n'
+    done
+
+    report "${lines}"
+}
+
+function do-string {
+    local string="$1"
+
+    report "${string}"
+}
+
 call-and-log-as-test 'no elements' \
-    call-safl 0
+    do-count 0
 
 call-and-log-as-test 'one element' \
-    call-safl 1
+    do-count 1
 
 call-and-log-as-test 'two elements' \
-    call-safl 2
+    do-count 2
 
 call-and-log-as-test '25 elements' \
-    call-safl 25
+    do-count 25
+
+call-and-log-as-test 'just newline' \
+    do-string $'\n'
+
+call-and-log-as-test 'just two newlines' \
+    do-string $'\n\n'
+
+call-and-log-as-test 'one line with newline at start and end' \
+    do-string $'\nzorch\n'
+
+call-and-log-as-test 'five lines with two newlines at start and end' \
+    do-string $'\n\nalpha\nbeta\ngamma\ndelta\nepsilon\n\n'
+
+call-and-log-as-test 'two lines with four newlines in the middle' \
+    do-string $'start\n\n\n\nend'
