@@ -6,8 +6,43 @@
 
 
 #
-# The test.
+# Argument parsing
 #
+
+opt-choice --var=what absolute not-set relative
+
+process-args "$@" || exit "$?"
+
+
+#
+# Helper functions
+#
+
+function do-absolute {
+    subproject-dir --set="$(this-cmd-dir)" || return "$?"
+    call-all
+}
+
+function do-not-set {
+    # These should all fail before the subproject is set.
+
+    if subproject-dir; then
+        error-msg '`subproject-dir` did not fail.'
+    fi
+
+    if subproject-subdir; then
+        error-msg '`subproject-subdir` did not fail.'
+    fi
+
+    if subproject-name; then
+        error-msg '`subproject-name` did not fail.'
+    fi
+}
+
+function do-relative {
+    subproject-dir --set=.. || return "$?"
+    call-all
+}
 
 function report {
     local cmd="$1"
@@ -22,6 +57,25 @@ function report {
     printf '%s: %s\n' "${cmd}" "${result}"
 }
 
+function call-all {
+    # These should all succeed if the subproject was set.
+    echo 'Trying all subproject getters...'
+
+    true \
+    && report subproject-dir \
+    && report subproject-subdir \
+    && report subproject-name \
+    || return "$?"
+
+    echo ''
+    echo 'Done!'
+}
+
+
+#
+# Main script
+#
+
 # Prefix to elide in results.
 prefix="${BASH_SOURCE[0]}"
 [[ ${prefix} =~ ^(.*/bashy-lib) ]] || {
@@ -30,34 +84,4 @@ prefix="${BASH_SOURCE[0]}"
 }
 prefix="${BASH_REMATCH[1]}"
 
-
-# These should fail before the subproject is set.
-
-echo 'Expecting failures:'
-
-if subproject-dir 2>&1; then
-    echo 'subproject-dir did not fail.'
-fi
-
-if subproject-subdir 2>&1; then
-    echo 'subproject-subdir did not fail.'
-fi
-
-if subproject-name 2>&1; then
-    echo 'subproject-name did not fail.'
-fi
-
-echo ''
-
-# Tests that should succeed after setting the subproject.
-
-subproject-dir --set="$(this-cmd-dir)" || exit "$?"
-echo 'Subproject has now been set.'
-
-true \
-&& report subproject-dir \
-&& report subproject-subdir \
-&& report subproject-name \
-|| exit "$?"
-
-printf '\nDone!\n'
+do-"${what}"

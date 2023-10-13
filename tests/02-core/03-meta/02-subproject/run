@@ -6,5 +6,11 @@
 
 cmd="$(this-cmd-dir)/the-cmd"
 
-call-and-log-as-test 'test' \
-    "${cmd}"
+call-and-log-as-test 'not set' \
+    "${cmd}" --not-set
+
+call-and-log-as-test 'set absolute path' \
+    "${cmd}" --absolute
+
+call-and-log-as-test 'set relative path' \
+    "${cmd}" --relative
