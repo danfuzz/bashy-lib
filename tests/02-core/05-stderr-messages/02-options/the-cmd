@@ -1,0 +1,26 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+opt-value --var=func func
+usual-stderr-args
+
+process-args "$@" || exit "$?"
+
+
+#
+# Main script
+#
+
+error-msg 'Error message.'
+info-msg 'Info message.'
+progress-msg 'Progress message.'
+
+echo "Option: $(stderr-opt)"
