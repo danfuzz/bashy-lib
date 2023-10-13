@@ -1,0 +1,80 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+opt-value --var=func func
+
+process-args "$@" || exit "$?"
+
+
+#
+# Helper functions
+#
+
+function do-file-line {
+    do-file-line-a
+}
+
+function do-file-line-a {
+    do-file-line-b
+}
+
+function do-file-line-b {
+    "${func}" --file-line=0 'I am on line 30.'
+    "${func}" --file-line=1 'My caller is on line 26.'
+    "${func}" --file-line=2 '_Their_ caller is on line 22.'
+}
+
+function expect {
+    local expect="$1"
+    shift
+    local cmd=("$@")
+
+    local result
+    result="$("${cmd[@]}")" || return "$?"
+
+    printf '$ %s\n' "${cmd[*]}"
+    printf '%s\n' "${result}"
+
+    if [[ ${result} != ${expect} ]]; then
+        printf 'Oops! Expected: %s\n' "${expect}"
+    fi
+
+    echo ''
+}
+
+
+
+#
+# Main script
+#
+
+# Should start out enabled.
+expect 1 "${func}" --status || exit "$?"
+
+"${func}" --disable || exit "$?"
+expect 0 "${func}" --status || exit "$?"
+
+"${func}" --enable || exit "$?"
+expect 1 "${func}" --status || exit "$?"
+
+"${func}" --set=0 || exit "$?"
+expect 0 "${func}" --status || exit "$?"
+
+"${func}" --set=1 || exit "$?"
+expect 1 "${func}" --status || exit "$?"
+
+echo ''
+
+true \
+&& "${func}" 'First regular message.' \
+&& "${func}" Another message 'but with' 'multiple arguments.' \
+&& "${func}" --exec printf '<%s>\n' Using '--exec' 'to call' 'another command.' \
+&& do-file-line
