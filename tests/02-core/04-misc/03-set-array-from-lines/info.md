@@ -1,1 +1,1 @@
-Test of the function `set-array-from-lines`
+Test of the function `set-array-from-lines`.

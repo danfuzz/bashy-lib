@@ -1,0 +1,38 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+function do-sort {
+    local items=("$@")
+
+    sort-array items || return "$?"
+
+    printf 'Length: %s\n' "${#items[@]}"
+
+    if (( ${#items[@]} != 0 )); then
+        printf '\n'
+        local n
+        for n in "${!items[@]}"; do
+            printf '%s: %q\n' "${n}" "${items[n]}"
+        done
+    fi
+}
+
+call-and-log-as-test 'no elements' \
+    do-sort
+
+call-and-log-as-test 'one element' \
+    do-sort yes
+
+call-and-log-as-test 'two elements, already sorted' \
+    do-sort a-one b-two
+
+call-and-log-as-test 'two elements, unsorted' \
+    do-sort b-two a-one
+
+call-and-log-as-test '26 elements, unsorted' \
+    do-sort vole yak quokka urchin dingo pika zebu weasel alpaca owl raven \
+        xerus jay marmot nutria sheep ibex egret heron lion bear kestrel \
+        frogmouth tardigrade capybara gerbil
