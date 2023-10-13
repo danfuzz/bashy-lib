@@ -5,9 +5,15 @@
 [[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
 
 function report {
+    local nlOpt=()
+    if [[ $1 == --nl-terminated ]]; then
+        nlOpt="$1"
+        shift
+    fi
+
     local lines="$1"
 
-    set-array-from-lines theArray "${lines}" || return "$?"
+    set-array-from-lines "${nlOpt[@]}" theArray "${lines}" || return "$?"
 
     printf 'Length: %s\n' "${#theArray[@]}"
 
@@ -40,6 +46,12 @@ function do-string {
     report "${string}"
 }
 
+function do-string-nl {
+    local string="$1"
+
+    report 2>&1 --nl-terminated "${string}"
+}
+
 call-and-log-as-test 'no elements' \
     do-count 0
 
@@ -66,3 +78,27 @@ call-and-log-as-test 'five lines with two newlines at start and end' \
 
 call-and-log-as-test 'two lines with four newlines in the middle' \
     do-string $'start\n\n\n\nend'
+
+call-and-log-as-test 'nl-terminated: empty string' \
+    do-string-nl $''
+
+call-and-log-as-test 'nl-terminated: just newline' \
+    do-string-nl $'\n'
+
+call-and-log-as-test 'nl-terminated: just two newlines' \
+    do-string-nl $'\n\n'
+
+call-and-log-as-test 'nl-terminated: one line with newline at start and end' \
+    do-string-nl $'\nzorch\n'
+
+call-and-log-as-test 'nl-terminated: five lines with two newlines at start and end' \
+    do-string-nl $'\n\nalpha\nbeta\ngamma\ndelta\nepsilon\n\n'
+
+call-and-log-as-test 'nl-terminated: two lines with four newlines in the middle and one at end' \
+    do-string-nl $'start\n\n\n\nend\n'
+
+call-and-log-as-test 'nl-terminated: one non-nl-terminated line' \
+    do-string-nl $'beep boop'
+
+call-and-log-as-test 'nl-terminated: two lines, non-nl-terminated at the end' \
+    do-string-nl $'beep\nboop'

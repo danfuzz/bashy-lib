@@ -136,3 +136,116 @@ Length: 2
 ```
 
 ### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: empty string
+
+### stdout
+```
+Length: 0
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: just newline
+
+### stdout
+```
+Length: 1
+
+0: 
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: just two newlines
+
+### stdout
+```
+Length: 2
+
+0: 
+1: 
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: one line with newline at start and end
+
+### stdout
+```
+Length: 2
+
+0: 
+1: zorch
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: five lines with two newlines at start and end
+
+### stdout
+```
+Length: 8
+
+0: 
+1: 
+2: alpha
+3: beta
+4: gamma
+5: delta
+6: epsilon
+7: 
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: two lines with four newlines in the middle and one at end
+
+### stdout
+```
+Length: 5
+
+0: start
+1: 
+2: 
+3: 
+4: end
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## nl-terminated: one non-nl-terminated line
+
+### stdout
+```
+run: 
+run:16: Last line unterminated.
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## nl-terminated: two lines, non-nl-terminated at the end
+
+### stdout
+```
+run: 
+run:16: Last line unterminated.
+```
+
+### exit: 1
