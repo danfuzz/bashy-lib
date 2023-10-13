@@ -1,7 +1,10 @@
 Changelog
 =========
 
-### ??? -- ???
+**Note:** Version numbers for _stable_ (so marked) releases follow semantic
+versioning principles. Unstable releases do not.
+
+### [Unreleased]
 
 Notable changes:
 
@@ -107,7 +110,7 @@ Notable changes:
 * New facility for constructing commands with hierarchical subcommands (like how
   you can say `git commit` or `aws ec2 run-instances`).
 
-### v1.0 -- 2023-05-01
+### v1.0 -- 2023-05-01 -- Stable
 
 Ex-post-facto release of the state of affairs before major rework was
 merged into `main`.
