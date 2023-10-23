@@ -1020,13 +1020,14 @@ function _argproc_statements-from-args {
                         ;;
                     '[]=')
                         # Multi-value option. Parse the value into elements.
-                        eval 2>/dev/null "values=(${value})" || {
+                        if eval 2>/dev/null "values=(${value})"; then
+                            _argproc_statements+=(
+                                "${handler} $(_argproc_quote "${values[@]}")")
+                        else
                             error-msg "Invalid multi-value syntax for option --${name}:"
                             error-msg "  ${value}"
                             argError=1
-                        }
-                        _argproc_statements+=(
-                            "${handler} $(_argproc_quote "${values[@]}")")
+                        fi
                         ;;
                 esac
             elif handler="_argproc:alias-${name}" \
