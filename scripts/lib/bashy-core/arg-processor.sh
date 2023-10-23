@@ -1029,6 +1029,15 @@ function _argproc_statements-from-args {
                             "${handler} $(_argproc_quote "${values[@]}")")
                         ;;
                 esac
+            elif handler="_argproc:alias-${name}" \
+                    && declare -F "${handler}" >/dev/null; then
+                if [[ ${assign} == '' ]]; then
+                    # TODO
+                    :
+                else
+                    error-msg "Cannot pass values to alias option: --${name}"
+                    argError=1
+                fi
             else
                 error-msg "Unknown option: --${name}"
                 argError=1
