@@ -1112,10 +1112,7 @@ function _argproc_statements-from-args {
             while [[ ${arg} =~ ^(.)(.*)$ ]]; do
                 name="${BASH_REMATCH[1]}"
                 arg="${BASH_REMATCH[2]}"
-                if handler="_argproc:abbrev-${name}" \
-                        && declare -F "${handler}" >/dev/null; then
-                    _argproc_statements+=("${handler}")
-                elif handler="_argproc:short-alias-${name}" \
+                if handler="_argproc:short-alias-${name}" \
                         && declare -F "${handler}" >/dev/null; then
                     # Parse the output of `handler` into new options, and
                     # "unshift" them onto `$@`.
