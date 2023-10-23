@@ -1113,15 +1113,15 @@ function _argproc_statements-from-args {
             while [[ ${arg} =~ ^(.)(.*)$ ]]; do
                 name="${BASH_REMATCH[1]}"
                 arg="${BASH_REMATCH[2]}"
-                handler="_argproc:abbrev-${name}"
-                if ! declare -F "${handler}" >/dev/null; then
+                if handler="_argproc:abbrev-${name}" \
+                        && declare -F "${handler}" >/dev/null; then
+                    _argproc_statements+=("${handler}")
+                else
                     error-msg "Unknown option: -${name}"
                     argError=1
                     # Break, to avoid spewing a ton of errors in case of a pilot
                     # error along the lines of `-longOptionName`.
                     break
-                else
-                    _argproc_statements+=("${handler}")
                 fi
             done
         else
