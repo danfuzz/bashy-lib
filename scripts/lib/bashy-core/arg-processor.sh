@@ -555,7 +555,7 @@ function _argproc_define-alias-arg {
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
-        eval 'function _argproc:alias-short-'"${abbrevChar}"' {
+        eval 'function _argproc:short-alias-'"${abbrevChar}"' {
             '"${handlerName}"' "$@"
         }'
     fi
@@ -1095,8 +1095,7 @@ function _argproc_statements-from-args {
                         shift # Shift the alias option away.
                         set -- shifted-away-below "${values[@]}" "$@"
                     else
-                        error-msg "Invalid multi-value syntax for option --${name}:"
-                        error-msg "  ${value}"
+                        error-msg "Could not expand alias option: --${name}"
                         argError=1
                     fi
                 else
@@ -1116,6 +1115,17 @@ function _argproc_statements-from-args {
                 if handler="_argproc:abbrev-${name}" \
                         && declare -F "${handler}" >/dev/null; then
                     _argproc_statements+=("${handler}")
+                elif handler="_argproc:short-alias-${name}" \
+                        && declare -F "${handler}" >/dev/null; then
+                    # Parse the output of `handler` into new options, and
+                    # "unshift" them onto `$@`.
+                    if eval 2>/dev/null "values=($("\${handler}"))"; then
+                        shift # Shift the alias option away.
+                        set -- shifted-away-below "${values[@]}" "$@"
+                    else
+                        error-msg "Could not expand alias option: --${name}"
+                        argError=1
+                    fi
                 else
                     error-msg "Unknown option: -${name}"
                     argError=1
