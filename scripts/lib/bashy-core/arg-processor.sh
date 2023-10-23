@@ -515,8 +515,8 @@ function _argproc_define-abbrev {
     local abbrevChar="$1"
     local specName="$2"
 
-    eval 'function _argproc:abbrev-'"${abbrevChar}"' {
-        _argproc:long-'"${specName}"' "$@"
+    eval 'function _argproc:short-alias-'"${abbrevChar}"' {
+        echo --'"${specName}"'
     }'
 }
 
@@ -1091,7 +1091,7 @@ function _argproc_statements-from-args {
                 if [[ ${assign} == '' ]]; then
                     # Parse the output of `handler` into new options, and
                     # "unshift" them onto `$@`.
-                    if eval 2>/dev/null "values=($("\${handler}"))"; then
+                    if eval 2>/dev/null "values=($("${handler}"))"; then
                         shift # Shift the alias option away.
                         set -- shifted-away-below "${values[@]}" "$@"
                     else
@@ -1119,7 +1119,7 @@ function _argproc_statements-from-args {
                         && declare -F "${handler}" >/dev/null; then
                     # Parse the output of `handler` into new options, and
                     # "unshift" them onto `$@`.
-                    if eval 2>/dev/null "values=($("\${handler}"))"; then
+                    if eval 2>/dev/null "values=($("${handler}"))"; then
                         shift # Shift the alias option away.
                         set -- shifted-away-below "${values[@]}" "$@"
                     else
