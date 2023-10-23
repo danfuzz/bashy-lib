@@ -1006,8 +1006,8 @@ function _argproc_statements-from-args {
             name="${BASH_REMATCH[1]}"
             assign="${BASH_REMATCH[3]}"
             value="${BASH_REMATCH[4]}"
-            handler="_argproc:long-${name}"
-            if declare -F "${handler}" >/dev/null; then
+            if handler="_argproc:long-${name}" \
+                    && declare -F "${handler}" >/dev/null; then
                 case "${assign}" in
                     '')
                         # No-value option.
