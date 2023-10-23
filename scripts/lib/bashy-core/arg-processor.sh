@@ -532,22 +532,26 @@ function _argproc_define-alias-arg {
 
     local specName="$1"
     local abbrevChar="$2"
+    shift 2
+    local args=("$@")
 
     _argproc_set-arg-description "${specName}" alias || return 1
 
     local desc="$(_argproc_arg-description "${specName}")"
     local handlerName="_argproc:alias-${specName}"
-    local handlerBody="$(
-        _argproc_handler-body "${specName}" '' "${callFunc}" "${varName}"
-    )"
+    local handlerBody=()
+
+    local a
+    for a in "${args[@]}"; do
+        handlerBody+=(printf '%q\n' "$(_argproc_quote "${a}")")
+    done
 
     eval 'function '"${handlerName}"' {
         if (( $# > 0 )); then
             error-msg "Value not allowed for '"${desc}"'."
             return 1
         fi
-        set '"${value}"'
-        '"${handlerBody}"'
+        '"${handlerBody[@]}"'
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
