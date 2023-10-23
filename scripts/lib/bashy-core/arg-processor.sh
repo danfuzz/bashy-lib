@@ -1007,10 +1007,7 @@ function _argproc_statements-from-args {
             assign="${BASH_REMATCH[3]}"
             value="${BASH_REMATCH[4]}"
             handler="_argproc:long-${name}"
-            if ! declare -F "${handler}" >/dev/null; then
-                error-msg "Unknown option: --${name}"
-                argError=1
-            else
+            if declare -F "${handler}" >/dev/null; then
                 case "${assign}" in
                     '')
                         # No-value option.
@@ -1031,6 +1028,9 @@ function _argproc_statements-from-args {
                             "${handler} $(_argproc_quote "${values[@]}")")
                         ;;
                 esac
+            else
+                error-msg "Unknown option: --${name}"
+                argError=1
             fi
         elif [[ $arg =~ ^-([a-zA-Z0-9]+)$ ]]; then
             # Short-form option.
