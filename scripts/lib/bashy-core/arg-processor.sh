@@ -535,7 +535,7 @@ function _argproc_define-alias-arg {
     shift 2
     local args=("$@")
 
-    _argproc_set-arg-description "${specName}" alias || return 1
+    _argproc_set-arg-description "${specName}" option || return 1
 
     local desc="$(_argproc_arg-description "${specName}")"
     local handlerName="_argproc:alias-${specName}"
