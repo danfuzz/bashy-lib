@@ -1001,22 +1001,8 @@ function _argproc_statements-from-args {
         elif [[ ${arg} == '' || ${arg} =~ ^-[0-9]*$ || ${arg} =~ ^[^-] ]]; then
             # Non-option argument.
             break
-        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)((=)(.*))?$ ]]; then
-            # Long-form no- or single-value option.
-            name="${BASH_REMATCH[1]}"
-            assign="${BASH_REMATCH[3]}"
-            value="${BASH_REMATCH[4]}"
-            handler="_argproc:long-${name}"
-            if ! declare -F "${handler}" >/dev/null; then
-                error-msg "Unknown option: --${name}"
-                argError=1
-            elif [[ ${assign} == '' ]]; then
-                _argproc_statements+=("${handler}")
-            else
-                _argproc_statements+=("${handler} $(_argproc_quote "${value}")")
-            fi
-        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)(('[]=')(.*))$ ]]; then
-            # Long-form multi-value option.
+        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)(('[]='|=)(.*))?$ ]]; then
+            # Long-form option.
             name="${BASH_REMATCH[1]}"
             assign="${BASH_REMATCH[3]}"
             value="${BASH_REMATCH[4]}"
@@ -1025,12 +1011,26 @@ function _argproc_statements-from-args {
                 error-msg "Unknown option: --${name}"
                 argError=1
             else
-                # Parse the value into elements.
-                eval 2>/dev/null "values=(${value})" || {
-                    error-msg "Invalid multi-value syntax for option --${name}:"
-                    error-msg "  ${value}"
-                }
-                _argproc_statements+=("${handler} $(_argproc_quote "${values[@]}")")
+                case "${assign}" in
+                    '')
+                        # No-value option.
+                        _argproc_statements+=("${handler}")
+                        ;;
+                    '=')
+                        # Single-value option.
+                        _argproc_statements+=(
+                            "${handler} $(_argproc_quote "${value}")")
+                        ;;
+                    '[]=')
+                        # Multi-value option. Parse the value into elements.
+                        eval 2>/dev/null "values=(${value})" || {
+                            error-msg "Invalid multi-value syntax for option --${name}:"
+                            error-msg "  ${value}"
+                        }
+                        _argproc_statements+=(
+                            "${handler} $(_argproc_quote "${values[@]}")")
+                        ;;
+                esac
             fi
         elif [[ $arg =~ ^-([a-zA-Z0-9]+)$ ]]; then
             # Short-form option.
