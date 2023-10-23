@@ -1015,10 +1015,11 @@ function _argproc_statements-from-args {
             else
                 _argproc_statements+=("${handler} $(_argproc_quote "${value}")")
             fi
-        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)'[]='(.*)$ ]]; then
+        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)(('[]=')(.*))$ ]]; then
             # Long-form multi-value option.
             name="${BASH_REMATCH[1]}"
-            value="${BASH_REMATCH[2]}"
+            assign="${BASH_REMATCH[3]}"
+            value="${BASH_REMATCH[4]}"
             handler="_argproc:long-${name}"
             if ! declare -F "${handler}" >/dev/null; then
                 error-msg "Unknown option: --${name}"
