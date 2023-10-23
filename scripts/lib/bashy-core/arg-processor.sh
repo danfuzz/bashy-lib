@@ -1023,6 +1023,7 @@ function _argproc_statements-from-args {
                         eval 2>/dev/null "values=(${value})" || {
                             error-msg "Invalid multi-value syntax for option --${name}:"
                             error-msg "  ${value}"
+                            argError=1
                         }
                         _argproc_statements+=(
                             "${handler} $(_argproc_quote "${values[@]}")")
