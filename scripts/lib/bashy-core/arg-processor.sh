@@ -978,7 +978,7 @@ function _argproc_set-arg-description {
 
 # Builds up a list of statements to evaluate, based on the given arguments. It
 # is stored in the variable `_argproc_statements`, which is assumed to be
-# declared by its caller.
+# declared `local` by its caller.
 #
 # Note: This arrangement, where argument parsing is done in a separate
 # function and as a separate pass from evaluation, makes it possible to use
