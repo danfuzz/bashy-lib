@@ -44,3 +44,15 @@ call-and-log-as-test 'passed multi-value option, two values' \
 
 call-and-log-as-test 'passed multi-value option, four values, omnibus' \
     "${cmd}" --items[]=$'one "two" \'three four\' $\'five & six\' \#7\(8\)9'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #1' \
+    "${cmd}" --items[]=$'one "two'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #2' \
+    "${cmd}" --items[]=$'a ; b'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #3' \
+    "${cmd}" --items[]=$'$c'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #4' \
+    "${cmd}" --items[]=$'d|e f&g'
