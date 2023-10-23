@@ -1,0 +1,48 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'passed alias to action' \
+    "${cmd}" --do-action
+
+call-and-log-as-test 'passed alias to multi' \
+    "${cmd}" --multi-123
+
+call-and-log-as-test 'passed alias to toggle' \
+    "${cmd}" --do-toggle
+
+# `--toggle` first so that `--do-notog` has a chance to demonstrate correctness.
+call-and-log-as-test 'passed alias to no-toggle' \
+    "${cmd}" --toggle --do-notog
+
+call-and-log-as-test 'passed alias to value' \
+    "${cmd}" --val-1
+
+call-and-log-as-test 'passed short-alias to value' \
+    "${cmd}" -v
+
+call-and-log-as-test 'passed alias to action and toggle' \
+    "${cmd}" --do-act-tog
+
+call-and-log-as-test 'passed short-alias to action and toggle' \
+    "${cmd}" -t
+
+call-and-log-as-test 'passed alias to action, toggle, and value' \
+    "${cmd}" --do-act-tog-val-2
+
+# `--toggle` first so that `--do-notog` has a chance to demonstrate correctness.
+call-and-log-as-test 'passed alias to value and no-toggle' \
+    "${cmd}" --toggle --do-notog-val-3
+
+call-and-log-as-test 'passed alias to value and multi' \
+    "${cmd}" --val-multi
+
+call-and-log-as-test 'passed alias to value, spaces in expansion' \
+    "${cmd}" --val-with-spaces
+
+call-and-log-as-test 'passed alias to value, special characters in expansion' \
+    "${cmd}" --val-with-specials

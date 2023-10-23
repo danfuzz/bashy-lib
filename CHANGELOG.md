@@ -21,6 +21,9 @@ Other notable changes:
 * `bashy-core`:
   * `arg-processor`:
     * Tightened up error checking and reporting.
+    * Added `opt-alias` to allow for expansion of single no-value options into
+      multiple options (including with values). Used underlying facility to
+      rework implementation of single-character short options.
     * Added multi-value option syntax `--opt-name[]=...`, along with helper
       function `values` for use sites.
   * `define-usage`: New option `--with-help` to help reduce boilerplate.

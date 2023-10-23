@@ -154,3 +154,56 @@ Count: 5
 ```
 
 ### exit: 0
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #1
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  one "two
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #2
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  a ; b
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #3
+
+### stdout
+```
+Count: 0
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #4
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  d|e f&g
+
+the-cmd -- test command
+```
+
+### exit: 1
