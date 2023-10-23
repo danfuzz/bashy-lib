@@ -1032,9 +1032,18 @@ function _argproc_statements-from-args {
                 esac
             elif handler="_argproc:alias-${name}" \
                     && declare -F "${handler}" >/dev/null; then
+                # Alias option; must not be passed any values.
                 if [[ ${assign} == '' ]]; then
-                    # TODO
-                    :
+                    # Parse the output of `handler` into new options, and
+                    # "unshift" them onto `$@`.
+                    if eval 2>/dev/null "values=($("\${handler}"))"; then
+                        shift # Shift the alias option away.
+                        set -- shifted-away-below "${values[@]}" "$@"
+                    else
+                        error-msg "Invalid multi-value syntax for option --${name}:"
+                        error-msg "  ${value}"
+                        argError=1
+                    fi
                 else
                     error-msg "Cannot pass values to alias option: --${name}"
                     argError=1
