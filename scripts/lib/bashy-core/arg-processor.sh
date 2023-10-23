@@ -17,7 +17,7 @@
 # `<value>` are always optional and (independently) sometimes prohibited,
 # depending on the definition function.
 #
-# The public argument-defining functions also all allow these options, of which
+# Most public argument-defining functions also all allow these options, of which
 # at least one must be used. When both are used, the `--call` is performed
 # first, and then the `--var` setting.
 # present, evaluation order is filter then call then variable setting.
@@ -106,6 +106,22 @@ function opt-action {
         # Set up the variable initializer.
         _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
     fi
+}
+
+# Declares an "alias" option, which expands into an arbitrary set of other
+# options. On a commandline, alias options do not accept values (because values,
+# if any, are provided in the expansion). Similarly, and unlike most of the
+# argument-definining functions, alias options cannot be specified with either
+# `--call` or `--var` (because any calls or variable setting is done with the
+# expanded options). In fact, _no_ options are available when defining an alias.
+function opt-alias {
+    local args=("$@")
+    _argproc_janky-args --multi-arg call \
+    || return 1
+
+    # TODO!
+    error-msg TODO
+    return 1
 }
 
 # Declares a "choice" option set, consisting of one or more options. On a
