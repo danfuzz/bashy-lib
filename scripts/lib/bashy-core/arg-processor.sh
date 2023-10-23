@@ -555,7 +555,9 @@ function _argproc_define-alias-arg {
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-abbrev "${abbrevChar}" "${specName}"
+        eval 'function _argproc:alias-short-'"${abbrevChar}"' {
+            '"${handlerName}"' "$@"
+        }'
     fi
 }
 
