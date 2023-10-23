@@ -116,7 +116,7 @@ function opt-action {
 # expanded options). In fact, _no_ options are available when defining an alias.
 function opt-alias {
     local args=("$@")
-    _argproc_janky-args --multi-arg call \
+    _argproc_janky-args --multi-arg \
     || return 1
 
     local specName=''
