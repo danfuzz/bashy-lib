@@ -986,7 +986,7 @@ function _argproc_set-arg-description {
 # read.
 function _argproc_statements-from-args {
     local argError=0
-    local arg handler name value values
+    local arg handler name assign value values
 
     # This is used for required-argument checking.
     _argproc_statements+=($'local _argproc_receivedArgNames=\'\'')
@@ -1001,19 +1001,19 @@ function _argproc_statements-from-args {
         elif [[ ${arg} == '' || ${arg} =~ ^-[0-9]*$ || ${arg} =~ ^[^-] ]]; then
             # Non-option argument.
             break
-        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)(=.*)?$ ]]; then
+        elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)((=)(.*))?$ ]]; then
             # Long-form no- or single-value option.
             name="${BASH_REMATCH[1]}"
-            value="${BASH_REMATCH[2]}"
+            assign="${BASH_REMATCH[3]}"
+            value="${BASH_REMATCH[4]}"
             handler="_argproc:long-${name}"
             if ! declare -F "${handler}" >/dev/null; then
                 error-msg "Unknown option: --${name}"
                 argError=1
-            elif [[ ${value} == '' ]]; then
+            elif [[ ${assign} == '' ]]; then
                 _argproc_statements+=("${handler}")
             else
-                # `:1` to drop the `=` from the start of `value`.
-                _argproc_statements+=("${handler} $(_argproc_quote "${value:1}")")
+                _argproc_statements+=("${handler} $(_argproc_quote "${value}")")
             fi
         elif [[ ${arg} =~ ^--([-a-zA-Z0-9]+)'[]='(.*)$ ]]; then
             # Long-form multi-value option.
