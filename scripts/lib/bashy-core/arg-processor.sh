@@ -119,9 +119,23 @@ function opt-alias {
     _argproc_janky-args --multi-arg call \
     || return 1
 
-    # TODO!
-    error-msg TODO
-    return 1
+    local specName=''
+    local specAbbrev=''
+    _argproc_parse-spec --abbrev "${args[0]}" \
+    || return 1
+
+    args=("${args[@]:1}")
+
+    local arg
+    for arg in "${args[@]}"; do
+        if [[ ! (${arg} =~ ^-) ]]; then
+            error-msg --file-line=1 "Invalid alias expansion: ${arg}"
+            return 1
+        fi
+    done
+
+    _argproc_define-alias-arg --option "${specName}" "${specAbbrev}" \
+        "${args[@]}"
 }
 
 # Declares a "choice" option set, consisting of one or more options. On a
@@ -504,6 +518,41 @@ function _argproc_define-abbrev {
     eval 'function _argproc:abbrev-'"${abbrevChar}"' {
         _argproc:long-'"${specName}"' "$@"
     }'
+}
+
+# Defines an activation function for an alias.
+function _argproc_define-alias-arg {
+    if [[ $1 == '--option' ]]; then
+        shift
+    else
+        # `--option` is really defined here for parallel structure, not utility.
+        error-msg --file-line=1 'Not supported.'
+        return 1
+    fi
+
+    local specName="$1"
+    local abbrevChar="$2"
+
+    _argproc_set-arg-description "${specName}" alias || return 1
+
+    local desc="$(_argproc_arg-description "${specName}")"
+    local handlerName="_argproc:alias-${specName}"
+    local handlerBody="$(
+        _argproc_handler-body "${specName}" '' "${callFunc}" "${varName}"
+    )"
+
+    eval 'function '"${handlerName}"' {
+        if (( $# > 0 )); then
+            error-msg "Value not allowed for '"${desc}"'."
+            return 1
+        fi
+        set '"${value}"'
+        '"${handlerBody}"'
+    }'
+
+    if [[ ${abbrevChar} != '' ]]; then
+        _argproc_define-abbrev "${abbrevChar}" "${specName}"
+    fi
 }
 
 # Defines an activation function for a multi-value argument.
