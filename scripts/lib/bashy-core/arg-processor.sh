@@ -526,7 +526,7 @@ function _argproc_define-alias-arg {
     shift
 
     local specName="$1"
-    local abbrevChar="$2"
+    local specShort="$2"
     shift 2
     local args=("$@")
 
@@ -544,8 +544,8 @@ function _argproc_define-alias-arg {
         }'
     fi
 
-    if [[ ${abbrevChar} != '' ]]; then
-        eval 'function _argproc:short-alias-'"${abbrevChar}"' {
+    if [[ ${specShort} != '' ]]; then
+        eval 'function _argproc:short-alias-'"${specShort}"' {
             echo --'"${specName}"'
         }'
     fi
@@ -606,7 +606,7 @@ function _argproc_define-no-value-arg {
     local value="$2"
     local callFunc="$3"
     local varName="$4"
-    local abbrevChar="$5"
+    local specShort="$5"
 
     _argproc_set-arg-description "${specName}" option || return 1
 
@@ -627,8 +627,8 @@ function _argproc_define-no-value-arg {
         '"${handlerBody}"'
     }'
 
-    if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-alias-arg --short-only "${specName}" "${abbrevChar}"
+    if [[ ${specShort} != '' ]]; then
+        _argproc_define-alias-arg --short-only "${specName}" "${specShort}"
     fi
 }
 
@@ -682,8 +682,8 @@ function _argproc_define-value-taking-arg {
         '"${handlerBody}"'
     }'
 
-    if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-alias-arg --short-only "${specName}" "${abbrevChar}"
+    if [[ ${specShort} != '' ]]; then
+        _argproc_define-alias-arg --short-only "${specName}" "${specShort}"
     fi
 }
 
