@@ -138,50 +138,6 @@ function opt-alias {
         "${args[@]}"
 }
 
-# Declares a "choice" option set, consisting of one or more options. On a
-# commandline, no choice option accepts a value (because the option name itself
-# implies the value). If left unspecified, the initial variable value for a
-# choice option is `''` (the empty string). This definer also accepts the
-# `--required` option.
-function opt-choice {
-    local optCall=''
-    local optDefault=''
-    local optRequired=0
-    local optVar=''
-    local args=("$@")
-    _argproc_janky-args --multi-arg call default required var \
-    || return 1
-
-    if [[ ${optVar} != '' ]]; then
-        # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
-    fi
-
-    local allNames=()
-    local spec
-    for spec in "${args[@]}"; do
-        local specName=''
-        local specHasValue=0
-        local specShort=''
-        local specValue=''
-        _argproc_parse-spec --short --value "${spec}" \
-        || return 1
-
-        if (( !specHasValue )); then
-            specValue="${specName}"
-        fi
-
-        _argproc_define-no-value-arg --option \
-            "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specShort}"
-
-        allNames+=("${specName}")
-    done
-
-    if (( optRequired )); then
-        _argproc_add-required-arg-postcheck "${allNames[@]}"
-    fi
-}
-
 # Declares a "multi-value" option, which allows passing zero or more values. No
 # `<short>` or `<value>` is allowed in the argument spec. These options are
 # accepted via the syntax `--<name>[]=<values>` where <values> is a

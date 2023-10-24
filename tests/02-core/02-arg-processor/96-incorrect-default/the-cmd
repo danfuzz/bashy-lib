@@ -15,8 +15,10 @@ define-usage $'
     This is a test command.
 '
 
-opt-choice --required --var=what zero one/o two/t=2 three=3
+opt-alias --default=zoop some-alias --x
+opt-multi --var=var1 --default=x some-multi
+rest-arg --var=var1 --default=y some-rest
 
 process-args "$@" || exit "$?"
 
-printf 'what: %q\n' "${what}"
+echo 'Nopers.'

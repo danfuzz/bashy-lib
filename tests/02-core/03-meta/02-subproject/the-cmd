@@ -9,7 +9,10 @@
 # Argument parsing
 #
 
-opt-choice --var=what absolute not-set relative
+opt-value --var=what what
+opt-alias absolute --what=absolute
+opt-alias not-set  --what=not-set
+opt-alias relative --what=relative
 
 process-args "$@" || exit "$?"
 

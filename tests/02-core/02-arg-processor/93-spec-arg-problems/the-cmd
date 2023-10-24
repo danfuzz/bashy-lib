@@ -18,7 +18,7 @@ define-usage $'
 # Missing spec.
 opt-action --var=var1
 opt-value --var=var2
-opt-choice --var=var3
+opt-multi --var=var3
 opt-toggle --var=var4
 positional-arg --var=var5
 rest-arg --var=var6
@@ -32,7 +32,7 @@ rest-arg --var=var5 x y
 
 # Invalid spec syntax.
 opt-action --var=var1 'foo%bar'
-opt-choice --var=var2 beep bloop@99
+opt-multi --var=var2 bloop@99
 opt-value --var=var3 -- -foo
 opt-toggle --var=var4 'beep boop'
 positional-arg --var=var5 '/x'
@@ -40,12 +40,13 @@ rest-arg --var=var6 _why
 
 # Abbreviation (short option) not allowed.
 opt-value --var=var1 bloop/b
+opt-multi --var=var1 biff/B
 opt-toggle --var=var2 zonk/z
 positional-arg --var=var3 crump/c
 rest-arg --var=var4 rhumba/r
 
 # Value not allowed.
-opt-choice --var=var1 florp foo=x bar
+opt-multi --var=var1 florp=no-way
 positional-arg --var=var2 fleep=123
 rest-arg --var=var3 floop=xyz
 
