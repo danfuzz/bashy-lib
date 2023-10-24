@@ -20,9 +20,9 @@ the-cmd:36: Invalid spec: -foo
 the-cmd:37: Invalid spec: beep boop
 the-cmd:38: Invalid spec: /x
 the-cmd:39: Invalid spec: _why
-the-cmd:42: Abbrev not allowed in spec: bloop/b
-the-cmd:44: Abbrev not allowed in spec: crump/c
-the-cmd:45: Abbrev not allowed in spec: rhumba/r
+the-cmd:42: Short-option character not allowed in spec: bloop/b
+the-cmd:44: Short-option character not allowed in spec: crump/c
+the-cmd:45: Short-option character not allowed in spec: rhumba/r
 the-cmd:49: Value not allowed in spec: fleep=123
 the-cmd:50: Value not allowed in spec: floop=xyz
 Cannot process arguments, due to declaration errors.
