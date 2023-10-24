@@ -215,7 +215,7 @@ function json-postproc-output {
             : # Nothing to do.
             ;;
         lines|raw|raw0)
-            jget "${outputArray}" --output="${_bashy_jsonOutputStyle}" '.[]'
+            jget --output="${_bashy_jsonOutputStyle}" "${outputArray}" '.[]'
             ;;
         '')
             error-msg 'No JSON --output option supplied (or implied).'
