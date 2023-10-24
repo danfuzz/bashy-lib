@@ -25,7 +25,8 @@ Other notable changes:
     * Added `opt-alias` to allow for expansion of single no-value options into
       multiple options (including with values). Used underlying facility to
       rework implementation of single-character short options.
-    * Added multi-value option syntax `--opt-name[]=...`, along with helper
+    * Added `opt-multi` to accept multi-valued options. Relatedly, added
+      multi-value option passing syntax `--opt-name[]=...`, along with helper
       function `vals` for use sites.
   * `define-usage`: New option `--with-help` to help reduce boilerplate.
   * `stderr-msg`: New option `--file-line`.
