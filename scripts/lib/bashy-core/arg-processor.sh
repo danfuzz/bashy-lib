@@ -96,7 +96,7 @@ function opt-action {
     local specHasValue=0 # Ignored, but needed because `parse-spec` will set it.
     local specShort=''
     local specValue='1'
-    _argproc_parse-spec --abbrev --value "${args[0]}" \
+    _argproc_parse-spec --short --value "${args[0]}" \
     || return 1
 
     _argproc_define-no-value-arg --option \
@@ -121,7 +121,7 @@ function opt-alias {
 
     local specName=''
     local specShort=''
-    _argproc_parse-spec --abbrev "${args[0]}" \
+    _argproc_parse-spec --short "${args[0]}" \
     || return 1
 
     args=("${args[@]:1}")
@@ -164,7 +164,7 @@ function opt-choice {
         local specHasValue=0
         local specShort=''
         local specValue=''
-        _argproc_parse-spec --abbrev --value "${spec}" \
+        _argproc_parse-spec --short --value "${spec}" \
         || return 1
 
         if (( !specHasValue )); then
@@ -232,7 +232,7 @@ function opt-toggle {
 
     local specName=''
     local specShort=''
-    _argproc_parse-spec --abbrev "${args[0]}" \
+    _argproc_parse-spec --short "${args[0]}" \
     || return 1
 
     if [[ ${optVar} != '' ]]; then
@@ -902,7 +902,7 @@ function _argproc_janky-args {
     fi
 }
 
-# Parses a single argument / option spec. `--abbrev` to accept a <short>
+# Parses a single argument / option spec. `--short` to accept a <short>
 # (short-option) character. `--value` to accept a value. `--value-eq` to accept
 # a value and leave the `=` in the result (to distinguish unset and
 # set-to-empty). Sets `spec<Item>` (presumed locals in the calling scope) to
@@ -913,7 +913,7 @@ function _argproc_parse-spec {
     local valueWithEq=0
     while [[ $1 =~ ^-- ]]; do
         case "$1" in
-            --abbrev)   abbrevOk=1               ;;
+            --short)    abbrevOk=1               ;;
             --value)    valueOk=1                ;;
             --value-eq) valueOk=1; valueWithEq=1 ;;
             *)
@@ -940,7 +940,7 @@ function _argproc_parse-spec {
     if (( abbrevOk )); then
         specShort="${abbrev:1}" # `:1` to drop the slash.
     elif [[ ${abbrev} != '' ]]; then
-        error-msg --file-line=2 "Abbrev not allowed in spec: ${spec}"
+        error-msg --file-line=2 "Short-option character not allowed in spec: ${spec}"
         _argproc_declarationError=1
         return 1
     fi
