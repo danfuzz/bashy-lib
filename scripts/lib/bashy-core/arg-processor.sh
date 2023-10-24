@@ -1098,7 +1098,7 @@ function _argproc_statements-from-args {
                 argError=1
             fi
         elif [[ $arg =~ ^-([a-zA-Z0-9]+)$ ]]; then
-            # Short-form option.
+            # Short-form option (which is always an alias in this system).
             arg="${BASH_REMATCH[1]}"
             while [[ ${arg} =~ ^(.)(.*)$ ]]; do
                 name="${BASH_REMATCH[1]}"
