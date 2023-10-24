@@ -242,8 +242,7 @@ function opt-toggle {
 
     _argproc_define-value-taking-arg --option \
         "${specName}" '=1' '/^[01]$/' "${optCall}" "${optVar}"
-    _argproc_define-no-value-arg --option \
-        "no-${specName}" '0' "${optCall}" "${optVar}" ''
+    _argproc_define-alias-arg --option "no-${specName}" '' "--${specName}=0"
 
     if [[ ${specAbbrev} != '' ]]; then
         _argproc_define-abbrev "${specAbbrev}" "${specName}"
