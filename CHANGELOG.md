@@ -13,6 +13,7 @@ Breaking changes:
     * New recommended processing call `process-args "$@" || exit "$?"`, because
       of "magic" reduction noted below.
     * Renamed `--init` to `--default`, which is a better word for the meaning.
+    * Removed `opt-choice`, as it's now covered by the more general `opt-alias`.
   * `define-usage`: Dropped "magical" `exit` behavior.
 
 Other notable changes:
@@ -25,7 +26,7 @@ Other notable changes:
       multiple options (including with values). Used underlying facility to
       rework implementation of single-character short options.
     * Added multi-value option syntax `--opt-name[]=...`, along with helper
-      function `values` for use sites.
+      function `vals` for use sites.
   * `define-usage`: New option `--with-help` to help reduce boilerplate.
   * `stderr-msg`: New option `--file-line`.
   * Added a lot of tests, covering almost all of the core library functionality.
