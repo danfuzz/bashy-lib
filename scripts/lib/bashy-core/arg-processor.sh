@@ -908,12 +908,12 @@ function _argproc_janky-args {
 # set-to-empty). Sets `spec<Item>` (presumed locals in the calling scope) to
 # "return" results.
 function _argproc_parse-spec {
-    local abbrevOk=0
+    local shortOk=0
     local valueOk=0
     local valueWithEq=0
     while [[ $1 =~ ^-- ]]; do
         case "$1" in
-            --short)    abbrevOk=1               ;;
+            --short)    shortOk=1               ;;
             --value)    valueOk=1                ;;
             --value-eq) valueOk=1; valueWithEq=1 ;;
             *)
@@ -937,7 +937,7 @@ function _argproc_parse-spec {
     local abbrev="${BASH_REMATCH[2]}"
     local value="${BASH_REMATCH[3]}"
 
-    if (( abbrevOk )); then
+    if (( shortOk )); then
         specShort="${abbrev:1}" # `:1` to drop the slash.
     elif [[ ${abbrev} != '' ]]; then
         error-msg --file-line=2 "Short-option character not allowed in spec: ${spec}"
