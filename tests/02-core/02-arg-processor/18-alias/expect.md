@@ -177,3 +177,29 @@ value: y\$e\&s\|\!
 ```
 
 ### exit: 0
+
+- - - - - - - - - -
+
+## passed explicit value to alias
+
+### stderr
+```
+the-cmd: Cannot pass values to alias option: --do-action
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed explicit multiple values to alias
+
+### stderr
+```
+the-cmd: Cannot pass values to alias option: --do-toggle
+
+the-cmd -- test command
+```
+
+### exit: 1
