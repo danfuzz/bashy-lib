@@ -17,7 +17,7 @@ define-usage $'
 
 opt-action act
 opt-value some-value
-opt-choice yes no
+opt-multi yes
 opt-toggle boop
 positional-arg --filter='/boop/' some-position
 rest-arg --filter='/x/' the-rest
