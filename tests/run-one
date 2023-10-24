@@ -62,7 +62,45 @@ function emit-error {
     error-msg "$@"
 }
 
-# Expands from a simple name (no slashes) taken to be a prefix.
+# Expands from just numbers and slashes, to a full test path.
+function expand-numbers {
+    local numbersName="$1"
+
+    local part partExpanded
+    local newName='/'
+    while [[ ${numbersName} =~ ^/*([0-9]+)(.*)$ ]]; do
+        part="${BASH_REMATCH[1]}"
+        numbersName="${BASH_REMATCH[2]}"
+        partExpanded=($(
+            lib ls-files --output=lines --cd="${testsDir}${newName}" --dirs \
+                --depth=1 --include="^${part}-"
+        ))
+
+        case "${#partExpanded[@]}" in
+            0)
+                error-msg 'Test not found:'
+                error-msg "  ${newName#/}${part}"
+                return 1
+                ;;
+            1)
+                : # It's good
+                ;;
+            *)
+                error-msg 'Ambiguous test name:'
+                error-msg "  ${newName#/}${part}"
+                error-msg --exec printf '    %s\n' "${partExpanded[@]}"
+                return 1
+                ;;
+        esac
+
+        newName+="${partExpanded[0]}/"
+    done
+
+    echo "tests${newName}"
+}
+
+# Expands from a simple name (no slashes) taken to be a prefix, to a full test
+# path.
 function expand-prefix {
     local prefix="$1"
 
@@ -105,36 +143,8 @@ testsDir="$(this-cmd-dir)"
 if [[ ${testName} =~ ^[/0-9]+$ ]]; then
     # The name appears to be a shorthand that omits the non-numeric portion of
     # the directories. Try to expand it.
-    newName='/'
-    while [[ ${testName} =~ ^/*([0-9]+)(.*)$ ]]; do
-        part="${BASH_REMATCH[1]}"
-        testName="${BASH_REMATCH[2]}"
-        partExpanded=($(
-            lib ls-files --output=lines --cd="${testsDir}${newName}" --dirs \
-                --depth=1 --include="^${part}-"
-        ))
-
-        case "${#partExpanded[@]}" in
-            0)
-                error-msg 'Test not found:'
-                error-msg "  ${newName#/}${part}"
-                exit 1
-                ;;
-            1)
-                : # It's good
-                ;;
-            *)
-                error-msg 'Ambiguous test name:'
-                error-msg "  ${newName#/}${part}"
-                error-msg --exec printf '    %s\n' "${partExpanded[@]}"
-                exit 1
-                ;;
-        esac
-
-        newName+="${partExpanded[0]}/"
-    done
-
-    testName="tests${newName}"
+    testName="$(expand-numbers "${testName}")" \
+    || exit "$?"
 elif [[ ${testName} =~ ^[0-9][-0-9a-z]+$ ]]; then
     # The name appears to be a shorthand prefix for a specific leaf test
     # directory. Try to expand it.
