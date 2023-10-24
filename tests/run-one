@@ -20,8 +20,8 @@ define-usage --with-help $'
     * Any prefix on the test which looks like a path to the `tests` directory is
       ignored.
     * If the name consists only of digits and slashes, then it is expanded to
-      include the names of the test directories in question, e.g. `01/005` might
-      expand into `01-smoke-tests/005-dry-ice`.
+      include the names of the test directories in question, e.g. `01/05` might
+      expand into `01-smoke-tests/05-dry-ice`.
 
     Note that all test directories are expected to be named with a sequential
     numeric prefix followed by a dash.
