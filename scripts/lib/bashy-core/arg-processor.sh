@@ -938,7 +938,7 @@ function _argproc_parse-spec {
     local value="${BASH_REMATCH[3]}"
 
     if (( shortOk )); then
-        specShort="${shortChar#/}" # `#/` to drop the slash.
+        specShort="${shortChar#/}" # `#/` to drop the initial slash.
     elif [[ ${shortChar} != '' ]]; then
         error-msg --file-line=2 "Short-option character not allowed in spec: ${spec}"
         _argproc_declarationError=1
