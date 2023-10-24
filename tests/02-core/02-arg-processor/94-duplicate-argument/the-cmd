@@ -19,7 +19,7 @@ define-usage $'
 opt-action --var=var1 the-one
 
 opt-action --var=var1 the-one
-opt-choice --var=var1 the-one
+opt-multi --var=var1 the-one
 opt-toggle --var=var1 the-one
 opt-value --var=var1 the-one
 positional-arg --var=var1 the-one
