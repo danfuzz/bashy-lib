@@ -514,41 +514,48 @@ function _argproc_define-abbrev {
     local abbrevChar="$1"
     local specName="$2"
 
-    eval 'function _argproc:short-alias-'"${abbrevChar}"' {
-        echo --'"${specName}"'
-    }'
+    _argproc_define-alias-arg --short-only "${specName}" "${abbrevChar}"
 }
 
-# Defines an activation function for an alias.
+# Defines an activation function for an alias and/or a short alias.
 function _argproc_define-alias-arg {
-    if [[ $1 == '--option' ]]; then
-        shift
-    else
-        # `--option` is really defined here for parallel structure, not utility.
-        error-msg --file-line=1 'Not supported.'
-        return 1
-    fi
+    local shortOnly=0
+    case "$1" in
+        --option)
+            : # Nothing special to do for this case.
+            ;;
+        --short-only)
+            shortOnly=1
+            ;;
+        *)
+            error-msg --file-line=1 'Need --option or --short-only.'
+            return 1
+            ;;
+    esac
+    shift
 
     local specName="$1"
     local abbrevChar="$2"
     shift 2
     local args=("$@")
 
-    _argproc_set-arg-description "${specName}" option || return 1
+    if (( !shortOnly )); then
+        _argproc_set-arg-description "${specName}" option || return 1
 
-    local desc="$(_argproc_arg-description "${specName}")"
-    local handlerName="_argproc:alias-${specName}"
-    eval 'function '"${handlerName}"' {
-        if (( $# > 0 )); then
-            error-msg "Value not allowed for '"${desc}"'."
-            return 1
-        fi
-        printf "%q\\n" '"$(_argproc_quote "${args[@]}")"'
-    }'
+        local desc="$(_argproc_arg-description "${specName}")"
+        local handlerName="_argproc:alias-${specName}"
+        eval 'function '"${handlerName}"' {
+            if (( $# > 0 )); then
+                error-msg "Value not allowed for '"${desc}"'."
+                return 1
+            fi
+            printf "%q\\n" '"$(_argproc_quote "${args[@]}")"'
+        }'
+    fi
 
     if [[ ${abbrevChar} != '' ]]; then
         eval 'function _argproc:short-alias-'"${abbrevChar}"' {
-            '"${handlerName}"' "$@"
+            echo --'"${specName}"'
         }'
     fi
 }
