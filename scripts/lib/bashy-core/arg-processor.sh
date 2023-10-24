@@ -11,10 +11,10 @@
 # integers (e.g. `-123`) are interpreted as non-option arguments.
 #
 # The public argument-defining functions all take argument specifications of the
-# form `<name>/<abbrev>=<value>`. `<name>` is the argument (long option) name.
-# `<abbrev>` is a one-letter abbreviation for a single-dash option form.
-# `<value>` is a (string) value to associate with the argument. `<abbrev>` and
-# `<value>` are always optional and (independently) sometimes prohibited,
+# form `<name>/<short>=<value>`. `<name>` is the argument (long option) name.
+# `<short>` is a one-letter short-option abbreviation for a single-dash option
+# form. `<value>` is a (string) value to associate with the argument. `<short>`
+# and `<value>` are always optional and (independently) sometimes prohibited,
 # depending on the definition function.
 #
 # Most public argument-defining functions also all allow these options, of which
@@ -183,7 +183,7 @@ function opt-choice {
 }
 
 # Declares a "multi-value" option, which allows passing zero or more values. No
-# `<abbrev>` or `<value>` is allowed in the argument spec. These options are
+# `<short>` or `<value>` is allowed in the argument spec. These options are
 # accepted via the syntax `--<name>[]=<values>` where <values> is a
 # space-separated list of literal values, with standard shell quoting and
 # escaping allowed in order to pass special characters. This definer also
@@ -251,7 +251,7 @@ function opt-toggle {
 
 # Declares a "value" option, which allows passing an arbitrary value. If a
 # <value> is passed in the spec, then the resulting option is value-optional,
-# with the no-value form using the given <value>. No <abbrev> is allowed in the
+# with the no-value form using the given <value>. No <short> is allowed in the
 # argument spec. If left unspecified, the default variable value for a value
 # option is `''` (the empty string). This definer also accepts the `--required`
 # option.
@@ -284,7 +284,7 @@ function opt-value {
     fi
 }
 
-# Declares a positional argument. No `<abbrev>` or `<value>` is allowed in the
+# Declares a positional argument. No `<short>` or `<value>` is allowed in the
 # argument spec. If left unspecified, the initial variable value is `''` (the
 # empty string). Unlike options, a positional argument name is _only_ used for
 # error messages and internal bookkeeping. This definer also accepts the
@@ -902,10 +902,11 @@ function _argproc_janky-args {
     fi
 }
 
-# Parses a single argument / option spec. `--abbrev` to accept an abbreviation.
-# `--value` to accept a value. `--value-eq` to accept a value and leave the
-# `=` in the result (to distinguish unset and set-to-empty). Sets `spec<Item>`
-# (presumed locals in the calling scope) to "return" results.
+# Parses a single argument / option spec. `--abbrev` to accept a <short>
+# (short-option) character. `--value` to accept a value. `--value-eq` to accept
+# a value and leave the `=` in the result (to distinguish unset and
+# set-to-empty). Sets `spec<Item>` (presumed locals in the calling scope) to
+# "return" results.
 function _argproc_parse-spec {
     local abbrevOk=0
     local valueOk=0
