@@ -24,13 +24,13 @@ call-and-log-as-test 'passed `--` then non-option arg' \
 call-and-log-as-test 'passed `--` then arg that looks like an option' \
     "${cmd}" -- --not-actually-an-option
 
-call-and-log-as-test 'passed a single-dash option' \
+call-and-log-as-test 'passed a short (single-dash) option' \
     "${cmd}" -x
 
-call-and-log-as-test 'passed a double-dash option' \
+call-and-log-as-test 'passed a regular (long / double-dash) option' \
     "${cmd}" --x
 
-call-and-log-as-test 'passed a double-dash option with a value' \
+call-and-log-as-test 'passed a regular (long / double-dash) option with a value' \
     "${cmd}" --x=y
 
 call-and-log-as-test 'passed a `--no-` option' \
@@ -41,3 +41,9 @@ call-and-log-as-test 'passed a `--no-` option and a non-option argument' \
 
 call-and-log-as-test 'passed a double-dash option and then `--`' \
     "${cmd}" --blort --
+
+call-and-log-as-test 'passed a concatenated pair of short options' \
+    "${cmd}" -xy
+
+call-and-log-as-test 'passed an invalid single-dash option' \
+    "${cmd}" -beep=boop

@@ -72,7 +72,7 @@ the-cmd -- test command
 
 - - - - - - - - - -
 
-## passed a single-dash option
+## passed a short (single-dash) option
 
 ### stderr
 ```
@@ -85,7 +85,7 @@ the-cmd -- test command
 
 - - - - - - - - - -
 
-## passed a double-dash option
+## passed a regular (long / double-dash) option
 
 ### stderr
 ```
@@ -98,7 +98,7 @@ the-cmd -- test command
 
 - - - - - - - - - -
 
-## passed a double-dash option with a value
+## passed a regular (long / double-dash) option with a value
 
 ### stderr
 ```
@@ -143,6 +143,32 @@ the-cmd -- test command
 ### stderr
 ```
 the-cmd: Unknown option: --blort
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed a concatenated pair of short options
+
+### stderr
+```
+the-cmd: Unknown option: -x
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed an invalid single-dash option
+
+### stderr
+```
+the-cmd: Invalid option syntax: -beep=boop
 
 the-cmd -- test command
 ```
