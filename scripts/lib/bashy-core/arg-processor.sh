@@ -1100,16 +1100,15 @@ function _argproc_statements-from-args {
         elif [[ $arg =~ ^-([a-zA-Z0-9]+)$ ]]; then
             # Short-form option (which is always an alias in this system).
             arg="${BASH_REMATCH[1]}"
+            local newArgs=()
             while [[ ${arg} =~ ^(.)(.*)$ ]]; do
                 name="${BASH_REMATCH[1]}"
                 arg="${BASH_REMATCH[2]}"
                 if handler="_argproc:short-alias-${name}" \
                         && declare -F "${handler}" >/dev/null; then
-                    # Parse the output of `handler` into new options, and
-                    # "unshift" them onto `$@`.
+                    # Parse the output of `handler` into new options to include.
                     if eval 2>/dev/null "values=($("${handler}"))"; then
-                        shift # Shift the alias option away.
-                        set -- shifted-away-below "${values[@]}" "$@"
+                        newArgs+=("${values[@]}")
                     else
                         error-msg "Could not expand alias option: --${name}"
                         argError=1
@@ -1122,6 +1121,8 @@ function _argproc_statements-from-args {
                     break
                 fi
             done
+            shift # Shift the original short option away.
+            set -- shifted-away-below "${newArgs[@]}" "$@"
         else
             # Something weird and invalid, e.g. `--=`.
             error-msg "Invalid option syntax: ${arg}"
