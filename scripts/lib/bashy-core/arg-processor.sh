@@ -245,7 +245,7 @@ function opt-toggle {
     _argproc_define-alias-arg --option "no-${specName}" '' "--${specName}=0"
 
     if [[ ${specAbbrev} != '' ]]; then
-        _argproc_define-abbrev "${specAbbrev}" "${specName}"
+        _argproc_define-alias-arg --short-only "${specName}" "${specAbbrev}"
     fi
 }
 
@@ -508,15 +508,6 @@ function _argproc_arg-description {
     fi
 }
 
-# Defines an "abbrev" function, which is what gets called to activate a
-# short-form option.
-function _argproc_define-abbrev {
-    local abbrevChar="$1"
-    local specName="$2"
-
-    _argproc_define-alias-arg --short-only "${specName}" "${abbrevChar}"
-}
-
 # Defines an activation function for an alias and/or a short alias.
 function _argproc_define-alias-arg {
     local shortOnly=0
@@ -637,7 +628,7 @@ function _argproc_define-no-value-arg {
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-abbrev "${abbrevChar}" "${specName}"
+        _argproc_define-alias-arg --short-only "${specName}" "${abbrevChar}"
     fi
 }
 
@@ -692,7 +683,7 @@ function _argproc_define-value-taking-arg {
     }'
 
     if [[ ${abbrevChar} != '' ]]; then
-        _argproc_define-abbrev "${abbrevChar}" "${specName}"
+        _argproc_define-alias-arg --short-only "${specName}" "${abbrevChar}"
     fi
 }
 
