@@ -933,7 +933,7 @@ function _argproc_parse-spec {
         return 1
     fi
 
-    specName="${BASH_REMATCH[1]}" # Name always allowed. Others need to be checked.
+    specName="${BASH_REMATCH[1]}" # Name always allowed. Others must be checked.
     local abbrev="${BASH_REMATCH[2]}"
     local value="${BASH_REMATCH[3]}"
 
