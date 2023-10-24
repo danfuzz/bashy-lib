@@ -180,6 +180,34 @@ value: y\$e\&s\|\!
 
 - - - - - - - - - -
 
+## passed two concatenated short aliases
+
+### stdout
+```
+action: 1
+multi: ()
+toggle: 1
+value: one
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## passed three concatenated short aliases, with one overriding another
+
+### stdout
+```
+action: 1
+multi: ()
+toggle: 1
+value: zzz
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
 ## passed explicit value to alias
 
 ### stderr

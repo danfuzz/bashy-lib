@@ -47,6 +47,12 @@ call-and-log-as-test 'passed alias to value, spaces in expansion' \
 call-and-log-as-test 'passed alias to value, special characters in expansion' \
     "${cmd}" --val-with-specials
 
+call-and-log-as-test 'passed two concatenated short aliases' \
+    "${cmd}" -vt
+
+call-and-log-as-test 'passed three concatenated short aliases, with one overriding another' \
+    "${cmd}" -vtz
+
 call-and-log-as-test 'passed explicit value to alias' \
     "${cmd}" --do-action=florp
 

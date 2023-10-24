@@ -26,6 +26,7 @@ opt-alias do-toggle --toggle
 opt-alias do-notog --no-toggle
 opt-alias val-1/v --value=one
 opt-alias do-act-tog/t --action --toggle
+opt-alias val-z/z --value=zzz
 opt-alias do-act-tog-val-2 --value=two --toggle --action
 opt-alias do-notog-val-3 --no-toggle --value=3
 opt-alias val-multi --value=florp --multi[]='yes no "maybe?"'
