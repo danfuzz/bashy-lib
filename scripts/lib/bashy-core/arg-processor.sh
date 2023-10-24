@@ -93,14 +93,14 @@ function opt-action {
     || return 1
 
     local specName=''
-    local specAbbrev=''
     local specHasValue=0 # Ignored, but needed because `parse-spec` will set it.
+    local specShort=''
     local specValue='1'
     _argproc_parse-spec --abbrev --value "${args[0]}" \
     || return 1
 
     _argproc_define-no-value-arg --option \
-        "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specAbbrev}"
+        "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specShort}"
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
@@ -120,7 +120,7 @@ function opt-alias {
     || return 1
 
     local specName=''
-    local specAbbrev=''
+    local specShort=''
     _argproc_parse-spec --abbrev "${args[0]}" \
     || return 1
 
@@ -134,7 +134,7 @@ function opt-alias {
         fi
     done
 
-    _argproc_define-alias-arg --option "${specName}" "${specAbbrev}" \
+    _argproc_define-alias-arg --option "${specName}" "${specShort}" \
         "${args[@]}"
 }
 
@@ -161,8 +161,8 @@ function opt-choice {
     local spec
     for spec in "${args[@]}"; do
         local specName=''
-        local specAbbrev=''
         local specHasValue=0
+        local specShort=''
         local specValue=''
         _argproc_parse-spec --abbrev --value "${spec}" \
         || return 1
@@ -172,7 +172,7 @@ function opt-choice {
         fi
 
         _argproc_define-no-value-arg --option \
-            "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specAbbrev}"
+            "${specName}" "${specValue}" "${optCall}" "${optVar}" "${specShort}"
 
         allNames+=("${specName}")
     done
@@ -231,7 +231,7 @@ function opt-toggle {
     || return 1
 
     local specName=''
-    local specAbbrev=''
+    local specShort=''
     _argproc_parse-spec --abbrev "${args[0]}" \
     || return 1
 
@@ -244,8 +244,8 @@ function opt-toggle {
         "${specName}" '=1' '/^[01]$/' "${optCall}" "${optVar}"
     _argproc_define-alias-arg --option "no-${specName}" '' "--${specName}=0"
 
-    if [[ ${specAbbrev} != '' ]]; then
-        _argproc_define-alias-arg --short-only "${specName}" "${specAbbrev}"
+    if [[ ${specShort} != '' ]]; then
+        _argproc_define-alias-arg --short-only "${specName}" "${specShort}"
     fi
 }
 
@@ -937,7 +937,7 @@ function _argproc_parse-spec {
     local value="${BASH_REMATCH[3]}"
 
     if (( abbrevOk )); then
-        specAbbrev="${abbrev:1}" # `:1` to drop the slash.
+        specShort="${abbrev:1}" # `:1` to drop the slash.
     elif [[ ${abbrev} != '' ]]; then
         error-msg --file-line=2 "Abbrev not allowed in spec: ${spec}"
         _argproc_declarationError=1
