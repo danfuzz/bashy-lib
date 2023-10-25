@@ -27,13 +27,13 @@ opt-value --var=value --enum[]='$' x
 opt-value --var=value --enum[]=',' x
 opt-value --var=value --enum[]=';' x
 opt-value --var=value --enum[]='|' x
-opt-value --var=value --enum[]='@' x
-opt-value --var=value --enum[]='#' x
+opt-value --var=value --enum[]='^' x
+opt-value --var=value --enum[]='&' x
 
 # Disallowed value characters, embedded.
-opt-value --var=value --enum[]='@hello' x
-opt-value --var=value --enum[]='hello@' x
-opt-value --var=value --enum[]='hello@there' x
+opt-value --var=value --enum[]=';hello' x
+opt-value --var=value --enum[]='hello*' x
+opt-value --var=value --enum[]='hello?there' x
 opt-value --var=value --enum[]='x y,z' x
 opt-value --var=value --enum[]='x ab| y' x
 opt-value --var=value --enum[]='x #ab y' x
