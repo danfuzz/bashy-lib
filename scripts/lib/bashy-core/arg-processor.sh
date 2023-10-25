@@ -35,9 +35,9 @@
 #   such it cannot be used to affect the global environment of the main script.
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
 #   the regex doesn't match, the argument is rejected.
-# * `--enum=<spec>` -- Matches each argument value against a set of valid names.
-#   `<spec>` must be a space-separated list of names, e.g. `--enum='yes no
-#   maybe'`.
+# * `--enum[]=<spec>` -- Matches each argument value against a set of valid
+#   names. `<spec>` must be a non-empty space-separated list of names, e.g.
+#   `--enum[]='yes no maybe'`.
 #
 # Some argument-definers also accept these options:
 # * `--default=<value>` -- Specifies a default value for an argument or option
@@ -733,6 +733,11 @@ function _argproc_janky-args {
     local gotDefault=0
     local a
 
+    # TEMP: Remove spec mod once use sites are migrated.
+    if [[ ${argSpecs} =~ ' enum ' ]]; then
+        argSpecs+='enum[] '
+    fi
+
     for a in "${args[@]}"; do
         if (( optsDone )); then
             args+=("${a}")
@@ -740,7 +745,7 @@ function _argproc_janky-args {
         fi
 
         if [[ ${a} =~ ^--. ]]; then
-            if ! [[ ${a} =~ ^--([a-z][-a-z]+)(=.*)?$ ]]; then
+            if ! [[ ${a} =~ ^--([a-z][-a-z]+\[?\]?)(=.*)?$ ]]; then
                 error-msg --file-line=2 "Invalid option syntax: ${a}"
                 _argproc_declarationError=1
                 return 1
@@ -767,7 +772,8 @@ function _argproc_janky-args {
                     && optDefault="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
-                enum)
+                # TEMP: Remove plain `enum` once use sites are migrated.
+                enum|enum[])
                     if ! _argproc_parse-enum "${value}"; then
                         argError=1
                     fi
