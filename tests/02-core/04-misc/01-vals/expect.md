@@ -59,7 +59,7 @@ Length: 3
 
 ### stdout
 ```
-Result: space \ more\ space\  $'yes\nno\n\n' $'\there\tthere'
+Result: space ' more space ' $'yes\nno\n\n' $'\there\tthere'
 Length: 4
 
 0: space
@@ -101,7 +101,7 @@ Length: 9
 
 ### stdout
 ```
-Result: \" \' \; \& \| \$ \? \! \* \` \# % \^ \\ \,
+Result: '"' $'\'' ';' '&' '|' '$' '?' '!' '*' '`' '#' % '^' '\' ','
 Length: 15
 
 0: "
@@ -129,7 +129,7 @@ Length: 15
 
 ### stdout
 ```
-Result: \[ \] \{ \} \( \) \< \>
+Result: '[' ']' '{' '}' '(' ')' '<' '>'
 Length: 8
 
 0: [
@@ -150,7 +150,7 @@ Length: 8
 
 ### stdout
 ```
-Result: a\"b a\'b a\;b a\&b a\|b a\$b a\?b a\!b a\*b
+Result: 'a"b' $'a\'b' 'a;b' 'a&b' 'a|b' 'a$b' 'a?b' 'a!b' 'a*b'
 Length: 9
 
 0: a"b
@@ -172,7 +172,7 @@ Length: 9
 
 ### stdout
 ```
-Result: \[ab\] \{ab\} \(ab\) \<ab\>
+Result: '[ab]' '{ab}' '(ab)' '<ab>'
 Length: 4
 
 0: [ab]

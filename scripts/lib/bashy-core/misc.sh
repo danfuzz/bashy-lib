@@ -105,27 +105,45 @@ function sort-array {
     eval "${_bashy_arrayName}=(\"\${_bashy_arr[@]}\")"
 }
 
-# Helper for passing multiple values to multi-value options (`--name[...]`),
+# Helper for passing multiple values to multi-value options (`--name[]=...`),
 # which formats its arguments so that the argument processor can recover the
 # original multiple values. This works for any number of values including zero
-# or one. Use it like `cmd --opt-name["$(vals ...)"]`, or, more specifically
-# when you want to pass an array, like `cmd --opt-name["$(values
-# "${arrayName[@]}")"]`.
+# or one. Use it like `cmd --opt-name[]="$(vals ...)"`, or, more specifically
+# when you want to pass an array, like `cmd --opt-name[]="$(values
+# "${arrayName[@]}")"`.
 function vals {
-    case "$#" in
-        0)
-            : # No need to emit anything.
-            ;;
-        1)
-            printf '%q\n' "$1"
-            ;;
-        *)
-            printf '%q' "$1"
-            shift
-            printf ' %q' "$@"
-            printf '\n'
-            ;;
-    esac
+    if (( $# == 0 )); then
+        return
+    fi
+
+    local v space=''
+    for v in "$@"; do
+        if [[ ${v} =~ ^[-+=_:./%@a-zA-Z0-9]+$ ]]; then
+            printf $'%s%s' "${space}" "${v}"
+        elif ! [[ ${v} =~ [$'\'\n\r\t'] ]]; then
+            printf $'%s\'%s\'' "${space}" "${v}"
+        else
+            local newv=''
+            while [[ ${v} != '' ]]; do
+                if [[ ${v} =~ ^([^$'\\\'\n\r\t']+)(.*)$ ]]; then
+                    newv+="${BASH_REMATCH[1]}"
+                    v="${BASH_REMATCH[2]}"
+                else
+                    case "${v:0:1}" in
+                        $'\\'|$'\'') newv+=$'\\'"${v:0:1}" ;;
+                        $'\n')       newv+=$'\\n'          ;;
+                        $'\r')       newv+=$'\\r'          ;;
+                        $'\t')       newv+=$'\\t'          ;;
+                    esac
+                    v="${v:1}"
+                fi
+            done
+            printf $'%s$\'%s\'' "${space}" "${newv}"
+        fi
+        space=' '
+    done
+
+    printf $'\n'
 }
 
 
