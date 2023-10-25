@@ -91,7 +91,7 @@ function stderr-opt {
 #   * `all` -- Everything.
 # * `--quiet` / `-q` -- Same as `--verbose=none`
 function usual-stderr-args {
-    opt-value --call=_stderr_verbose --enum='none error warn all' verbose
+    opt-value --call=_stderr_verbose --enum[]='none error warn all' verbose
     opt-alias quiet/q --verbose=none
 }
 

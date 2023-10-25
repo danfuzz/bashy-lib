@@ -15,13 +15,13 @@ define-usage $'
     This is a test command.
 '
 
-opt-value --var=value --enum='x' just-x
-opt-value --var=value --enum='x y' xy
-opt-value --var=value --enum=' x y' space-prefix-xy
-opt-value --var=value --enum='x y ' space-suffix-xy
-opt-value --var=value --enum='   lots   of      spaces     ' lots-of-spaces
+opt-value --var=value --enum[]='x' just-x
+opt-value --var=value --enum[]='x y' xy
+opt-value --var=value --enum[]=' x y' space-prefix-xy
+opt-value --var=value --enum[]='x y ' space-suffix-xy
+opt-value --var=value --enum[]='   lots   of      spaces     ' lots-of-spaces
 opt-value --var=value \
-    --enum='abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 - : _ .' \
+    --enum[]='abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 - : _ .' \
     all-symbol-chars
 
 process-args "$@" || exit "$?"

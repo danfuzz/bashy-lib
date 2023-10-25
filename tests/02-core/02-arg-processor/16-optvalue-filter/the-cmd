@@ -16,7 +16,7 @@ define-usage $'
 '
 
 opt-value --var=theItem --filter='/^good /' item
-opt-value --var=theColor --enum='black white green' color
+opt-value --var=theColor --enum[]='black white green' color
 
 process-args "$@" || exit "$?"
 
