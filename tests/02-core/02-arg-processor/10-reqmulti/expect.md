@@ -84,18 +84,6 @@ Count: 1
 
 - - - - - - - - - -
 
-## passed multi-value option, one value with escapes
-
-### stdout
-```
-Count: 1
-  0: x\$y\&z
-```
-
-### exit: 0
-
-- - - - - - - - - -
-
 ## passed multi-value option, one single-quoted value with a space
 
 ### stdout
@@ -149,12 +137,11 @@ Count: 2
 
 ### stdout
 ```
-Count: 5
+Count: 4
   0: one
   1: two
   2: three\ four
   3: five\ \&\ six
-  4: \#7\(8\)9
 ```
 
 ### exit: 0

@@ -7,10 +7,16 @@ versioning principles. Unstable releases do not.
 ### [Unreleased]
 
 Breaking changes:
-* None
+* `bashy-core`:
+  * `arg-processor`:
+    * Tightened up syntax for passing multi-value arguments.
 
 Other notable changes:
-* None
+* `bashy-core`:
+  * `misc`:
+    * Made `vals` more conservative in its output.
+    * New function `set-array-from-vals`, which is (approximately) the reverse
+      action of `vals`.
 
 ### v2.6 -- 2023-10-24
 

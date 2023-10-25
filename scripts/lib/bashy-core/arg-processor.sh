@@ -1046,12 +1046,12 @@ function _argproc_statements-from-args {
                         ;;
                     '[]=')
                         # Multi-value option. Parse the value into elements.
-                        if eval 2>/dev/null "values=(${value})"; then
+                        if set-array-from-vals values "${value}"; then
                             _argproc_statements+=(
                                 "${handler} $(_argproc_quote "${values[@]}")")
                         else
                             error-msg "Invalid multi-value syntax for option --${name}:"
-                            error-msg "  ${value}"
+                            error-msg "  $(vals "${value}")"
                             argError=1
                         fi
                         ;;
