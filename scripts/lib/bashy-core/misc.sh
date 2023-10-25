@@ -108,8 +108,8 @@ function sort-array {
 # Helper for passing multiple values to multi-value options (`--name[...]`),
 # which formats its arguments so that the argument processor can recover the
 # original multiple values. This works for any number of values including zero
-# or one. Use it like `cmd --opt-name["$(values ...)"]`, or more specifically
-# when you want to pass an array like `cmd --opt-name["$(values
+# or one. Use it like `cmd --opt-name["$(vals ...)"]`, or, more specifically
+# when you want to pass an array, like `cmd --opt-name["$(values
 # "${arrayName[@]}")"]`.
 function vals {
     case "$#" in
