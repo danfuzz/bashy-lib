@@ -13,6 +13,9 @@ Breaking changes:
 
 Other notable changes:
 * `bashy-core`:
+  * `arg-processor`:
+    * `--filter` now supports `{...}` to specify a code snippet, just like
+      `--call` already does.
   * `misc`:
     * Made `vals` more conservative in its output.
     * New function `set-array-from-vals`, which is (approximately) the reverse
