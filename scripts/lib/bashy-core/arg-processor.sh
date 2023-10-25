@@ -151,7 +151,7 @@ function opt-multi {
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter required var \
+    _argproc_janky-args call enum[] filter required var \
     || return 1
 
     local specName=''
@@ -218,7 +218,7 @@ function opt-value {
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call default enum filter required var \
+    _argproc_janky-args call default enum[] filter required var \
     || return 1
 
     local specName=''
@@ -252,7 +252,7 @@ function positional-arg {
     local optRequired=0
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call default enum filter required var \
+    _argproc_janky-args call default enum[] filter required var \
     || return 1
 
     local specName=''
@@ -361,7 +361,7 @@ function rest-arg {
     local optFilter=''
     local optVar=''
     local args=("$@")
-    _argproc_janky-args call enum filter var \
+    _argproc_janky-args call enum[] filter var \
     || return 1
 
     local specName=''
@@ -734,8 +734,8 @@ function _argproc_janky-args {
     local a
 
     # TEMP: Remove spec mod once use sites are migrated.
-    if [[ ${argSpecs} =~ ' enum ' ]]; then
-        argSpecs+='enum[] '
+    if [[ ${argSpecs} =~ ' enum[] ' ]]; then
+        argSpecs+='enum '
     fi
 
     for a in "${args[@]}"; do
