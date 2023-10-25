@@ -201,3 +201,16 @@ value: .
 ```
 
 ### exit: 0
+
+- - - - - - - - - -
+
+## <avec all symbol chars>: `&`
+
+### stderr
+```
+the-cmd: Invalid value for option --all-symbol-chars: &
+
+the-cmd -- test command
+```
+
+### exit: 1

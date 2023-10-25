@@ -59,3 +59,8 @@ call-and-log-as-test '<avec all symbol chars>: `:`' \
 
 call-and-log-as-test '<avec all symbol chars>: `.`' \
     "${cmd}" --all-symbol-chars=.
+
+# Should fail because `&` isn't a symbol character. This is specifically meant
+# to test that the enumeration value `.` isn't treated as a regex wildcard.
+call-and-log-as-test '<avec all symbol chars>: `&`' \
+    "${cmd}" --all-symbol-chars='&'
