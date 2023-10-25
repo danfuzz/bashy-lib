@@ -29,10 +29,11 @@
 #
 # Value-accepting argument definers allow these additional options to pre-filter
 # a value, before it gets set or passed to a `--call`:
-# * `--filter=<name>` -- Calls the named function passing it a single argument
-#   value; the function must output a replacement value. If the call fails, the
-#   argument is rejected. Note: The filter function runs in a subshell, and as
-#   such it cannot be used to affect the global environment of the main script.
+# * `--filter=<name>` or `filter={code}` -- Calls the named function passing it
+#   a single argument value, or runs the indicated code snippet. The function
+#   or snippet must output a replacement value. If the call fails, the argument
+#   is rejected. Note: The filter runs in a subshell, and as such it cannot be
+#   used to affect the global environment of the main script.
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
 #   the regex doesn't match, the argument is rejected.
 # * `--enum[]=<spec>` -- Matches each argument value against a set of valid
@@ -674,13 +675,29 @@ function _argproc_handler-body {
             '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
             "${desc}" "${filter}"
         )")
+    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        # Add a loop to run the filter code on each argument.
+        result+=(
+            "$(printf '
+                local _argproc_value _argproc_args=()
+                for _argproc_value in "$@"; do
+                    _argproc_args+=("$(
+                        set -- "${_argproc_value}"
+                        {
+                            %s
+                        }
+                    )") || return "$?"
+                done
+                set -- "${_argproc_args[@]}"' \
+                "${BASH_REMATCH[1]}")"
+        )
     elif [[ ${filter} != '' ]]; then
         # Add a loop to call the filter function on each argument.
         result+=(
             "$(printf '
                 local _argproc_value _argproc_args=()
                 for _argproc_value in "$@"; do
-                    _argproc_args+=("$(%s "${_argproc_value}")") || return 1
+                    _argproc_args+=("$(%s "${_argproc_value}")") || return "$?"
                 done
                 set -- "${_argproc_args[@]}"' \
                 "${filter}")"
@@ -779,7 +796,7 @@ function _argproc_janky-args {
                     fi
                     ;;
                 filter)
-                    [[ ${value} =~ ^=(/.*/|[_a-zA-Z][-_:a-zA-Z0-9]*)$ ]] \
+                    [[ ${value} =~ ^=(/.*/|\{.*\}|[_a-zA-Z][-_:a-zA-Z0-9]*)$ ]] \
                     && optFilter="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
