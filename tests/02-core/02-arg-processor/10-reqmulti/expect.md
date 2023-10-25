@@ -89,7 +89,7 @@ Count: 1
 ### stdout
 ```
 Count: 1
-  0: yes\ yes
+  0: 'yes yes'
 ```
 
 ### exit: 0
@@ -101,7 +101,7 @@ Count: 1
 ### stdout
 ```
 Count: 1
-  0: two\ two
+  0: 'two two'
 ```
 
 ### exit: 0
@@ -113,7 +113,7 @@ Count: 1
 ### stdout
 ```
 Count: 1
-  0: yes\ sirree\!
+  0: 'yes sirree!'
 ```
 
 ### exit: 0
@@ -140,8 +140,8 @@ Count: 2
 Count: 4
   0: one
   1: two
-  2: three\ four
-  3: five\ \&\ six
+  2: 'three four'
+  3: 'five & six'
 ```
 
 ### exit: 0
