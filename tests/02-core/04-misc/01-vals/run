@@ -47,8 +47,11 @@ call-and-log-as-test 'space-type stuff in arguments' \
 call-and-log-as-test 'non-alphanumeric non-special characters as arguments' \
     call-vals '@' '%' '_' '-' '+' '=' ':' '.' '/'
 
-call-and-log-as-test 'special characters as arguments' \
-    call-vals '"' "'" ';' '&' '|' '$' '?' '!' '*' '[' ']' '{' '}' '(' ')' '<' '>'
+call-and-log-as-test 'special characters (non-bracket-ish) as arguments' \
+    call-vals '"' "'" ';' '&' '|' '$' '?' '!' '*'
+
+call-and-log-as-test 'special characters (bracket-ish) as arguments' \
+    call-vals '[' ']' '{' '}' '(' ')' '<' '>'
 
 call-and-log-as-test 'special characters in the middle of arguments' \
     call-vals 'a"b' "a'b" 'a;b' 'a&b' 'a|b' 'a$b' 'a?b' 'a!b' 'a*b'

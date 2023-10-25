@@ -97,12 +97,12 @@ Length: 9
 
 - - - - - - - - - -
 
-## special characters as arguments
+## special characters (non-bracket-ish) as arguments
 
 ### stdout
 ```
-Result: \" \' \; \& \| \$ \? \! \* \[ \] \{ \} \( \) \< \>
-Length: 17
+Result: \" \' \; \& \| \$ \? \! \*
+Length: 9
 
 0: "
 1: '
@@ -113,14 +113,27 @@ Length: 17
 6: ?
 7: !
 8: *
-9: [
-10: ]
-11: {
-12: }
-13: (
-14: )
-15: <
-16: >
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## special characters (bracket-ish) as arguments
+
+### stdout
+```
+Result: \[ \] \{ \} \( \) \< \>
+Length: 8
+
+0: [
+1: ]
+2: {
+3: }
+4: (
+5: )
+6: <
+7: >
 ```
 
 ### exit: 0
