@@ -7,13 +7,22 @@ versioning principles. Unstable releases do not.
 ### [Unreleased]
 
 Breaking changes:
+* None
+
+Other notable changes:
+* None
+
+### v2.6 -- 2023-10-24
+
+Breaking changes:
 
 * `bashy-core`:
   * `arg-processor`:
     * New recommended processing call `process-args "$@" || exit "$?"`, because
       of "magic" reduction noted below.
     * Renamed `--init` to `--default`, which is a better word for the meaning.
-    * Removed `opt-choice`, as it's now covered by the more general `opt-alias`.
+    * Removed `opt-choice`, as it's now covered by the more general `opt-alias`
+      (see below).
   * `define-usage`: Dropped "magical" `exit` behavior.
 
 Other notable changes:
