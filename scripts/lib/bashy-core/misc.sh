@@ -89,6 +89,48 @@ function set-array-from-lines {
     return "$?"
 }
 
+# Reverse of `vals`: Assigns parsed elements of the given multi-value string
+# (as produced by `vals` or similar) into the indicated variable, as an array.
+function set-array-from-vals {
+    # Note: Because we use `eval`, local variables are given name prefixes to
+    # avoid conflicts with the caller.
+    local _bashy_name="$1"
+    local _bashy_value="$2"
+
+    # Trim _ending_ whitespace, and prefix `value` with a space, the latter to
+    # maintain the constraint that values are space-separated.
+    if [[ ${_bashy_value} =~ ^(.*[^ ])' '+$ ]]; then
+        _bashy_value=" ${BASH_REMATCH[1]}"
+    else
+        _bashy_value=" ${_bashy_value}"
+    fi
+
+    local _bashy_values=() _bashy_print
+    while [[ ${_bashy_value} =~ ^' '+([^ ].*)$ ]]; do
+        _bashy_value="${BASH_REMATCH[1]}"
+        if [[ ${_bashy_value} =~ ^([-+=_:./%@a-zA-Z0-9]+)(.*)$ ]]; then
+            _bashy_values+=("${BASH_REMATCH[1]}")
+            _bashy_value="${BASH_REMATCH[2]}"
+        elif [[ ${_bashy_value} =~ ^(\'[^\']*\')(.*)$ ]]; then
+            _bashy_values+=("${BASH_REMATCH[1]}")
+            _bashy_value="${BASH_REMATCH[2]}"
+        elif [[ ${_bashy_value} =~ ^\"([^\"]*)\"(.*)$ ]]; then
+            printf -v _bashy_print '%q' "${BASH_REMATCH[1]}"
+            _bashy_values+=("${_bashy_print}")
+            _bashy_value="${BASH_REMATCH[2]}"
+        elif [[ ${_bashy_value} =~ ^(\$\'([^\']|\\\')*\')(.*)$ ]]; then
+            _bashy_values+=("${BASH_REMATCH[1]}")
+            _bashy_value="${BASH_REMATCH[3]}"
+        fi
+    done
+
+    if ! [[ ${_bashy_value} =~ ^' '*$ ]]; then
+        return 1
+    fi
+
+    eval "${_bashy_name}=("${_bashy_values[@]}")"
+}
+
 # Sorts an array in-place.
 function sort-array {
     # Because of Bash-3.2 compatibility, this is the sanest way to get the
