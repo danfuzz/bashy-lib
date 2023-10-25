@@ -214,6 +214,62 @@ the-cmd -- test command
 
 - - - - - - - - - -
 
+## passed multi-value option, with invalid multi-value syntax #6
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  $'x \'y'
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #7
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  $'x $\'oopsie'
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #8
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  '"boop'
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
+## passed multi-value option, with invalid multi-value syntax #9
+
+### stderr
+```
+the-cmd: Invalid multi-value syntax for option --items:
+  $'\'x\'\'y\''
+
+the-cmd -- test command
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
 ## passed multi-value option, showing that double-quoted strings are literal
 
 ### stdout

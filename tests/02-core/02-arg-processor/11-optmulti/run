@@ -57,5 +57,17 @@ call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax
 call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #5' \
     "${cmd}" --items[]=$'x\\ y'
 
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #6' \
+    "${cmd}" --items[]=$'x \'y'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #7' \
+    "${cmd}" --items[]=$'x $\'oopsie'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #8' \
+    "${cmd}" --items[]=$'"boop'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #9' \
+    "${cmd}" --items[]=$'\'x\'\'y\''
+
 call-and-log-as-test 'passed multi-value option, showing that double-quoted strings are literal' \
     "${cmd}" --items[]='"$(echo hi)" "\n" "${florp}"'
