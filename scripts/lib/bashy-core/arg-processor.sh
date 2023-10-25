@@ -768,19 +768,7 @@ function _argproc_janky-args {
                     || argError=1
                     ;;
                 enum)
-                    if [[ ${value} =~ ^=(' '*([-_:.a-zA-Z0-9]+' '*)+)$ ]]; then
-                        # Re-form as a filter expression.
-                        value="${BASH_REMATCH[1]}"
-                        optFilter=''
-                        while [[ ${value} =~ ^' '*([^ ]+)' '*(.*)$ ]]; do
-                            optFilter+="|${BASH_REMATCH[1]}"
-                            value="${BASH_REMATCH[2]}"
-                        done
-                        # `:1` to drop the initial `|`.
-                        optFilter="/^(${optFilter:1})\$/"
-                        # "Escape" `.` so it's not treated as regex syntax.
-                        optFilter="${optFilter//./[.]}"
-                    else
+                    if ! _argproc_parse-enum "${value}"; then
                         argError=1
                     fi
                     ;;
@@ -856,6 +844,36 @@ function _argproc_janky-args {
             return 1
         fi
     fi
+}
+
+# Parses a single enumeration-set value. Upon success sets a `optFilter`
+# (presumed local in the calling scope) to "return" a filter expression that
+# matches the specified enumeration.
+function _argproc_parse-enum {
+    local value="$1"
+
+    if ! [[ ${value} =~ ^=([- _:.a-zA-Z0-9]+)$ ]]; then
+        return 1
+    fi
+
+    value="${BASH_REMATCH[1]}"
+    optFilter=''
+
+    while [[ ${value} =~ ^' '*([^ ]+)' '*(.*)$ ]]; do
+        optFilter+="|${BASH_REMATCH[1]}"
+        value="${BASH_REMATCH[2]}"
+    done
+
+    if [[ ${optFilter} == '' ]]; then
+        # Error: Must have at least one value.
+        return 1
+    fi
+
+    # `:1` to drop the initial `|`.
+    optFilter="/^(${optFilter:1})\$/"
+
+    # "Escape" `.` so it's not treated as regex syntax.
+    optFilter="${optFilter//./[.]}"
 }
 
 # Parses a single argument / option spec. `--short` to accept a <short>
