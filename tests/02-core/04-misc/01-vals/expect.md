@@ -75,6 +75,28 @@ no
 
 - - - - - - - - - -
 
+## non-alphanumeric non-special characters as arguments
+
+### stdout
+```
+Result: @ % _ - + = : . /
+Length: 9
+
+0: @
+1: %
+2: _
+3: -
+4: +
+5: =
+6: :
+7: .
+8: /
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
 ## special characters as arguments
 
 ### stdout
