@@ -92,6 +92,11 @@ function set-array-from-lines {
 # Reverse of `vals`: Assigns parsed elements of the given multi-value string
 # (as produced by `vals` or similar) into the indicated variable, as an array.
 function set-array-from-vals {
+    if (( $# != 2 )); then
+        error-msg --file-line=1 'Missing argument(s) to `set-array-from-vals`.'
+        return 1
+    fi
+
     # Note: Because we use `eval`, local variables are given name prefixes to
     # avoid conflicts with the caller.
     local _bashy_name="$1"
