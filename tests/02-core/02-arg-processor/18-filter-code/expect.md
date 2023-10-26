@@ -61,6 +61,7 @@ the-cmd -- test command
 ### stdout
 ```
 value: like
+florp: like
 ```
 
 ### exit: 0
