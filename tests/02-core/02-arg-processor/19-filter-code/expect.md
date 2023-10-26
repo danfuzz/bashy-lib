@@ -13,7 +13,7 @@ value: xyz
 
 ### stdout
 ```
-value: \<pdq\>
+value: '<pdq>'
 ```
 
 ### exit: 0
@@ -24,7 +24,7 @@ value: \<pdq\>
 
 ### stdout
 ```
-value: yes\!\!
+value: 'yes!!'
 ```
 
 ### exit: 0
@@ -46,10 +46,27 @@ value: not-a
 
 ### stderr
 ```
-the-cmd: Not a!
-the-cmd: Invalid value for option --fail-on-a: a
+the-cmd: Got a! No way!
+Invalid value for option --fail-on-a: a
 
 the-cmd -- test command
 ```
 
 ### exit: 1
+
+- - - - - - - - - -
+
+## filter which modifies a global
+
+### stdout
+```
+value: like
+florp: like
+```
+
+### stderr
+```
+We have florped.
+```
+
+### exit: 0

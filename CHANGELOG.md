@@ -10,9 +10,13 @@ Breaking changes:
 * `bashy-core`:
   * `arg-processor`:
     * Tightened up syntax for passing multi-value arguments.
-    * Reworked `--eval` to be a multi-value option in the same way that the
-      system lets clients define them. That is, it's now `--enum[]=` instead
-      of `--enum=`.
+    * Reworked `--enum` to be a multi-value option in the same way that the
+      system lets clients define them. Most notably, it's now `--enum[]=`
+      instead of `--enum=`.
+    * Changed how `--filter` functions/code are called, so that they no longer
+      run in a subshell, which required changing how the client filter code is
+      defined. TLDR: Instead of printing replacement values, they now need to
+      call `replace-value`.
 
 Other notable changes:
 * `bashy-core`:

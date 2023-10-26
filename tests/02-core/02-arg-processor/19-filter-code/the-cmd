@@ -15,20 +15,29 @@ define-usage $'
     This is a test command.
 '
 
-opt-value --var=value --filter='{echo "$1"}' nop
-opt-value --var=value --filter='{echo "<$1>"}' wrap
+opt-value --var=value --filter='{:}' nop
+opt-value --var=value --filter='{replace-value "<$1>"}' wrap
 opt-value --var=value --filter='{
         x="$1"
-        echo "${x}!!"
+        replace-value "${x}!!"
     }' multiline
 opt-value --var=value --filter='{
         if [[ $1 == a ]]; then
-            error-msg "Not a!"
-            exit 1
+            error-msg "Got a! No way!"
+            return 1
         fi
-        echo "$1"
     }' fail-on-a
+
+florp='do not like'
+origFlorp="${florp}"
+opt-value --var=value --filter='{
+        florp="$1"
+        echo 1>&2 "We have florped."
+    }' set-florp
 
 process-args "$@" || exit "$?"
 
-printf 'value: %q\n' "${value}"
+echo "value: $(vals "${value}")"
+if [[ ${florp} != ${origFlorp} ]]; then
+    echo "florp: $(vals "${florp}")"
+fi

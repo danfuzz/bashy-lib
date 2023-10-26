@@ -20,3 +20,7 @@ call-and-log-as-test 'multiline filter that rejects `a`, given not-`a`' \
 
 call-and-log-as-test 'multiline filter that rejects `a`, given `a`' \
     "${cmd}" --fail-on-a=a
+
+# This demonstrates that the filter doesn't run in a subshell.
+call-and-log-as-test 'filter which modifies a global' \
+    "${cmd}" --set-florp=like

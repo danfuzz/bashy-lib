@@ -1,0 +1,49 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+function nop-filter {
+    :
+}
+opt-value --var=value --filter=nop-filter nop
+
+function wrap-filter {
+    replace-value "<$1>"
+}
+opt-value --var=value --filter=wrap-filter wrap
+
+function fail-on-z-filter {
+    if [[ $1 == z ]]; then
+        error-msg "Got z! No way!"
+        return 1
+    fi
+}
+opt-value --var=value --filter=fail-on-z-filter fail-on-z
+
+florp='do not like'
+origFlorp="${florp}"
+function set-florp-filter {
+    florp="$1"
+    echo 1>&2 'We have florped.'
+}
+opt-value --var=value --filter=set-florp-filter set-florp
+
+process-args "$@" || exit "$?"
+
+echo "value: $(vals "${value}")"
+if [[ ${florp} != ${origFlorp} ]]; then
+    echo "florp: $(vals "${florp}")"
+fi
