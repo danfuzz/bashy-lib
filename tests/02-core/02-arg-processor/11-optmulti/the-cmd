@@ -23,6 +23,6 @@ echo "Count: ${#items[@]}"
 
 if (( ${#items[@]} != 0 )); then
     for n in "${!items[@]}"; do
-        printf '  %s: %q\n' "${n}" "${items[n]}"
+        echo "  ${n}: $(vals -- "${items[n]}")"
     done
 fi

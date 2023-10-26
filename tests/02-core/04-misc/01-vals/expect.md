@@ -55,11 +55,37 @@ Length: 3
 
 - - - - - - - - - -
 
+## just `--`
+
+### stdout
+```
+Empty result.
+Length: 0
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## one arg after `--`
+
+### stdout
+```
+Result: bloop
+Length: 1
+
+0: bloop
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
 ## space-type stuff in arguments
 
 ### stdout
 ```
-Result: space \ more\ space\  $'yes\nno\n\n' $'\there\tthere'
+Result: space ' more space ' $'yes\nno\n\n' $'\there\tthere'
 Length: 4
 
 0: space
@@ -75,12 +101,34 @@ no
 
 - - - - - - - - - -
 
-## special characters as arguments
+## non-alphanumeric non-special characters as arguments
 
 ### stdout
 ```
-Result: \" \' \; \& \| \$ \? \! \* \[ \] \{ \} \( \) \< \>
-Length: 17
+Result: @ % _ - + = : . /
+Length: 9
+
+0: @
+1: %
+2: _
+3: -
+4: +
+5: =
+6: :
+7: .
+8: /
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## special characters (non-bracket-ish) as arguments
+
+### stdout
+```
+Result: '"' $'\'' ';' '&' '|' '$' '?' '!' '*' '`' '#' % '^' '\' ','
+Length: 15
 
 0: "
 1: '
@@ -91,14 +139,33 @@ Length: 17
 6: ?
 7: !
 8: *
-9: [
-10: ]
-11: {
-12: }
-13: (
-14: )
-15: <
-16: >
+9: `
+10: #
+11: %
+12: ^
+13: \
+14: ,
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## special characters (bracket-ish) as arguments
+
+### stdout
+```
+Result: '[' ']' '{' '}' '(' ')' '<' '>'
+Length: 8
+
+0: [
+1: ]
+2: {
+3: }
+4: (
+5: )
+6: <
+7: >
 ```
 
 ### exit: 0
@@ -109,7 +176,7 @@ Length: 17
 
 ### stdout
 ```
-Result: a\"b a\'b a\;b a\&b a\|b a\$b a\?b a\!b a\*b
+Result: 'a"b' $'a\'b' 'a;b' 'a&b' 'a|b' 'a$b' 'a?b' 'a!b' 'a*b'
 Length: 9
 
 0: a"b
@@ -131,13 +198,47 @@ Length: 9
 
 ### stdout
 ```
-Result: \[ab\] \{ab\} \(ab\) \<ab\>
+Result: '[ab]' '{ab}' '(ab)' '<ab>'
 Length: 4
 
 0: [ab]
 1: {ab}
 2: (ab)
 3: <ab>
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## with `--dollar`
+
+### stdout
+```
+Result: $'beep' $'boop-boop' $'blorp\n'
+Length: 3
+
+0: beep
+1: boop-boop
+2: blorp
+
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## with `--dollar --`
+
+### stdout
+```
+Result: $'beep' $'boop-boop' $'blorp\n'
+Length: 3
+
+0: beep
+1: boop-boop
+2: blorp
+
 ```
 
 ### exit: 0

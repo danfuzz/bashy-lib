@@ -1,0 +1,75 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test '`x`: `x`' \
+    "${cmd}" --just-x=x
+
+call-and-log-as-test '`x`: non-matching value' \
+    "${cmd}" --just-x=florp
+
+call-and-log-as-test '`x y`: `x`' \
+    "${cmd}" --xy=x
+
+call-and-log-as-test '`x y`: `y`' \
+    "${cmd}" --xy=y
+
+call-and-log-as-test '`x y`: non-matching value' \
+    "${cmd}" --xy=z
+
+call-and-log-as-test '` x y`: `x`' \
+    "${cmd}" --space-prefix-xy=x
+
+call-and-log-as-test '` x y`: `y`' \
+    "${cmd}" --space-prefix-xy=y
+
+call-and-log-as-test '` x y`: non-matching value' \
+    "${cmd}" --space-prefix-xy=z
+
+call-and-log-as-test '`x y `: `x`' \
+    "${cmd}" --space-suffix-xy=x
+
+call-and-log-as-test '`x y `: `y`' \
+    "${cmd}" --space-suffix-xy=y
+
+call-and-log-as-test '`x y `: non-matching value' \
+    "${cmd}" --space-suffix-xy=zonk
+
+call-and-log-as-test '<avec all symbol chars>: alpha' \
+    "${cmd}" --all-symbol-chars=abcdefghijklmnopqrstuvwxyz
+
+call-and-log-as-test '<avec all symbol chars>: ALPHA' \
+    "${cmd}" --all-symbol-chars=ABCDEFGHIJKLMNOPQRSTUVWXYZ
+
+call-and-log-as-test '<avec all symbol chars>: digits' \
+    "${cmd}" --all-symbol-chars=0123456789
+
+call-and-log-as-test '<avec all symbol chars>: `-`' \
+    "${cmd}" --all-symbol-chars=-
+
+call-and-log-as-test '<avec all symbol chars>: `_`' \
+    "${cmd}" --all-symbol-chars=_
+
+call-and-log-as-test '<avec all symbol chars>: `:`' \
+    "${cmd}" --all-symbol-chars=:
+
+call-and-log-as-test '<avec all symbol chars>: `.`' \
+    "${cmd}" --all-symbol-chars=.
+
+call-and-log-as-test '<quoted forms>: `a b`' \
+    "${cmd}" --quoted-forms='a b'
+
+call-and-log-as-test '<quoted forms>: `c d`' \
+    "${cmd}" --quoted-forms='c d'
+
+call-and-log-as-test '<quoted forms>: `efg`' \
+    "${cmd}" --quoted-forms='a b'
+
+# Should fail because `&` isn't a symbol character. This is specifically meant
+# to test that the enumeration value `.` isn't treated as a regex wildcard.
+call-and-log-as-test '<avec all symbol chars>: `&`' \
+    "${cmd}" --all-symbol-chars='&'

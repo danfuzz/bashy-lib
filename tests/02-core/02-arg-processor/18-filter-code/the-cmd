@@ -1,0 +1,34 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+opt-value --var=value --filter='{echo "$1"}' nop
+opt-value --var=value --filter='{echo "<$1>"}' wrap
+opt-value --var=value --filter='{
+        x="$1"
+        echo "${x}!!"
+    }' multiline
+opt-value --var=value --filter='{
+        if [[ $1 == a ]]; then
+            error-msg "Not a!"
+            exit 1
+        fi
+        echo "$1"
+    }' fail-on-a
+
+process-args "$@" || exit "$?"
+
+printf 'value: %q\n' "${value}"

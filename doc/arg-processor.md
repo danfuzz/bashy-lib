@@ -24,8 +24,12 @@ alphanumerics and more dashes, e.g. `--some-option`. In addition:
 
 * Multiple values can be passed to an option by following the option name with
   a pair of square brackets and an equal sign (`[]=`) and then a series of
-  space-separated words, with standard shell rules for quoting and escaping in
-  order to pass special characters, e.g. `--some-option[]='this "and that"'`.
+  space-separated words, with quotes recognized as delimiting words with
+  special characters. Single-quoted (`'...'`) and dollar-quoted (`$'...'`)
+  strings are interpreted in the shell-usual ways. Double-quoted (`"..."`)
+  strings are treated like single-quoted; notably, they do not undergo any shell
+  substitutions or backslash interpretation. E.g. `--some-option[]='this
+  "and that" $'and other' 'things'`.
 
   This multi-value form will also work for options that don't allow values or
   allow only one value (though there are probably few reasons to favor this form
@@ -33,7 +37,7 @@ alphanumerics and more dashes, e.g. `--some-option`. In addition:
 
   The helper function `vals` is a convenient way to safely pass multiple values
   without having to worry about quoting hygiene. (That is, the helper handles it
-  for you.) For example, `--some-option[]="$(vals "${myArray[@]}")"`.
+  for you.) For example, `--some-option[]="$(vals -- "${myArray[@]}")"`.
 
 Special cases:
 * A single dash (`-`) is interpreted as a non-option argument.
@@ -61,7 +65,7 @@ my-cmd -34                         # One positional argument.
 my-cmd -- --foo                    # One positional argument, literally `--foo`.
 
 # Passing arbitrary strings safely to a multi-value option.
-my-cmd --strings[]="$(vals "${paths[@]}")"
+my-cmd --strings[]="$(vals -- "${paths[@]}")"
 ```
 
 ## Declaring options

@@ -27,9 +27,6 @@ call-and-log-as-test 'passed multi-value option, one value, using single-value s
 call-and-log-as-test 'passed multi-value option, one empty value, using single-value syntax' \
     "${cmd}" --items=''
 
-call-and-log-as-test 'passed multi-value option, one value with escapes' \
-    "${cmd}" --items[]='x\$y\&z'
-
 call-and-log-as-test 'passed multi-value option, one single-quoted value with a space' \
     "${cmd}" --items[]="'yes yes'"
 
@@ -43,7 +40,7 @@ call-and-log-as-test 'passed multi-value option, two values' \
     "${cmd}" --items[]='one two'
 
 call-and-log-as-test 'passed multi-value option, four values, omnibus' \
-    "${cmd}" --items[]=$'one "two" \'three four\' $\'five & six\' \#7\(8\)9'
+    "${cmd}" --items[]=$'one "two" \'three four\' $\'five & six\''
 
 call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #1' \
     "${cmd}" --items[]=$'one "two'
@@ -56,3 +53,21 @@ call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax
 
 call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #4' \
     "${cmd}" --items[]=$'d|e f&g'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #5' \
+    "${cmd}" --items[]=$'x\\ y'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #6' \
+    "${cmd}" --items[]=$'x \'y'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #7' \
+    "${cmd}" --items[]=$'x $\'oopsie'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #8' \
+    "${cmd}" --items[]=$'"boop'
+
+call-and-log-as-test 'passed multi-value option, with invalid multi-value syntax #9' \
+    "${cmd}" --items[]=$'\'x\'\'y\''
+
+call-and-log-as-test 'passed multi-value option, showing that double-quoted strings are literal' \
+    "${cmd}" --items[]='"$(echo hi)" "\n" "${florp}"'
