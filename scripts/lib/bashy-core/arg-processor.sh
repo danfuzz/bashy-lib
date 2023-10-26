@@ -734,7 +734,7 @@ function _argproc_handler-body {
     if [[ ${callFunc} =~ ^\{(.*)\}$ ]]; then
         # Add a compound statement for the code block.
         result+=(
-            "$(printf '{\n%s\n} || return "$?"\n' "${BASH_REMATCH[1]}")"
+            "$(printf '{\n%s\n} || return "$?"' "${BASH_REMATCH[1]}")"
         )
     elif [[ ${callFunc} != '' ]]; then
         result+=(
