@@ -30,10 +30,12 @@
 # Value-accepting argument definers allow these additional options to pre-filter
 # a value, before it gets set or passed to a `--call`:
 # * `--filter=<name>` or `filter={code}` -- Calls the named function passing it
-#   a single argument value, or runs the indicated code snippet. The function
-#   or snippet must output a replacement value. If the call fails, the argument
-#   is rejected. Note: The filter runs in a subshell, and as such it cannot be
-#   used to affect the global environment of the main script.
+#   a single argument value, or runs the indicated code snippet. The function or
+#   code can do one of the following:
+#   * Return without error to accept the value as-is.
+#   * Return a non-zero code (and perhaps print an error message) to indicate an
+#     invalid value.
+#   * Call `replace-value <value>` to provide a replacement value.
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
 #   the regex doesn't match, the argument is rejected. The regex must be
 #   non-empty.
@@ -333,6 +335,15 @@ function process-args {
         return "${_argproc_error}"
     fi
 }
+
+# Used during `--filter=` invocations as a callback from client code to indicate
+# that a value is to be replaced.
+function replace-value {
+    _bashy_replacementValue="$1"
+    _bashy_replacementDone=1
+}
+_bashy_replacementValue=''
+_bashy_replacementDone=0
 
 # Requires that exactly one of the indicated arguments / options is present.
 function require-exactly-one-arg-of {
@@ -674,7 +685,7 @@ function _argproc_filter-call {
         filter="$(vals -- "${BASH_REMATCH[1]}")"
         eval "function ${filterCall} {
             local _argproc_regex=${filter}
-            [[ \$1 =~ \${_argproc_regex} ]] && printf '%s\\n' \"\$1\"
+            [[ \$1 =~ \${_argproc_regex} ]]
         }"
     elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
         filter="${BASH_REMATCH[1]}"
@@ -686,14 +697,19 @@ function _argproc_filter-call {
         filterCall="${filter}"
     fi
 
-    local arg result error=0
+    local arg error=0
     for arg in "$@"; do
-        if ! result=("$("${filterCall}" "${arg}")"); then
+        _bashy_replacementDone=0
+        if ! "${filterCall}" "${arg}"; then
             error-msg "Invalid value for ${desc}: ${arg}"
             error=1
             break
         fi
-        vals -- "${result}"
+        if (( _bashy_replacementDone )); then
+            vals -- "${_bashy_replacementValue}"
+        else
+            vals -- "${arg}"
+        fi
     done
 
     if (( definedFunc )); then
@@ -909,7 +925,7 @@ function _argproc_parse-enum {
             printf '%s%s' "${or}" "$(vals --dollar -- "${value}")"
             or='|'
         done
-        printf $')$ ]] && printf \'%%s\' "$1" }'
+        printf $')$ ]] }'
     )"
 }
 
