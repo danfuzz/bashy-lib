@@ -37,8 +37,8 @@
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
 #   the regex doesn't match, the argument is rejected.
 # * `--enum[]=<spec>` -- Matches each argument value against a set of valid
-#   names. `<spec>` must be a non-empty space-separated list of names, e.g.
-#   `--enum[]='yes no maybe'`.
+#   names. `<spec>` must be a non-empty list of values, in the usual multi-value
+#   form accepted by this system, e.g. `--enum[]='yes no "maybe so"'`.
 #
 # Some argument-definers also accept these options:
 # * `--default=<value>` -- Specifies a default value for an argument or option
