@@ -35,7 +35,8 @@
 #   is rejected. Note: The filter runs in a subshell, and as such it cannot be
 #   used to affect the global environment of the main script.
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
-#   the regex doesn't match, the argument is rejected.
+#   the regex doesn't match, the argument is rejected. The regex must be
+#   non-empty.
 # * `--enum[]=<spec>` -- Matches each argument value against a set of valid
 #   names. `<spec>` must be a non-empty list of values, in the usual multi-value
 #   form accepted by this system, e.g. `--enum[]='yes no "maybe so"'`.
@@ -666,22 +667,40 @@ function _argproc_filter-call {
     local filter="$2"
     shift 2
 
-    if [[ ${filter} =~ ^\{(.*)\}$ ]]; then
-        # Kinda gross, but this makes it easy to call the filter code block.
-        eval "function _argproc_filter-call:inner {
-            ${BASH_REMATCH[1]}
+    # Kinda gross, but converting a non-call form to a function makes the
+    # evaluation much more straightforward.
+    local definedFunc=1 filterCall='_argproc_filter-call:inner'
+    if [[ ${filter} =~ ^/(.*)/$ ]]; then
+        filter="$(vals -- "${BASH_REMATCH[1]}")"
+        eval "function ${filterCall} {
+            local _argproc_regex=${filter}
+            [[ \$1 =~ \${_argproc_regex} ]] && printf '%s\\n' \"\$1\"
         }"
-        filter='_argproc_filter-call:inner'
+    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        filter="${BASH_REMATCH[1]}"
+        eval "function ${filterCall} {
+            ${filter}
+        }"
+    else
+        definedFunc=0
+        filterCall="${filter}"
     fi
 
-    local arg result
+    local arg result error=0
     for arg in "$@"; do
-        if ! result=("$("${filter}" "${arg}")"); then
+        if ! result=("$("${filterCall}" "${arg}")"); then
             error-msg "Invalid value for ${desc}: ${arg}"
-            return 1
+            error=1
+            break
         fi
         vals -- "${result}"
     done
+
+    if (( definedFunc )); then
+        unset -f "${filterCall}"
+    fi
+
+    return "${error}"
 }
 
 # Produces an argument handler body, from the given components.
@@ -692,16 +711,8 @@ function _argproc_handler-body {
     local varName="$4"
     local result=()
 
-    if [[ ${filter} =~ ^/(.*)/$ ]]; then
-        # Add a call to perform the regex check on each argument.
-        filter="${BASH_REMATCH[1]}"
-        local desc="$(_argproc_arg-description "${specName}")"
-        result+=("$(printf \
-            '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
-            "${desc}" "${filter}"
-        )")
-    elif [[ ${filter} != '' ]]; then
-        # Add a call to perform the filtering.
+    if [[ ${filter} != '' ]]; then
+        # Add a call to perform the filtering on all the arguments.
         local desc="$(_argproc_arg-description "${specName}")"
         result+=("$(printf '
             local _argproc_args
@@ -720,7 +731,7 @@ function _argproc_handler-body {
     if [[ ${callFunc} =~ ^\{(.*)\}$ ]]; then
         # Add a compound statement for the code block.
         result+=(
-            "$(printf '{\n%s\n} || return "$?"\n' "${BASH_REMATCH[1]}")"
+            "$(printf '{\n%s\n} || return "$?"' "${BASH_REMATCH[1]}")"
         )
     elif [[ ${callFunc} != '' ]]; then
         result+=(
@@ -763,11 +774,6 @@ function _argproc_janky-args {
     local gotDefault=0
     local a
 
-    # TEMP: Remove spec mod once use sites are migrated.
-    if [[ ${argSpecs} =~ ' enum[] ' ]]; then
-        argSpecs+='enum '
-    fi
-
     for a in "${args[@]}"; do
         if (( optsDone )); then
             args+=("${a}")
@@ -802,14 +808,13 @@ function _argproc_janky-args {
                     && optDefault="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
-                # TEMP: Remove plain `enum` once use sites are migrated.
-                enum|enum[])
+                enum[])
                     if ! _argproc_parse-enum "${value#=}"; then
                         argError=1
                     fi
                     ;;
                 filter)
-                    [[ ${value} =~ ^=(/.*/|\{.*\}|[_a-zA-Z][-_:a-zA-Z0-9]*)$ ]] \
+                    [[ ${value} =~ ^=(/.+/|\{.*\}|[_a-zA-Z][-_:a-zA-Z0-9]*)$ ]] \
                     && optFilter="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
@@ -967,22 +972,6 @@ function _argproc_parse-spec {
         _argproc_declarationError=1
         return 1
     fi
-}
-
-# Helper (called by code produced by `_argproc_handler-body`) which performs
-# a regex filter check.
-function _argproc_regex-filter-check {
-    local desc="$1"
-    local regex="$2"
-    shift 2
-
-    local arg
-    for arg in "$@"; do
-        if [[ ! (${arg} =~ ${regex}) ]]; then
-            error-msg "Invalid value for ${desc}: ${arg}"
-            return 1
-        fi
-    done
 }
 
 # Sets the description of the named argument based on its type. This function

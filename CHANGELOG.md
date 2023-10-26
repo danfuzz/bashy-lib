@@ -10,8 +10,9 @@ Breaking changes:
 * `bashy-core`:
   * `arg-processor`:
     * Tightened up syntax for passing multi-value arguments.
-    * Renamed `--eval=` to `--eval[]=`, to be the same as how options defined by
-      the system work.
+    * Reworked `--eval` to be a multi-value option in the same way that the
+      system lets clients define them. That is, it's now `--enum[]=` instead
+      of `--enum=`.
 
 Other notable changes:
 * `bashy-core`:

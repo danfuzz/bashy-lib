@@ -1,0 +1,34 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'nop filter, empty value' \
+    "${cmd}" --nop=''
+
+call-and-log-as-test 'nop filter, non-empty value' \
+    "${cmd}" --nop=beep
+
+call-and-log-as-test '"non-empty" filter, empty value' \
+    "${cmd}" --non-empty=''
+
+call-and-log-as-test '"non-empty" filter, non-empty value' \
+    "${cmd}" --non-empty=beep
+
+# These test that the regex syntax accepted isn't treated like Bash source, in
+# that quote marks are treated as literals, and `$` always means end-of-input.
+call-and-log-as-test 'single-quotes in filter, matching value' \
+    "${cmd}" --looks-like-sq-string=$'beep \'x\' boop'
+call-and-log-as-test 'single-quotes in filter, non-matching value' \
+    "${cmd}" --looks-like-sq-string=$'beep x boop'
+call-and-log-as-test 'double-quotes in filter, matching value' \
+    "${cmd}" --looks-like-dq-string=$'beep \"x\" boop'
+call-and-log-as-test 'double-quotes in filter, non-matching value' \
+    "${cmd}" --looks-like-dq-string=$'beep x boop'
+call-and-log-as-test 'dollar-substitution-looking thing in filter, matching value' \
+    "${cmd}" --looks-like-dollar=$'yes abc'
+call-and-log-as-test 'dollar-substitution-looking thing in filter, non-matching value' \
+    "${cmd}" --looks-like-dollar=$'no abczz'
