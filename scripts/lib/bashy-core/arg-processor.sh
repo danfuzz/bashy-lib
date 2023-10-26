@@ -106,7 +106,7 @@ function opt-action {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
+        _argproc_initStatements+=("${optVar}=$(vals "${optDefault}")")
     fi
 }
 
@@ -195,7 +195,7 @@ function opt-toggle {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
+        _argproc_initStatements+=("${optVar}=$(vals "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg --option \
@@ -230,7 +230,7 @@ function opt-value {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
+        _argproc_initStatements+=("${optVar}=$(vals "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg --option \
@@ -263,7 +263,7 @@ function positional-arg {
 
     if [[ ${optVar} != '' ]]; then
         # Set up the variable initializer.
-        _argproc_initStatements+=("${optVar}=$(_argproc_quote "${optDefault}")")
+        _argproc_initStatements+=("${optVar}=$(vals "${optDefault}")")
     fi
 
     _argproc_define-value-taking-arg \
@@ -498,7 +498,7 @@ function _argproc_define-alias-arg {
                 error-msg "Value not allowed for '"${desc}"'."
                 return 1
             fi
-            printf "%q\\n" '"$(_argproc_quote "${args[@]}")"'
+            printf "%q\\n" '"$(vals "${args[@]}")"'
         }'
     fi
 
@@ -574,7 +574,7 @@ function _argproc_define-no-value-arg {
         _argproc_handler-body "${specName}" '' "${callFunc}" "${varName}"
     )"
 
-    value="$(_argproc_quote "${value}")"
+    value="$(vals "${value}")"
 
     eval 'function '"${handlerName}"' {
         if (( $# > 0 )); then
@@ -626,7 +626,7 @@ function _argproc_define-value-taking-arg {
             error-msg "Value required for '"${desc}"'."
             return 1'
     else
-        eqDefault="$(_argproc_quote "${eqDefault:1}")" # `:1` to drop the `=`.
+        eqDefault="$(vals "${eqDefault:1}")" # `:1` to drop the `=`.
         ifNoValue="set -- ${eqDefault}"
     fi
 
@@ -1013,7 +1013,7 @@ function _argproc_set-arg-description {
     esac
 
     eval 'function '"${funcName}"' {
-        echo '"$(_argproc_quote "${desc}")"'
+        echo '"$(vals "${desc}")"'
     }'
 }
 
@@ -1057,13 +1057,13 @@ function _argproc_statements-from-args {
                     '=')
                         # Single-value option.
                         _argproc_statements+=(
-                            "${handler} $(_argproc_quote "${value}")")
+                            "${handler} $(vals "${value}")")
                         ;;
                     '[]=')
                         # Multi-value option. Parse the value into elements.
                         if set-array-from-vals values "${value}"; then
                             _argproc_statements+=(
-                                "${handler} $(_argproc_quote "${values[@]}")")
+                                "${handler} $(vals "${values[@]}")")
                         else
                             error-msg "Invalid multi-value syntax for option --${name}:"
                             error-msg "  $(vals -- "${value}")"
@@ -1133,12 +1133,12 @@ function _argproc_statements-from-args {
             break
         fi
 
-        _argproc_statements+=("${func} $(_argproc_quote "$1")")
+        _argproc_statements+=("${func} $(vals "$1")")
         shift
     done
 
     if declare -F _argproc:rest >/dev/null; then
-        _argproc_statements+=("_argproc:rest $(_argproc_quote "$@")")
+        _argproc_statements+=("_argproc:rest $(vals "$@")")
     elif (( $# > 0 )); then
         if (( ${#_argproc_positionalFuncs[@]} == 0 )); then
             error-msg 'Positional arguments are not allowed.'
@@ -1149,23 +1149,4 @@ function _argproc_statements-from-args {
     fi
 
     return "${argError}"
-}
-
-# Quotes one or more literal strings, space separated, so they can be safely
-# used in evaluated code. This (successfully) prints nothing if no arguments are
-# given.
-function _argproc_quote {
-    case "$#" in
-        0)
-            : # Nothing to print.
-            ;;
-        1)
-            printf '%q' "$1"
-            ;;
-        *)
-            printf '%q' "$1"
-            shift
-            printf ' %q' "$@"
-            ;;
-    esac
 }
