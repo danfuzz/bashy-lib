@@ -671,10 +671,15 @@ function _argproc_filter-call {
     # evaluation much more straightforward.
     local definedFunc=1 filterCall='_argproc_filter-call:inner'
     if [[ ${filter} =~ ^/(.*)/$ ]]; then
-        : #TODO
-    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        filter="$(vals -- "${BASH_REMATCH[1]}")"
         eval "function ${filterCall} {
-            ${BASH_REMATCH[1]}
+            local _argproc_regex=${filter}
+            [[ \$1 =~ \${_argproc_regex} ]] && printf '%s\\n' \"\$1\"
+        }"
+    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        filter="${BASH_REMATCH[1]}"
+        eval "function ${filterCall} {
+            ${filter}
         }"
     else
         definedFunc=0
@@ -706,16 +711,8 @@ function _argproc_handler-body {
     local varName="$4"
     local result=()
 
-    if [[ ${filter} =~ ^/(.*)/$ ]]; then
-        # Add a call to perform the regex check on each argument.
-        filter="${BASH_REMATCH[1]}"
-        local desc="$(_argproc_arg-description "${specName}")"
-        result+=("$(printf \
-            '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
-            "${desc}" "${filter}"
-        )")
-    elif [[ ${filter} != '' ]]; then
-        # Add a call to perform the filtering.
+    if [[ ${filter} != '' ]]; then
+        # Add a call to perform the filtering on all the arguments.
         local desc="$(_argproc_arg-description "${specName}")"
         result+=("$(printf '
             local _argproc_args
@@ -975,22 +972,6 @@ function _argproc_parse-spec {
         _argproc_declarationError=1
         return 1
     fi
-}
-
-# Helper (called by code produced by `_argproc_handler-body`) which performs
-# a regex filter check.
-function _argproc_regex-filter-check {
-    local desc="$1"
-    local regex="$2"
-    shift 2
-
-    local arg
-    for arg in "$@"; do
-        if [[ ! (${arg} =~ ${regex}) ]]; then
-            error-msg "Invalid value for ${desc}: ${arg}"
-            return 1
-        fi
-    done
 }
 
 # Sets the description of the named argument based on its type. This function
