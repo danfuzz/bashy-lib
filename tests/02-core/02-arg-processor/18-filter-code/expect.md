@@ -53,3 +53,14 @@ the-cmd -- test command
 ```
 
 ### exit: 1
+
+- - - - - - - - - -
+
+## filter which modifies a global
+
+### stdout
+```
+value: like
+```
+
+### exit: 0

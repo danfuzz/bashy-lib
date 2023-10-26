@@ -28,6 +28,15 @@ opt-value --var=value --filter='{
         fi
     }' fail-on-a
 
+florp='do not like'
+origFlorp="${florp}"
+opt-value --var=value --filter='{
+        florp="$1"
+    }' set-florp
+
 process-args "$@" || exit "$?"
 
 printf 'value: %q\n' "${value}"
+if [[ ${florp} != ${origFlorp} ]]; then
+    echo "florp: $(vals "${florp}")"
+fi
