@@ -626,7 +626,7 @@ function _argproc_define-value-taking-arg {
             error-msg "Value required for '"${desc}"'."
             return 1'
     else
-        eqDefault="$(vals "${eqDefault:1}")" # `:1` to drop the `=`.
+        eqDefault="$(vals "${eqDefault#=}")"
         ifNoValue="set -- ${eqDefault}"
     fi
 
@@ -837,7 +837,7 @@ function _argproc_janky-args {
 
             if (( argError )); then
                 if [[ ${value} != '' ]]; then
-                    error-msg --file-line=2 "Invalid value for option --${name}: ${value:1}"
+                    error-msg --file-line=2 "Invalid value for option --${name}: ${value#=}"
                 else
                     error-msg --file-line=2 "Value required for option --${name}."
                 fi
@@ -963,7 +963,7 @@ function _argproc_parse-spec {
 
         if [[ ${value} != '' ]]; then
             if (( !valueWithEq )); then
-                value="${value:1}" # `:1` to drop the equal sign.
+                value="${value#=}"
             fi
             specValue="${value}"
         fi
