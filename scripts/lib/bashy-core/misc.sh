@@ -155,19 +155,33 @@ function sort-array {
 # Helper for passing multiple values to multi-value options (`--name[]=...`),
 # which formats its arguments so that the argument processor can recover the
 # original multiple values. This works for any number of values including zero
-# or one. Use it like `cmd --opt-name[]="$(vals ...)"`, or, more specifically
-# when you want to pass an array, like `cmd --opt-name[]="$(values
-# "${arrayName[@]}")"`.
+# or one. Use it like `cmd --opt-name[]="$(vals -- ...)"`, or, more specifically
+# when you want to pass an array, like `cmd --opt-name[]="$(vals --
+# "${arrayName[@]}")"`. With option --dollar, _only_ uses dollar-quoting
+# (`$'...'`).
 function vals {
+    local justDollar=0
+    while (( $# > 0 )); do
+        if [[ $1 == --dollar ]]; then
+            justDollar=1
+            shift
+        elif [[ $1 == -- ]]; then
+            shift
+            break
+        else
+            break
+        fi
+    done
+
     if (( $# == 0 )); then
         return
     fi
 
     local v space=''
     for v in "$@"; do
-        if [[ ${v} =~ ^[-+=_:./%@a-zA-Z0-9]+$ ]]; then
+        if (( !justDollar )) && [[ ${v} =~ ^[-+=_:./%@a-zA-Z0-9]+$ ]]; then
             printf $'%s%s' "${space}" "${v}"
-        elif ! [[ ${v} =~ [$'\'\n\r\t'] ]]; then
+        elif (( !justDollar )) && ! [[ ${v} =~ [$'\'\n\r\t'] ]]; then
             printf $'%s\'%s\'' "${space}" "${v}"
         else
             local newv=''
