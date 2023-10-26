@@ -36,7 +36,7 @@ opt-value --var=value --filter='{
 
 process-args "$@" || exit "$?"
 
-printf 'value: %q\n' "${value}"
+echo "value: $(vals "${value}")"
 if [[ ${florp} != ${origFlorp} ]]; then
     echo "florp: $(vals "${florp}")"
 fi

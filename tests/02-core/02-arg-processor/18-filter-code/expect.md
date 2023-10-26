@@ -13,7 +13,7 @@ value: xyz
 
 ### stdout
 ```
-value: \<pdq\>
+value: '<pdq>'
 ```
 
 ### exit: 0
@@ -24,7 +24,7 @@ value: \<pdq\>
 
 ### stdout
 ```
-value: yes\!\!
+value: 'yes!!'
 ```
 
 ### exit: 0
