@@ -47,7 +47,8 @@ value: not-a
 ### stderr
 ```
 the-cmd: Not a!
-the-cmd: 
+the-cmd: Invalid value for option --fail-on-a: a
+
 the-cmd -- test command
 ```
 

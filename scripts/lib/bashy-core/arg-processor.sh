@@ -675,33 +675,21 @@ function _argproc_handler-body {
             '_argproc_regex-filter-check %q %q "$@" || return "$?"\n' \
             "${desc}" "${filter}"
         )")
-    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
-        # Add a loop to run the filter code on each argument.
-        result+=(
-            "$(printf '
-                local _argproc_value _argproc_args=()
-                for _argproc_value in "$@"; do
-                    _argproc_args+=("$(
-                        set -- "${_argproc_value}"
-                        {
-                            %s
-                        }
-                    )") || return "$?"
-                done
-                set -- "${_argproc_args[@]}"' \
-                "${BASH_REMATCH[1]}")"
-        )
     elif [[ ${filter} != '' ]]; then
-        # Add a loop to call the filter function on each argument.
-        result+=(
-            "$(printf '
-                local _argproc_value _argproc_args=()
-                for _argproc_value in "$@"; do
-                    _argproc_args+=("$(%s "${_argproc_value}")") || return "$?"
-                done
-                set -- "${_argproc_args[@]}"' \
-                "${filter}")"
-        )
+        # Add a call to perform the filtering.
+        local desc="$(_argproc_arg-description "${specName}")"
+        result+=("$(printf '
+            local _argproc_args
+            _argproc_args="$(_argproc_filter-call %q %q "$@")" \
+            && set-array-from-vals _argproc_args "${_argproc_args}" \
+            || {
+                local error="$?"
+                error-msg --suppress-cmd
+                return "${error}"
+            }
+            set -- "${_argproc_args[@]}"' \
+            "${desc}" "${filter}"
+        )")
     fi
 
     if [[ ${callFunc} =~ ^\{(.*)\}$ ]]; then
@@ -791,7 +779,7 @@ function _argproc_janky-args {
                     ;;
                 # TEMP: Remove plain `enum` once use sites are migrated.
                 enum|enum[])
-                    if ! _argproc_parse-enum "${value}"; then
+                    if ! _argproc_parse-enum "${value#=}"; then
                         argError=1
                     fi
                     ;;
@@ -874,29 +862,25 @@ function _argproc_janky-args {
 # matches the specified enumeration.
 function _argproc_parse-enum {
     local value="$1"
+    local values
 
-    if ! [[ ${value} =~ ^=([- _:.a-zA-Z0-9]+)$ ]]; then
-        return 1
-    fi
+    set-array-from-vals values "${value}" \
+    || return "$?"
 
-    value="${BASH_REMATCH[1]}"
-    optFilter=''
-
-    while [[ ${value} =~ ^' '*([^ ]+)' '*(.*)$ ]]; do
-        optFilter+="|${BASH_REMATCH[1]}"
-        value="${BASH_REMATCH[2]}"
-    done
-
-    if [[ ${optFilter} == '' ]]; then
+    if (( ${#values[@]} == 0 )); then
         # Error: Must have at least one value.
         return 1
     fi
 
-    # `:1` to drop the initial `|`.
-    optFilter="/^(${optFilter:1})\$/"
-
-    # "Escape" `.` so it's not treated as regex syntax.
-    optFilter="${optFilter//./[.]}"
+    optFilter="$(
+        printf '{ [[ "$1" =~ ^('
+        local or='' print
+        for value in "${values[@]}"; do
+            printf '%s%s' "${or}" "$(vals --dollar -- "${value}")"
+            or='|'
+        done
+        printf $')$ ]] && printf \'%%s\' "$1" }'
+    )"
 }
 
 # Parses a single argument / option spec. `--short` to accept a <short>
@@ -973,6 +957,31 @@ function _argproc_regex-filter-check {
             error-msg "Invalid value for ${desc}: ${arg}"
             return 1
         fi
+    done
+}
+
+# Helper (called by code produced by `_argproc_handler-body`) which performs
+# a filter call. Upon success, prints all the filtered values.
+function _argproc_filter-call {
+    local desc="$1"
+    local filter="$2"
+    shift 2
+
+    if [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        # Kinda gross, but this makes it easy to call the filter code block.
+        eval "function _argproc_filter-call:inner {
+            ${BASH_REMATCH[1]}
+        }"
+        filter='_argproc_filter-call:inner'
+    fi
+
+    local arg result
+    for arg in "$@"; do
+        if ! result=("$("${filter}" "${arg}")"); then
+            error-msg "Invalid value for ${desc}: ${arg}"
+            return 1
+        fi
+        vals "${result}"
     done
 }
 
