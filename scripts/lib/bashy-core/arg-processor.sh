@@ -981,7 +981,7 @@ function _argproc_filter-call {
             error-msg "Invalid value for ${desc}: ${arg}"
             return 1
         fi
-        vals "${result}"
+        vals -- "${result}"
     done
 }
 
@@ -1077,7 +1077,7 @@ function _argproc_statements-from-args {
                                 "${handler} $(_argproc_quote "${values[@]}")")
                         else
                             error-msg "Invalid multi-value syntax for option --${name}:"
-                            error-msg "  $(vals "${value}")"
+                            error-msg "  $(vals -- "${value}")"
                             argError=1
                         fi
                         ;;

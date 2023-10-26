@@ -37,7 +37,7 @@ alphanumerics and more dashes, e.g. `--some-option`. In addition:
 
   The helper function `vals` is a convenient way to safely pass multiple values
   without having to worry about quoting hygiene. (That is, the helper handles it
-  for you.) For example, `--some-option[]="$(vals "${myArray[@]}")"`.
+  for you.) For example, `--some-option[]="$(vals -- "${myArray[@]}")"`.
 
 Special cases:
 * A single dash (`-`) is interpreted as a non-option argument.
@@ -65,7 +65,7 @@ my-cmd -34                         # One positional argument.
 my-cmd -- --foo                    # One positional argument, literally `--foo`.
 
 # Passing arbitrary strings safely to a multi-value option.
-my-cmd --strings[]="$(vals "${paths[@]}")"
+my-cmd --strings[]="$(vals -- "${paths[@]}")"
 ```
 
 ## Declaring options
