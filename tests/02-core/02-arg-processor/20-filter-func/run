@@ -1,0 +1,23 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+cmd="$(this-cmd-dir)/the-cmd"
+
+call-and-log-as-test 'nop filter' \
+    "${cmd}" --nop=xyz
+
+call-and-log-as-test 'simple wrapping filter' \
+    "${cmd}" --wrap=pdq
+
+call-and-log-as-test 'filter that rejects `z`, given not-`z`' \
+    "${cmd}" --fail-on-z=not-z
+
+call-and-log-as-test 'filter that rejects `z`, given `z`' \
+    "${cmd}" --fail-on-z=z
+
+# This demonstrates that the filter doesn't run in a subshell.
+call-and-log-as-test 'filter which modifies a global' \
+    "${cmd}" --set-florp=like
