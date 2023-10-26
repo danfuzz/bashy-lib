@@ -339,11 +339,11 @@ function process-args {
 # Used during `--filter=` invocations as a callback from client code to indicate
 # that a value is to be replaced.
 function replace-value {
-    _bashy_replacementValue="$1"
-    _bashy_replacementDone=1
+    _argproc_filteredValues+=("$1")
+    _argproc_replaceCalled=1
 }
-_bashy_replacementValue=''
-_bashy_replacementDone=0
+_argproc_filteredValues=()
+_argproc_replaceCalled=0
 
 # Requires that exactly one of the indicated arguments / options is present.
 function require-exactly-one-arg-of {
@@ -697,18 +697,17 @@ function _argproc_filter-call {
         filterCall="${filter}"
     fi
 
+    _argproc_filteredValues=()
     local arg error=0
     for arg in "$@"; do
-        _bashy_replacementDone=0
+        _argproc_replaceCalled=0
         if ! "${filterCall}" "${arg}"; then
             error-msg "Invalid value for ${desc}: ${arg}"
             error=1
             break
         fi
-        if (( _bashy_replacementDone )); then
-            vals -- "${_bashy_replacementValue}"
-        else
-            vals -- "${arg}"
+        if (( !_argproc_replaceCalled )); then
+            replace-value "${arg}"
         fi
     done
 
@@ -731,15 +730,8 @@ function _argproc_handler-body {
         # Add a call to perform the filtering on all the arguments.
         local desc="$(_argproc_arg-description "${specName}")"
         result+=("$(printf '
-            local _argproc_args
-            _argproc_args="$(_argproc_filter-call %q %q "$@")" \
-            && set-array-from-vals _argproc_args "${_argproc_args}" \
-            || {
-                local error="$?"
-                error-msg --suppress-cmd
-                return "${error}"
-            }
-            set -- "${_argproc_args[@]}"' \
+            _argproc_filter-call %q %q "$@" || return "$?"
+            set -- "${_argproc_filteredValues[@]}"' \
             "${desc}" "${filter}"
         )")
     fi

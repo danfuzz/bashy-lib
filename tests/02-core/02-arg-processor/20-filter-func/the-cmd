@@ -37,6 +37,7 @@ florp='do not like'
 origFlorp="${florp}"
 function set-florp-filter {
     florp="$1"
+    echo 1>&2 'We have florped.'
 }
 opt-value --var=value --filter=set-florp-filter set-florp
 

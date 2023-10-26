@@ -32,6 +32,7 @@ florp='do not like'
 origFlorp="${florp}"
 opt-value --var=value --filter='{
         florp="$1"
+        echo 1>&2 "We have florped."
     }' set-florp
 
 process-args "$@" || exit "$?"

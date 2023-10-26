@@ -64,4 +64,9 @@ value: like
 florp: like
 ```
 
+### stderr
+```
+We have florped.
+```
+
 ### exit: 0
