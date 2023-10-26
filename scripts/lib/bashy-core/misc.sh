@@ -127,7 +127,7 @@ function set-array-from-vals {
             printf -v _bashy_print '%q' "${BASH_REMATCH[1]}"
             _bashy_values+=("${_bashy_print}")
             _bashy_value="${BASH_REMATCH[2]}"
-        elif [[ ${_bashy_value} =~ ^(\$\'([^\']|\\\')*\')(.*)$ ]]; then
+        elif [[ ${_bashy_value} =~ ^(\$\'([^\'\\]|\\.)*\')(.*)$ ]]; then
             _bashy_values+=("${BASH_REMATCH[1]}")
             _bashy_value="${BASH_REMATCH[3]}"
         fi
