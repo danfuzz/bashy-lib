@@ -54,7 +54,7 @@ call-and-log-as-test 'non-alphanumeric non-special characters as arguments' \
     call-vals '@' '%' '_' '-' '+' '=' ':' '.' '/'
 
 call-and-log-as-test 'special characters (non-bracket-ish) as arguments' \
-    call-vals '"' "'" ';' '&' '|' '$' '?' '!' '*' '`' '#' '%' '^' '\' ','
+    call-vals '"' "'" ';' '&' '|' '$' '?' '!' '*' '`' '#' '%' '^' '\' ',' '~'
 
 call-and-log-as-test 'special characters (bracket-ish) as arguments' \
     call-vals '[' ']' '{' '}' '(' ')' '<' '>'
