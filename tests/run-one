@@ -29,9 +29,15 @@ define-usage --with-help $'
     Note that all test directories are expected to be named with a sequential
     numeric prefix followed by a dash.
 
+    --print
+      Print the test run output to stdout, instead of doing a diff with the
+      expected output.
     --update
       Update the expected output to match the actual output.
 '
+
+# Print the test run output?
+opt-toggle --var=doPrint print
 
 # Update the expected output?
 opt-toggle --var=doUpdate update
@@ -204,9 +210,16 @@ testOutput="$("${runScript}")" \
     exit 1
 }
 
+if (( doPrint )); then
+    echo "${testOutput}"
+fi
+
 if (( doUpdate )); then
     echo >"${expectMd}" "${testOutput}" \
     || exit "$?"
+fi
+
+if (( doPrint || doUpdate )); then
     exit
 fi
 
