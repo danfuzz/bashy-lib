@@ -674,48 +674,51 @@ function _argproc_error-coda {
 # Helper (called by code produced by `_argproc_handler-body`) which performs
 # a filter call. Upon success, prints all the filtered values.
 function _argproc_filter-call {
-    local desc="$1"
-    local filter="$2"
+    # Note: We use prefixed local variables to avoid a variable shadowing
+    # collision, because this function calls back to client code.
+    local _argproc_desc="$1"
+    local _argproc_filter="$2"
     shift 2
 
     # Kinda gross, but converting a non-call form to a function makes the
     # evaluation much more straightforward.
-    local definedFunc=1 filterCall='_argproc_filter-call:inner'
-    if [[ ${filter} =~ ^/(.*)/$ ]]; then
-        filter="$(vals -- "${BASH_REMATCH[1]}")"
-        eval "function ${filterCall} {
-            local _argproc_regex=${filter}
+    local _argproc_definedFunc=1
+    local _argproc_filterCall='_argproc_filter-call:inner'
+    if [[ ${_argproc_filter} =~ ^/(.*)/$ ]]; then
+        _argproc_filter="$(vals -- "${BASH_REMATCH[1]}")"
+        eval "function ${_argproc_filterCall} {
+            local _argproc_regex=${_argproc_filter}
             [[ \$1 =~ \${_argproc_regex} ]]
         }"
-    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
-        filter="${BASH_REMATCH[1]}"
-        eval "function ${filterCall} {
-            ${filter}
+    elif [[ ${_argproc_filter} =~ ^\{(.*)\}$ ]]; then
+        _argproc_filter="${BASH_REMATCH[1]}"
+        eval "function ${_argproc_filterCall} {
+            ${_argproc_filter}
         }"
     else
-        definedFunc=0
-        filterCall="${filter}"
+        _argproc_definedFunc=0
+        _argproc_filterCall="${_argproc_filter}"
     fi
 
     _argproc_filteredValues=()
-    local arg error=0
-    for arg in "$@"; do
+    local _argproc_arg _argproc_error=0
+    for _argproc_arg in "$@"; do
         _argproc_replaceCalled=0
-        if ! "${filterCall}" "${arg}"; then
-            error-msg "Invalid value for ${desc}: ${arg}"
-            error=1
+        if ! "${_argproc_filterCall}" "${_argproc_arg}"; then
+            error-msg "Invalid value for ${_argproc_desc}: ${_argproc_arg}"
+            _argproc_error=1
             break
         fi
         if (( !_argproc_replaceCalled )); then
-            replace-value "${arg}"
+            replace-value "${_argproc_arg}"
         fi
     done
 
-    if (( definedFunc )); then
-        unset -f "${filterCall}"
+    if (( _argproc_definedFunc )); then
+        unset -f "${_argproc_filterCall}"
     fi
 
-    return "${error}"
+    return "${_argproc_error}"
 }
 
 # Produces an argument handler body, from the given components.
