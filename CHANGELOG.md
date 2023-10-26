@@ -10,12 +10,16 @@ Breaking changes:
 * `bashy-core`:
   * `arg-processor`:
     * Tightened up syntax for passing multi-value arguments.
+    * Renamed `--eval=` to `--eval[]=`, to be the same as how options defined by
+      the system work.
 
 Other notable changes:
 * `bashy-core`:
   * `arg-processor`:
     * `--filter` now supports `{...}` to specify a code snippet, just like
       `--call` already does.
+    * `--eval` values can be specified using the same multi-value syntax used by
+      the rest of the system.
   * `misc`:
     * Made `vals` more conservative in its output.
     * New function `set-array-from-vals`, which is (approximately) the reverse
