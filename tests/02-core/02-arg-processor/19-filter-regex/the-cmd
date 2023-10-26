@@ -1,0 +1,28 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_init.sh" || exit 1
+
+
+#
+# Argument parsing
+#
+
+define-usage $'
+    ${name} -- test command
+
+    This is a test command.
+'
+
+opt-value --var=value --filter='//' nop
+opt-value --var=value --filter='/./' non-empty
+opt-value --var=value --filter=$'/\'x\'/' looks-like-sq-string
+opt-value --var=value --filter='/"x"/' looks-like-dq-string
+
+Z='zzz'
+opt-value --var=value --filter=$'/abc$Z?/' looks-like-dollar
+
+process-args "$@" || exit "$?"
+
+echo "value: $(vals "${value}")"
