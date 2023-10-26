@@ -763,11 +763,6 @@ function _argproc_janky-args {
     local gotDefault=0
     local a
 
-    # TEMP: Remove spec mod once use sites are migrated.
-    if [[ ${argSpecs} =~ ' enum[] ' ]]; then
-        argSpecs+='enum '
-    fi
-
     for a in "${args[@]}"; do
         if (( optsDone )); then
             args+=("${a}")
@@ -802,8 +797,7 @@ function _argproc_janky-args {
                     && optDefault="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
-                # TEMP: Remove plain `enum` once use sites are migrated.
-                enum|enum[])
+                enum[])
                     if ! _argproc_parse-enum "${value#=}"; then
                         argError=1
                     fi
