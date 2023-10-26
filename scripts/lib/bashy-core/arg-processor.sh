@@ -666,19 +666,23 @@ function _argproc_filter-call {
     local filter="$2"
     shift 2
 
-    local definedFunc=0
-    if [[ ${filter} =~ ^\{(.*)\}$ ]]; then
-        # Kinda gross, but this makes it easy to call the filter code block.
-        eval "function _argproc_filter-call:inner {
+    # Kinda gross, but converting a non-call form to a function makes the
+    # evaluation much more straightforward.
+    local definedFunc=1 filterCall='_argproc_filter-call:inner'
+    if [[ ${filter} =~ ^/(.*)/$ ]]; then
+        : #TODO
+    elif [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        eval "function ${filterCall} {
             ${BASH_REMATCH[1]}
         }"
-        filter='_argproc_filter-call:inner'
-        definedFunc=1
+    else
+        definedFunc=0
+        filterCall="${filter}"
     fi
 
     local arg result error=0
     for arg in "$@"; do
-        if ! result=("$("${filter}" "${arg}")"); then
+        if ! result=("$("${filterCall}" "${arg}")"); then
             error-msg "Invalid value for ${desc}: ${arg}"
             error=1
             break
@@ -687,7 +691,7 @@ function _argproc_filter-call {
     done
 
     if (( definedFunc )); then
-        unset -f _argproc_filter-call:inner
+        unset -f "${filterCall}"
     fi
 
     return "${error}"
