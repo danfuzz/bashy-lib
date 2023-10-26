@@ -659,6 +659,31 @@ function _argproc_error-coda {
     fi
 }
 
+# Helper (called by code produced by `_argproc_handler-body`) which performs
+# a filter call. Upon success, prints all the filtered values.
+function _argproc_filter-call {
+    local desc="$1"
+    local filter="$2"
+    shift 2
+
+    if [[ ${filter} =~ ^\{(.*)\}$ ]]; then
+        # Kinda gross, but this makes it easy to call the filter code block.
+        eval "function _argproc_filter-call:inner {
+            ${BASH_REMATCH[1]}
+        }"
+        filter='_argproc_filter-call:inner'
+    fi
+
+    local arg result
+    for arg in "$@"; do
+        if ! result=("$("${filter}" "${arg}")"); then
+            error-msg "Invalid value for ${desc}: ${arg}"
+            return 1
+        fi
+        vals -- "${result}"
+    done
+}
+
 # Produces an argument handler body, from the given components.
 function _argproc_handler-body {
     local specName="$1"
@@ -957,31 +982,6 @@ function _argproc_regex-filter-check {
             error-msg "Invalid value for ${desc}: ${arg}"
             return 1
         fi
-    done
-}
-
-# Helper (called by code produced by `_argproc_handler-body`) which performs
-# a filter call. Upon success, prints all the filtered values.
-function _argproc_filter-call {
-    local desc="$1"
-    local filter="$2"
-    shift 2
-
-    if [[ ${filter} =~ ^\{(.*)\}$ ]]; then
-        # Kinda gross, but this makes it easy to call the filter code block.
-        eval "function _argproc_filter-call:inner {
-            ${BASH_REMATCH[1]}
-        }"
-        filter='_argproc_filter-call:inner'
-    fi
-
-    local arg result
-    for arg in "$@"; do
-        if ! result=("$("${filter}" "${arg}")"); then
-            error-msg "Invalid value for ${desc}: ${arg}"
-            return 1
-        fi
-        vals -- "${result}"
     done
 }
 
