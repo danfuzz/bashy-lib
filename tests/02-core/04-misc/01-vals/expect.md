@@ -55,6 +55,32 @@ Length: 3
 
 - - - - - - - - - -
 
+## just `--`
+
+### stdout
+```
+Empty result.
+Length: 0
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## one arg after `--`
+
+### stdout
+```
+Result: bloop
+Length: 1
+
+0: bloop
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
 ## space-type stuff in arguments
 
 ### stdout
@@ -179,6 +205,40 @@ Length: 4
 1: {ab}
 2: (ab)
 3: <ab>
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## with `--dollar`
+
+### stdout
+```
+Result: $'beep' $'boop-boop' $'blorp\n'
+Length: 3
+
+0: beep
+1: boop-boop
+2: blorp
+
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## with `--dollar --`
+
+### stdout
+```
+Result: $'beep' $'boop-boop' $'blorp\n'
+Length: 3
+
+0: beep
+1: boop-boop
+2: blorp
+
 ```
 
 ### exit: 0

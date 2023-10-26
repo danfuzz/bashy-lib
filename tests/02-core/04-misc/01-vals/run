@@ -41,6 +41,12 @@ call-and-log-as-test 'two args' \
 call-and-log-as-test 'three args' \
     call-vals Things are awesome.
 
+call-and-log-as-test 'just `--`' \
+    call-vals --
+
+call-and-log-as-test 'one arg after `--`' \
+    call-vals -- bloop
+
 call-and-log-as-test 'space-type stuff in arguments' \
     call-vals 'space' ' more space ' $'yes\nno\n\n' $'\there\tthere'
 
@@ -58,3 +64,9 @@ call-and-log-as-test 'special characters in the middle of arguments' \
 
 call-and-log-as-test 'special characters surrounding arguments' \
     call-vals '[ab]' '{ab}' '(ab)' '<ab>'
+
+call-and-log-as-test 'with `--dollar`' \
+    call-vals --dollar beep boop-boop $'blorp\n'
+
+call-and-log-as-test 'with `--dollar --`' \
+    call-vals --dollar -- beep boop-boop $'blorp\n'
