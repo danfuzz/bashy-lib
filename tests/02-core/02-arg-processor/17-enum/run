@@ -60,6 +60,15 @@ call-and-log-as-test '<avec all symbol chars>: `:`' \
 call-and-log-as-test '<avec all symbol chars>: `.`' \
     "${cmd}" --all-symbol-chars=.
 
+call-and-log-as-test '<quoted forms>: `a b`' \
+    "${cmd}" --quoted-forms='a b'
+
+call-and-log-as-test '<quoted forms>: `c d`' \
+    "${cmd}" --quoted-forms='c d'
+
+call-and-log-as-test '<quoted forms>: `efg`' \
+    "${cmd}" --quoted-forms='a b'
+
 # Should fail because `&` isn't a symbol character. This is specifically meant
 # to test that the enumeration value `.` isn't treated as a regex wildcard.
 call-and-log-as-test '<avec all symbol chars>: `&`' \

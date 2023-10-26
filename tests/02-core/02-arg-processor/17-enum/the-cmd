@@ -23,6 +23,7 @@ opt-value --var=value --enum[]='   lots   of      spaces     ' lots-of-spaces
 opt-value --var=value \
     --enum[]='abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789 - : _ .' \
     all-symbol-chars
+opt-value --var=value --enum[]=$'\'a b\' $\'c d\' "efg"' quoted-forms
 
 process-args "$@" || exit "$?"
 

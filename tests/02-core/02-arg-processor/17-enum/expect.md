@@ -204,6 +204,39 @@ value: .
 
 - - - - - - - - - -
 
+## <quoted forms>: `a b`
+
+### stdout
+```
+value: a\ b
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## <quoted forms>: `c d`
+
+### stdout
+```
+value: c\ d
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
+## <quoted forms>: `efg`
+
+### stdout
+```
+value: a\ b
+```
+
+### exit: 0
+
+- - - - - - - - - -
+
 ## <avec all symbol chars>: `&`
 
 ### stderr
