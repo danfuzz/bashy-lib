@@ -35,7 +35,8 @@
 #   is rejected. Note: The filter runs in a subshell, and as such it cannot be
 #   used to affect the global environment of the main script.
 # * `--filter=/<regex>/` -- Matches each argument value against the regex. If
-#   the regex doesn't match, the argument is rejected.
+#   the regex doesn't match, the argument is rejected. The regex must be
+#   non-empty.
 # * `--enum[]=<spec>` -- Matches each argument value against a set of valid
 #   names. `<spec>` must be a non-empty list of values, in the usual multi-value
 #   form accepted by this system, e.g. `--enum[]='yes no "maybe so"'`.
@@ -816,7 +817,7 @@ function _argproc_janky-args {
                     fi
                     ;;
                 filter)
-                    [[ ${value} =~ ^=(/.*/|\{.*\}|[_a-zA-Z][-_:a-zA-Z0-9]*)$ ]] \
+                    [[ ${value} =~ ^=(/.+/|\{.*\}|[_a-zA-Z][-_:a-zA-Z0-9]*)$ ]] \
                     && optFilter="${BASH_REMATCH[1]}" \
                     || argError=1
                     ;;
