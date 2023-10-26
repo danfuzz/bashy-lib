@@ -23,7 +23,7 @@ opt-value --var=value --filter='{
     }' multiline
 opt-value --var=value --filter='{
         if [[ $1 == a ]]; then
-            error-msg "Not a!"
+            error-msg "Got a! No way!"
             return 1
         fi
     }' fail-on-a
