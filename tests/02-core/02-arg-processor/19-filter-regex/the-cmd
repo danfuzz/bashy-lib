@@ -15,7 +15,7 @@ define-usage $'
     This is a test command.
 '
 
-opt-value --var=value --filter='//' nop
+opt-value --var=value --filter='/^/' nop
 opt-value --var=value --filter='/./' non-empty
 opt-value --var=value --filter=$'/\'x\'/' looks-like-sq-string
 opt-value --var=value --filter='/"x"/' looks-like-dq-string

@@ -1,26 +1,22 @@
 ## nop filter, empty value
 
-### stderr
+### stdout
 ```
-the-cmd: Invalid value for option --nop: 
-
-the-cmd -- test command
+value: ''
 ```
 
-### exit: 1
+### exit: 0
 
 - - - - - - - - - -
 
 ## nop filter, non-empty value
 
-### stderr
+### stdout
 ```
-the-cmd: Invalid value for option --nop: beep
-
-the-cmd -- test command
+value: beep
 ```
 
-### exit: 1
+### exit: 0
 
 - - - - - - - - - -
 
