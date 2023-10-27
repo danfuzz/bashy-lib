@@ -103,7 +103,15 @@ function set-array-from-vals {
     fi
 
     if (( $# != 2 )); then
-        error-msg --file-line=1 'Missing argument(s) to `set-array-from-vals`.'
+        if (( !_bashy_quiet )); then
+            local msg
+            if (( $# < 2 )); then
+                msg='Missing argument(s)'
+            else
+                msg='Too many arguments'
+            fi
+            error-msg --file-line=1 "${msg}"' to `set-array-from-vals`.'
+        fi
         return 1
     fi
 
