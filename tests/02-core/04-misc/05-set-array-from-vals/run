@@ -1,0 +1,133 @@
+#!/bin/bash
+# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# SPDX-License-Identifier: Apache-2.0
+
+[[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
+
+function call-safv {
+    local varName
+    if [[ $1 == '--quiet' ]]; then
+        varName="$2"
+    else
+        varName="$1"
+    fi
+
+    local varNameIsValid=0
+    if [[ ${varName} =~ ^[_a-zA-Z][_a-zA-Z0-9]*$ ]]; then
+        varNameIsValid=1
+        eval "${varName}=('<never set>' 'x' 'y' 'z')"
+    fi
+
+    set-array-from-vals "$@"
+    local error="$?"
+
+    if (( varNameIsValid )); then
+        varName="${varName}[@]"
+        local values=("${!varName}")
+
+        printf 'Length: %s\n' "${#values[@]}"
+
+        if (( ${#values[@]} != 0 )); then
+            printf '\n'
+            local n
+            for n in "${!values[@]}"; do
+                printf '%s: %s\n' "${n}" "${values[n]}"
+            done
+        fi
+    fi
+
+    return "${error}"
+}
+
+# Too few arguments.
+call-and-log-as-test 'no args (too few)' \
+    call-safv
+call-and-log-as-test 'one arg (too few)' \
+    call-safv someName
+call-and-log-as-test 'just `--quiet` and no other args (too few)' \
+    call-safv --quiet
+call-and-log-as-test '`--quiet` and one arg (too few)' \
+    call-safv --quiet someName
+
+# Too many arguments.
+call-and-log-as-test 'three args (too many)' \
+    call-safv someName x y
+call-and-log-as-test '`--quiet` and three args (too many)' \
+    call-safv --quiet someName x y
+
+# Valid calls, single values.
+call-and-log-as-test 'one valid unquoted value' \
+    call-safv x xyz
+call-and-log-as-test 'one valid single-quoted value' \
+    call-safv x $'\'xyz\''
+call-and-log-as-test 'one valid double-quoted value' \
+    call-safv x '"xyz"'
+call-and-log-as-test 'one valid dollar-quoted value' \
+    call-safv x $'$\'xyz\''
+call-and-log-as-test '`--quiet` and one valid value' \
+    call-safv --quiet x florp
+
+# Valid calls, testing variable name variations.
+call-and-log-as-test 'variable name check #1' \
+    call-safv a florp
+call-and-log-as-test 'variable name check #2' \
+    call-safv A florp
+call-and-log-as-test 'variable name check #3' \
+    call-safv __ florp # Note: Plain `_` is a special variable.
+call-and-log-as-test 'variable name check #4' \
+    call-safv a1 florp
+call-and-log-as-test 'variable name check #5' \
+    call-safv a_ florp
+call-and-log-as-test 'variable name check #6' \
+    call-safv X_Y florp
+
+# Valid calls with more than one value.
+call-and-log-as-test 'two unquoted values' \
+    call-safv var 'florp fleep'
+call-and-log-as-test 'two single-quoted values' \
+    call-safv var $'\'florp\' \'fleep\''
+call-and-log-as-test 'two double-quoted values' \
+    call-safv var '"florp" "fleep"'
+call-and-log-as-test 'two dollar-quoted values' \
+    call-safv var $'$\'florp\' $\'fleep\''
+call-and-log-as-test 'all allowed unquoted alphanumerics' \
+    call-safv var 'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789'
+call-and-log-as-test 'all allowed unquoted non-alphanumerics' \
+    call-safv var '@ % _ - + = : . /'
+
+# Valid calls checking for whitespace acceptance.
+call-and-log-as-test 'two space-surrounded values' \
+    call-safv var $' florp fleep '
+call-and-log-as-test 'two tab-separated values' \
+    call-safv var $'florp\tfleep'
+call-and-log-as-test 'two tab-surrounded values' \
+    call-safv var $'\tflorp\tfleep\t'
+call-and-log-as-test 'two newline-separated values' \
+    call-safv var $'florp\nfleep'
+call-and-log-as-test 'two newline-surrounded values' \
+    call-safv var $'\nflorp\nfleep\n'
+call-and-log-as-test 'two return-separated values' \
+    call-safv var $'florp\rfleep'
+call-and-log-as-test 'two return-surrounded values' \
+    call-safv var $'\rflorp\rfleep\r'
+call-and-log-as-test 'two values surrounded by a mix of all valid separators' \
+    call-safv var $'\n\r \tflorp\r \t\nfleep\t\r\n '
+
+# Invalid calls because of unquoted special characters.
+chars=$'\'\\";&|$?!*`#%^,~[]{}()<>'
+for (( n = 0; n < ${#chars}; n++ )); do
+    ch="${chars:n:1}"
+    call-and-log-as-test "unquoted $(vals "${ch}") (invalid)" \
+        call-safv var "${ch}"
+done
+
+# Invalid because of a missing space between quoted values.
+call-and-log-as-test 'missing space #1'  call-safv var $'foo\'bar\''
+call-and-log-as-test 'missing space #2'  call-safv var $'\'foo\'bar'
+call-and-log-as-test 'missing space #3'  call-safv var $'\'foo\'\'bar\''
+call-and-log-as-test 'missing space #5'  call-safv var $'foo"bar"'
+call-and-log-as-test 'missing space #6'  call-safv var $'"foo"bar'
+call-and-log-as-test 'missing space #7'  call-safv var $'"foo""bar"'
+call-and-log-as-test 'missing space #8'  call-safv var $'foo$\'bar\''
+call-and-log-as-test 'missing space #9'  call-safv var $'$\'foo$\'bar'
+call-and-log-as-test 'missing space #10' call-safv var $'$\'foo$\'$\'bar\''
