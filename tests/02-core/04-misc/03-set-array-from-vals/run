@@ -25,14 +25,17 @@ function call-safv {
         varName="${varName}[@]"
         local values=("${!varName}")
 
-        printf 'Length: %s\n' "${#values[@]}"
-
-        if (( ${#values[@]} != 0 )); then
-            printf '\n'
-            local n
-            for n in "${!values[@]}"; do
-                printf '%s: %s\n' "${n}" "${values[n]}"
-            done
+        if (( ${#values[@]} == 4 )) && [[ "${values[*]}" == '<never set> x y z' ]]; then
+            echo 'Variable never set.'
+        else
+            printf 'Length: %s\n' "${#values[@]}"
+            if (( ${#values[@]} != 0 )); then
+                printf '\n'
+                local n
+                for n in "${!values[@]}"; do
+                    printf '%s: %s\n' "${n}" "${values[n]}"
+                done
+            fi
         fi
     fi
 

@@ -14,12 +14,7 @@ run:21: Missing argument(s) to `set-array-from-vals`.
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -42,12 +37,7 @@ run:21: Missing argument(s) to `set-array-from-vals`.
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### exit: 1
@@ -58,12 +48,7 @@ Length: 4
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -80,12 +65,7 @@ run:21: Too many arguments to `set-array-from-vals`.
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### exit: 1
@@ -443,12 +423,7 @@ Length: 2
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### exit: 1
@@ -459,12 +434,7 @@ Length: 4
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -481,12 +451,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -503,12 +468,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -525,12 +485,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -547,12 +502,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -569,12 +519,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -591,12 +536,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -613,12 +553,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -635,12 +570,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -657,12 +587,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -679,12 +604,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -701,12 +621,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -736,12 +651,7 @@ Length: 1
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -758,12 +668,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -780,12 +685,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -802,12 +702,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -824,12 +719,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -846,12 +736,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -868,12 +753,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -890,12 +770,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -912,12 +787,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -934,12 +804,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -956,12 +821,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -978,12 +838,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1000,12 +855,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1022,12 +872,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1044,12 +889,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1066,12 +906,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1088,12 +923,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1110,12 +940,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1132,12 +957,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
@@ -1154,12 +974,7 @@ run: Invalid `vals`-style multi-value string:
 
 ### stdout
 ```
-Length: 4
-
-0: <never set>
-1: x
-2: y
-3: z
+Variable never set.
 ```
 
 ### stderr
