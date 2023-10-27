@@ -113,6 +113,10 @@ call-and-log-as-test 'two return-surrounded values' \
 call-and-log-as-test 'two values surrounded by a mix of all valid separators' \
     call-safv var $'\n\r \tflorp\r \t\nfleep\t\r\n '
 
+# Invalid value, but with `--quiet`.
+call-and-log-as-test '`--quiet` and one invalid value' \
+    call-safv --quiet var 'boop&'
+
 # Invalid calls because of unquoted special characters.
 chars=$'\'\\";&|$?!*`#%^,~[]{}()<>'
 for (( n = 0; n < ${#chars}; n++ )); do

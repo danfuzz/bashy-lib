@@ -439,6 +439,22 @@ Length: 2
 
 - - - - - - - - - -
 
+## `--quiet` and one invalid value
+
+### stdout
+```
+Length: 4
+
+0: <never set>
+1: x
+2: y
+3: z
+```
+
+### exit: 1
+
+- - - - - - - - - -
+
 ## unquoted $'\'' (invalid)
 
 ### stdout
