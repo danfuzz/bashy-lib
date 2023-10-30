@@ -68,7 +68,66 @@ my-cmd -- --foo                    # One positional argument, literally `--foo`.
 my-cmd --strings[]="$(vals -- "${paths[@]}")"
 ```
 
-## Declaring options
+## Declaring arguments, and performing parsing
 
-TODO! Coming soon! In the mean time, see the source of all the included commands
-and tests for a rich set of examples.
+**Note:** TODO! More detail to be coming soon. In the mean time, see the long
+header comment at the top of `arg-processor.sh` for an overview, the function
+headers on the argument definers in the same file for a bit more detail, and the
+`argument parsing` sections of all the included commands and tests for a rich
+set of examples.
+
+### Options
+
+#### `opt-action [--call=<call>]  [--var=<var> [--default=<value>]] -- <spec>`
+
+Defines an "action" (non-toggle-able switch) option.
+
+#### `opt-alias -- <spec> [<option> ...]`
+
+Defines an alias option.
+
+#### `opt-multi [--required] [--call=<call>] [--var=<var>] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+
+Defines a multi-value option.
+
+#### `opt-toggle [--call=<call>]  [--var=<var> [--default=<value>]] -- <spec>`
+
+Defines a toggle (on/off) option.
+
+#### `opt-value [--required] [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+
+Defines a (single) value option.
+
+### Positional arguments
+
+#### `positional-arg [--required] [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+
+Defines a positional argument.
+
+#### `rest-arg [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+
+Defines a "rest" argument (consuming zero or more arguments at the end of a
+commandline).
+
+### Processing, etc.
+
+#### `post-process-args-call <cmd> <arg> ...`
+
+Adds a call to be queued up to perform arbitrary post-processing (such as
+consistency checking) which gets called after initial argument processing is
+complete and considered successful.
+
+#### `process-args <arg> ...`
+
+Processes the given arguments, according to all of the defined positional
+arguments, options, and post-processing directives.
+
+#### `replace-value <value>`
+
+Used in the implementation of `--filter` calls to replace the originally-passed
+value.
+
+#### `require-exactly-one-arg-of <name> ...`
+
+Adds a post-processing call which fails if there is not exactly one of the
+given named arguments present in the arguments passed to `process-args`.
