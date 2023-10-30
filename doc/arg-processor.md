@@ -78,7 +78,7 @@ set of examples.
 
 ### Options
 
-#### `opt-action [--call=<call>]  [--var=<var> [--default=<value>]] [--] <spec>`
+#### `opt-action [--call=<call>] [--var=<var> [--default=<value>]] [--] <spec>`
 
 Defines an "action" (non-toggle-able switch) option.
 
@@ -90,7 +90,7 @@ Defines an alias option.
 
 Defines a multi-value option.
 
-#### `opt-toggle [--call=<call>]  [--var=<var> [--default=<value>]] [--] <spec>`
+#### `opt-toggle [--call=<call>] [--var=<var> [--default=<value>]] [--] <spec>`
 
 Defines a toggle (on/off) option.
 
