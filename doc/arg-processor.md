@@ -78,33 +78,33 @@ set of examples.
 
 ### Options
 
-#### `opt-action [--call=<call>]  [--var=<var> [--default=<value>]] -- <spec>`
+#### `opt-action [--call=<call>]  [--var=<var> [--default=<value>]] [--] <spec>`
 
 Defines an "action" (non-toggle-able switch) option.
 
-#### `opt-alias -- <spec> [<option> ...]`
+#### `opt-alias [--] <spec> [<option> ...]`
 
 Defines an alias option.
 
-#### `opt-multi [--required] [--call=<call>] [--var=<var>] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+#### `opt-multi [--required] [--call=<call>] [--var=<var>] [--filter=<filter> | --enum[]=<names>] [--] <spec>`
 
 Defines a multi-value option.
 
-#### `opt-toggle [--call=<call>]  [--var=<var> [--default=<value>]] -- <spec>`
+#### `opt-toggle [--call=<call>]  [--var=<var> [--default=<value>]] [--] <spec>`
 
 Defines a toggle (on/off) option.
 
-#### `opt-value [--required] [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+#### `opt-value [--required] [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] [--] <spec>`
 
 Defines a (single) value option.
 
 ### Positional arguments
 
-#### `positional-arg [--required] [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+#### `positional-arg [--required] [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] [--] <spec>`
 
 Defines a positional argument.
 
-#### `rest-arg [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] -- <spec>`
+#### `rest-arg [--call=<call>] [--var=<var> [--default=<value>]] [--filter=<filter> | --enum[]=<names>] [--] <spec>`
 
 Defines a "rest" argument (consuming zero or more arguments at the end of a
 commandline).
