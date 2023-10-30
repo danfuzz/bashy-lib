@@ -4,7 +4,9 @@ Changelog
 **Note:** Version numbers for _stable_ (so marked) releases follow semantic
 versioning principles. Unstable releases do not.
 
-### [Unreleased]
+### v2.7 -- 2023-10-30
+
+This is a stable-ish release. No breaking changes are currently contemplated.
 
 Breaking changes:
 * `bashy-core`:
