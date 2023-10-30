@@ -6,7 +6,8 @@ versioning principles. Unstable releases do not.
 
 ### v2.7 -- 2023-10-30
 
-This is a stable-ish release. No breaking changes are currently contemplated.
+This is a stable-ish release. No further breaking changes are currently
+contemplated for the 2.* release series.
 
 Breaking changes:
 * `bashy-core`:
