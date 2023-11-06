@@ -4,6 +4,14 @@ Changelog
 **Note:** Version numbers for _stable_ (so marked) releases follow semantic
 versioning principles. Unstable releases do not.
 
+### [Unreleased]
+
+Breaking changes:
+* None.
+
+Other notable changes:
+* `bashy-basics`: New utility function `env-names`.
+
 ### v2.7 -- 2023-10-30
 
 This is a stable-ish release. No further breaking changes are currently

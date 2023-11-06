@@ -61,6 +61,16 @@ function check-json-output-args {
     fi
 }
 
+# Prints a list of the names of all defined environment variables.
+function env-names {
+    # It turns out that the most straightforward way to get a list of
+    # currently-defined environment variables is arguably to use `awk`. Notably,
+    # the output of `declare -x` can't be trivially parsed in the case where an
+    # environment variable contains a newline (perhaps followed by a line that
+    # mimics the output of `declare -x`).
+    awk 'BEGIN { for (x in ENVIRON) print x; }'
+}
+
 # Interprets standardized (for this project) JSON "post-processing" arguments.
 # This processes `stdin`. The arguments must start with `::`. After that are
 # options and arguments just as with `jval`, except `--input` is not accepted.
