@@ -61,6 +61,24 @@ function check-json-output-args {
     fi
 }
 
+# Removes from the environment all the variables except for the ones listed.
+# Note that it is probably best to only run this in a subshell, e.g. just before
+# running code that can't be fully trusted with a fuller set of environment
+# variables.
+function env-clean {
+    local allowList=" $* " # Minor cleverness for easier regex matching below.
+
+    local allNames
+    allNames=($(env-names)) || return "$?"
+
+    local n
+    for n in "${allNames[@]}"; do
+        if [[ ! (${allowList} =~ " ${n} ") ]]; then
+            export -n "${n}"
+        fi
+    done
+}
+
 # Prints a list of the names of all defined environment variables.
 function env-names {
     # It turns out that the most straightforward way to get a list of

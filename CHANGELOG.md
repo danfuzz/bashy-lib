@@ -10,7 +10,7 @@ Breaking changes:
 * None.
 
 Other notable changes:
-* `bashy-basics`: New utility function `env-names`.
+* `bashy-basics`: New utility functions `env-clean` and `env-names`.
 
 ### v2.7 -- 2023-10-30
 
