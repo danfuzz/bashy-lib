@@ -79,6 +79,12 @@ function env-clean {
     done
 }
 
+# Runs `env-clean` passing it a reasonably "minimal" set of environment
+# variables to keep.
+function env-minimize {
+    env-clean HOME HOSTNAME LANG LOGNAME PATH PWD SHELL SHLVL TERM TMPDIR USER
+}
+
 # Prints a list of the names of all defined environment variables.
 function env-names {
     # It turns out that the most straightforward way to get a list of
