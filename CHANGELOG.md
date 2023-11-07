@@ -6,8 +6,13 @@ versioning principles. Unstable releases do not.
 
 ### [Unreleased]
 
+This is a stable-ish release. No further breaking changes are currently
+contemplated for the 2.* release series.
+
 Breaking changes:
-* None.
+* `bashy-node`: Reworked build options to use the newly-standardized multi-value
+  forms. Only _nominally_ breaking in that use of `bashy-node` at all is
+  pretty minimal.
 
 Other notable changes:
 * `bashy-basics`: New utility functions `env-clean`, `env-minimize`, and
