@@ -26,8 +26,7 @@ define-usage --with-help $'
     --allow-platform-specific-files
       If specified, the build does *not* check to see if any platform-specific
       files ended up in the built output.
-    --modules-dir=<dir>
-      Path to a directory containing all module sources to be used.
+    --modules-dirs=<dir>
     --modules-dirs[]=<dir> ...
       Paths to one or more module source directories, collectively containing
       all module sources to be used. If there are same-named modules under more
@@ -47,9 +46,7 @@ define-usage --with-help $'
 opt-toggle --var=platformSpecific allow-platform-specific-files
 
 # Paths to all module directories.
-opt-value --call='{ modulesDirs=("$1") }' --filter='/./' modules-dir
-opt-multi --var=modulesDirs --filter='/./' modules-dirs
-require-exactly-one-arg-of modules-dir modules-dirs
+opt-multi --required --var=modulesDirs --filter='/./' modules-dirs
 
 # Built output directory.
 opt-value --var=outDir out
