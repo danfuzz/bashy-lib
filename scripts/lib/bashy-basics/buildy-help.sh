@@ -20,7 +20,7 @@ function set-up-out-dir {
             --clean=0|--no-clean)
                 shift
                 ;;
-            --out=)
+            --out=*)
                 extraOpts+=("$1")
                 shift
                 ;;
