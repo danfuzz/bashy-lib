@@ -6,6 +6,8 @@ versioning principles. Unstable releases do not.
 
 ### [Unreleased]
 
+### v2.8 -- 2023-11-30
+
 This is a stable-ish release. No further breaking changes are currently
 contemplated for the 2.* release series.
 
