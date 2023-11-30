@@ -97,7 +97,7 @@ function satisfy-target {
         else
             _build_targetStack+=" ${target} "
             echo "Building target ${target}..."
-            "${targetFunc}" 2>&1 | indent '  '
+            "${targetFunc}" 2>&1 | _buildyHelp_indent '  '
             result="${PIPESTATUS[0]}"
             if (( ${result} == 0 )); then
                 echo "Target ${target}: Succeeded!"
@@ -143,4 +143,19 @@ function set-up-out-dir {
 
     lib buildy out-dir \
         --out="${outDir}" --create --print "${extraOpts[@]}"
+}
+
+
+#
+# Helper functions
+#
+
+# Indents stdin with the given prefix.
+function _buildyHelp_indent {
+    local prefix="$1"
+
+    local line
+    while IFS=$'\n' read -r line; do
+        printf $'%s%s\n' "${prefix}" "${line}"
+    done
 }
