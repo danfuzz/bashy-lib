@@ -44,19 +44,19 @@ function satisfy-all-targets {
         || (( errors++ ))
     done
 
-    info-msg
+    progress-msg
 
     if (( ${errors} != 0 )); then
         plural=''
         if (( ${errors} != 1 )); then
             plural='s'
         fi
-        info-msg "${errors} error${plural}."
-        info-msg 'Alas.'
+        progress-msg "${errors} error${plural}."
+        progress-msg 'Alas.'
         return 1
     fi
 
-    info-msg 'No errors. Done!'
+    progress-msg 'No errors. Done!'
 }
 
 # "Satisfies" a given target. If it's already been built, does nothing other
