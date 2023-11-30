@@ -15,8 +15,10 @@ Breaking changes:
   pretty minimal.
 
 Other notable changes:
-* `bashy-basics`: New utility functions `env-clean`, `env-minimize`, and
-  `env-names`.
+* `bashy-basics`:
+  * New utility functions `env-clean`, `env-minimize`, and `env-names`.
+  * New helper library `buildy-help`, to help avoid some project-build-related
+    boilerplate.
 
 ### v2.7 -- 2023-10-30
 
