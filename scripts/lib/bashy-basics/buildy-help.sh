@@ -32,6 +32,33 @@ done
 # Library functions
 #
 
+# "Satisfies" all the given targets, printing out a final success-or-error
+# report.
+function satisfy-all-targets {
+    local targets=("$@")
+    local errors=0
+
+    local t
+    for t in "${targets[@]}"; do
+        satisfy-target "${t}" \
+        || (( errors++ ))
+    done
+
+    info-msg
+
+    if (( ${errors} != 0 )); then
+        plural=''
+        if (( ${errors} != 1 )); then
+            plural='s'
+        fi
+        info-msg "${errors} error${plural}."
+        info-msg 'Alas.'
+        return 1
+    fi
+
+    info-msg 'No errors. Done!'
+}
+
 # "Satisfies" a given target. If it's already been built, does nothing other
 # than returning the original result. If it _hasn't_ been built, attempts to
 # build it by calling the corresponding `target-*` function.
