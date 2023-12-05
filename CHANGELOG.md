@@ -6,6 +6,14 @@ versioning principles. Unstable releases do not.
 
 ### [Unreleased]
 
+Breaking changes:
+* None.
+
+Other notable changes:
+* `bashy-node`:
+  * New option `--runner-script` for `node-project build-main-module`, using
+    code extracted from sibling project `lactoserv`.
+
 ### v2.8 -- 2023-11-30
 
 This is a stable-ish release. No further breaking changes are currently
