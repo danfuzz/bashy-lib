@@ -11,6 +11,7 @@ Breaking changes:
 
 Other notable changes:
 * `bashy-node`:
+  * New subcommand `lint`, extracted from sibling project `lactoserv`.
   * New option `--runner-script` for `node-project build-main-module`, using
     code extracted from sibling project `lactoserv`.
 
