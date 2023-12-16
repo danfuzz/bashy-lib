@@ -10,10 +10,14 @@ Breaking changes:
 * None.
 
 Other notable changes:
+* `bashy-basics`:
+  * Accept `jq` versions that have "patch" values (that is, sub-minor version
+    numbers).
 * `bashy-node`:
   * New subcommand `lint`, extracted from sibling project `lactoserv`.
   * New option `--runner-script` for `node-project build-main-module`, using
     code extracted from sibling project `lactoserv`.
+  * Accept Node v21 when running.
 
 ### v2.8 -- 2023-11-30
 
