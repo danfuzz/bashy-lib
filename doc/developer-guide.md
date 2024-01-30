@@ -146,3 +146,9 @@ $ echo 'my-subproject/scripts' > scripts/lib/my-subproject.link
 
 With that, you can now say `ubik my-subproject ...` or (in scripts) `lib
 my-subproject ...`.
+
+- - - - - - - - - -
+```
+Copyright 2022-2024 the Bashy-lib Authors (Dan Bornstein et alia).
+SPDX-License-Identifier: Apache-2.0
+```

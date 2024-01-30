@@ -53,3 +53,9 @@ contents directly (it is self-contained).
 searches up the directory hierarchy from the CWD for an `ubik` script to run (in
 a `bin` or `scripts` directory), and if it finds one it will run it with
 whatever arguments you passed to the function.
+
+- - - - - - - - - -
+```
+Copyright 2022-2024 the Bashy-lib Authors (Dan Bornstein et alia).
+SPDX-License-Identifier: Apache-2.0
+```

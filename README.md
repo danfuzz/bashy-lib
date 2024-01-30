@@ -31,3 +31,9 @@ changes with each release. Expect a stable release sometime in 2024.
 * [Argument Processing](./doc/arg-processor.md)
 * [Developer Guide](./doc/developer-guide.md)
 * [User Guide](./doc/user-guide.md)
+
+- - - - - - - - - -
+```
+Copyright 2022-2024 the Bashy-lib Authors (Dan Bornstein et alia).
+SPDX-License-Identifier: Apache-2.0
+```
