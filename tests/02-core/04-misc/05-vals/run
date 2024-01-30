@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright 2022-2023 the Bashy-lib Authors (Dan Bornstein et alia).
+# Copyright 2022-2024 the Bashy-lib Authors (Dan Bornstein et alia).
 # SPDX-License-Identifier: Apache-2.0
 
 [[ "$(readlink -f "$0")" =~ ^(.*/tests/) ]] && . "${BASH_REMATCH[1]}_test-init.sh" || exit 1
