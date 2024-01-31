@@ -10,6 +10,14 @@ Breaking changes:
 * None.
 
 Other notable changes:
+* None.
+
+### v2.9 -- 2024-01-30
+
+Breaking changes:
+* None.
+
+Other notable changes:
 * `bashy-basics`:
   * Accept `jq` versions that have "patch" values (that is, sub-minor version
     numbers).
