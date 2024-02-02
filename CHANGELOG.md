@@ -10,7 +10,8 @@ Breaking changes:
 * None.
 
 Other notable changes:
-* None.
+* `bashy-node`:
+  * Added `--runner-versions[]` option to `node-project build-main-module`.
 
 ### v2.9 -- 2024-01-30
 
