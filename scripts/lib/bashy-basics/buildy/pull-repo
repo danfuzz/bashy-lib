@@ -108,9 +108,14 @@ function actually-pull {
         (
             cd "${destDir}"
 
-            true \
-            && git checkout --quiet "${tagSpec}" \
-            && git 1>&2 pull --quiet
+            git checkout --quiet "${tagSpec}" \
+            || exit "$?"
+
+            # Differentiate branch (`pull`able) from tag (not `pull`able), and
+            # only pull in the former case.
+            if [[ "$(git branch --show-current)" != '' ]]; then
+                git 1>&2 pull --quiet
+            fi
         ) \
         || return "$?"
     fi
