@@ -44,8 +44,6 @@ function satisfy-all-targets {
         || (( errors++ ))
     done
 
-    progress-msg
-
     if (( ${errors} != 0 )); then
         plural=''
         if (( ${errors} != 1 )); then
