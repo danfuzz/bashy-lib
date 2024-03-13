@@ -12,6 +12,7 @@ Breaking changes:
 Other notable changes:
 * `bashy-node`:
   * Added `--runner-versions[]` option to `node-project build-main-module`.
+  * Updated `lint` to handle new-style "flat" ESLint config files.
 
 ### v2.9 -- 2024-01-30
 
