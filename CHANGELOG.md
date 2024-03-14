@@ -10,9 +10,11 @@ Breaking changes:
 * None.
 
 Other notable changes:
+* `bashy-basics`:
+  * Handle branches (not just tags) in `buildy pull-repo`.
 * `bashy-node`:
   * Added `--runner-versions[]` option to `node-project build-main-module`.
-  * Updated `lint` to handle new-style "flat" ESLint config files.
+  * Updated `node-project lint` to handle new-style "flat" ESLint config files.
 
 ### v2.9 -- 2024-01-30
 
