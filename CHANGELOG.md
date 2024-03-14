@@ -10,6 +10,14 @@ Breaking changes:
 * None.
 
 Other notable changes:
+* None.
+
+### v2.10 -- 2024-03-14
+
+Breaking changes:
+* None.
+
+Other notable changes:
 * `bashy-basics`:
   * Handle branches (not just tags) in `buildy pull-repo`.
 * `bashy-node`:
