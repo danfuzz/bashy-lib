@@ -10,7 +10,8 @@ Breaking changes:
 * None.
 
 Other notable changes:
-* None.
+* `bashy-node`:
+  * New script `node-project reflow-jsdoc`.
 
 ### v2.10 -- 2024-03-14
 
