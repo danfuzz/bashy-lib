@@ -12,6 +12,8 @@ Breaking changes:
 Other notable changes:
 * `bashy-node`:
   * New script `node-project reflow-jsdoc`.
+  * Rewrote the guts of `node-project find-module-dependencies` in Node, for a
+    major speed improvement.
 
 ### v2.10 -- 2024-03-14
 
