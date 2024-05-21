@@ -14,6 +14,7 @@ Other notable changes:
   * New script `node-project reflow-jsdoc`.
   * Rewrote the guts of `node-project find-module-dependencies` in Node, for a
     major speed improvement.
+  * Added support for `postinstall` scripts for _local_ modules.
 
 ### v2.10 -- 2024-03-14
 
