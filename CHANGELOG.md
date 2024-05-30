@@ -7,7 +7,9 @@ versioning principles. Unstable releases do not.
 ### [Unreleased]
 
 Breaking changes:
-* None.
+* `bashy-node`:
+  * `fix-package-json`:
+    * Changed import specification `#test/` to `#tests/` for consistency.
 
 Other notable changes:
 * `bashy-node`:
