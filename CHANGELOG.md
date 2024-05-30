@@ -15,7 +15,9 @@ Other notable changes:
   * Rewrote the guts of `node-project find-module-dependencies` in Node, for a
     major speed improvement.
   * Added support for `postinstall` scripts for _local_ modules.
-  * Fixed `fix-package-json` to produce tidier results.
+  * `fix-package-json`:
+    * Added support for `export/testing` to export testing-related classes.
+    * Minor tweakage to produce tidier results.
 
 ### v2.10 -- 2024-03-14
 
