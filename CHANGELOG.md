@@ -12,6 +12,8 @@ Breaking changes:
     * Changed import specification `#test/` to `#tests/` for consistency.
 
 Other notable changes:
+* `bashy-basics`:
+  * Removed errant option passed in `set-up-out-dir`.
 * `bashy-node`:
   * New script `node-project reflow-jsdoc`.
   * Rewrote the guts of `node-project find-module-dependencies` in Node, for a
