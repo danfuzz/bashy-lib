@@ -22,6 +22,7 @@ Other notable changes:
   * `fix-package-json`:
     * Added support for `export/testing` to export testing-related classes.
     * Minor tweakage to produce tidier results.
+  * Updated linter versions.
 
 ### v2.10 -- 2024-03-14
 
