@@ -24,7 +24,7 @@ without code duplication.
 The 1.0 release is stable but not recommended for use.
 
 The 2.* series of releases isn't yet stable. You can still expect breaking
-changes with each release. Expect a stable release sometime in 2024.
+changes with each release. Expect a stable release sometime in 2025.
 
 ## Documentation
 
