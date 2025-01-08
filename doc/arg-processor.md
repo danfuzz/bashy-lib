@@ -134,6 +134,6 @@ given named arguments present in the arguments passed to `process-args`.
 
 - - - - - - - - - -
 ```
-Copyright 2022-2024 the Bashy-lib Authors (Dan Bornstein et alia).
+Copyright 2022-2025 the Bashy-lib Authors (Dan Bornstein et alia).
 SPDX-License-Identifier: Apache-2.0
 ```
