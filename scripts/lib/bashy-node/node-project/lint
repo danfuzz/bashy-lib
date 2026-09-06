@@ -122,10 +122,14 @@ fi
 outDir="$(lib buildy out-dir --out="${outDir}")" \
 || exit "$?"
 
-configFile="$(config-file-path)" \
+toolPath="$(linter-path)" \
 || exit "$?"
 
-toolPath="$(linter-path)" \
+if (( doBuildLinter )); then
+    exit
+fi
+
+configFile="$(config-file-path)" \
 || exit "$?"
 
 opts=(
